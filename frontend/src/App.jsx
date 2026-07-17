@@ -7,6 +7,7 @@ import About from "./pages/About.jsx";
 import Members from "./pages/Members.jsx";
 import JoinClub from "./pages/JoinClub.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import { Analytics } from '@vercel/analytics/react';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -31,6 +32,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <Analytics />
     </div>
   );
 }
