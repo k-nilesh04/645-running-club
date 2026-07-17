@@ -70,9 +70,9 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
-          <a href="/join" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
+          <NavLink to="/join" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
             Join Club
-          </a>
+          </NavLink>
         </div>
       )}
     </header>
