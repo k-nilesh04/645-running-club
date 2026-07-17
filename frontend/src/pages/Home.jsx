@@ -56,20 +56,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="pb-20 px-6">
-        <div className="max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-lg">
-
-          <iframe
-            title="Google Map"
-            src="https://www.google.com/maps?q=Lake,+Sector-23+-+Cycling+and+Walking+Track,+Dwarka,+Sector+23,+New+Delhi&output=embed"
-            width="100%"
-            height="450"
-            allowFullScreen=""
-            loading="lazy"
-          ></iframe>
-
+      <section className="w-full px-4 sm:px-6 lg:px-8 my-8 md:my-16">
+        <div className="max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
+            <iframe
+              title="Google Map"
+              src="https://www.google.com/maps?q=Lake,+Sector-23+-+Cycling+and+Walking+Track,+Dwarka,+Sector+23,+New+Delhi&output=embed"
+              className="absolute top-0 left-0 w-full h-full border-0"
+              allowFullScreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
         </div>
       </section>
+
 
       <section className="section">
         <h2 className="section-title text-center mb-10">Health Benefits</h2>
