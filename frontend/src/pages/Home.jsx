@@ -56,6 +56,21 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="pb-20 px-6">
+        <div className="max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-lg">
+
+          <iframe
+            title="Google Map"
+            src="https://www.google.com/maps?q=Lake,+Sector-23+-+Cycling+and+Walking+Track,+Dwarka,+Sector+23,+New+Delhi&output=embed"
+            width="100%"
+            height="450"
+            allowFullScreen=""
+            loading="lazy"
+          ></iframe>
+
+        </div>
+      </section>
+
       <section className="section">
         <h2 className="section-title text-center mb-10">Health Benefits</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
