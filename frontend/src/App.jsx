@@ -5,6 +5,7 @@ import Footer from "./components/Footer.jsx";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Members from "./pages/Members.jsx";
+import JoinClub from "./pages/JoinClub.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 function ScrollToTop() {
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/members" element={<Members />} />
+          <Route path="/join" element={<JoinClub />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { fetchMembers } from "../api/api.js";
+// import { fetchMembers } from "../api/api.js";
 import fallbackMembers from "../data/members.js";
 
 export default function useMembers() {
@@ -20,7 +20,6 @@ export default function useMembers() {
           setError(null);
         }
       } catch (err) {
-        // Backend not running yet, so fall back to sample data.
         if (isMounted) {
           setMembers(fallbackMembers);
           setError("Showing sample data because the API could not be reached.");

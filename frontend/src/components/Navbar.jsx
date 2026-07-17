@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import JoinClub from "../pages/JoinClub";
 
 const links = [
   { to: "/", label: "Home" },
@@ -33,7 +34,7 @@ export default function Navbar() {
           <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm">
             645
           </span>
-          Dwarka Running Club
+          Dwarka Chapter Running Club
         </NavLink>
 
         <div className="hidden md:flex items-center gap-8">
@@ -42,13 +43,13 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
-          <a href="#subscribe" className="btn-primary py-2 px-5 text-sm">
+          <NavLink to="/join" className="btn-primary py-2 px-5 text-sm">
             Join Club
-          </a>
+          </NavLink>
         </div>
 
         <button
-          className="md:hidden text-white"
+          className="md:hidden text-white font-medium border border-white rounded mx-2 px-3 py-1 hover:bg-white hover:text-dark transition-colors"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label="Toggle menu"
         >
@@ -69,7 +70,7 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
-          <a href="#subscribe" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
+          <a href="/join" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
             Join Club
           </a>
         </div>

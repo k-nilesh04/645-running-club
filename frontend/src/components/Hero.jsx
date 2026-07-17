@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export default function Hero() {
   return (
     <section
@@ -11,7 +13,7 @@ export default function Hero() {
     >
       <div className="max-w-3xl">
         <p className="uppercase tracking-[0.3em] text-primary text-xs font-display font-semibold mb-4">
-          Dwarka Sector 6 | Every Sunday | 5:45 AM
+          Dwarka Sector 23 | Every Sunday | 6:45 AM
         </p>
         <h1 className="font-display text-4xl md:text-6xl font-extrabold text-white leading-tight">
           645 Dwarka Chapter Running Club
@@ -19,9 +21,9 @@ export default function Hero() {
         <p className="font-display text-lg md:text-2xl text-accent mt-4">
           Run Every Sunday. Stay Healthy. Inspire Others.
         </p>
-        <a href="#subscribe" className="btn-primary mt-8 inline-block">
+        <NavLink to="/join" className="btn-primary mt-8 inline-block">
           Join Now
-        </a>
+        </NavLink>
       </div>
     </section>
   );

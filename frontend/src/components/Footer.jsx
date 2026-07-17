@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export default function Footer() {
   return (
     <footer className="border-t border-white/10 mt-16">
@@ -8,15 +10,14 @@ export default function Footer() {
         </div>
 
         <div className="flex gap-6 text-sm text-offwhite/70">
-          <a href="mailto:hello@645dwarkarunning.club" className="hover:text-primary">
+
+          <NavLink to="/" className="hover:text-primary">
             Email
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-primary">
+          </NavLink>
+          <a href="https://instagram.com/645dwarkachapter" target="_blank" rel="noreferrer" className="hover:text-primary">
             Instagram
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-primary">
-            LinkedIn
-          </a>
+          
         </div>
 
         <p className="text-xs text-offwhite/40">Copyright {new Date().getFullYear()} 645 Dwarka Chapter Running Club</p>
