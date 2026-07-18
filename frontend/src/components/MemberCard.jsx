@@ -18,8 +18,8 @@ export default function MemberCard({ member, rank }) {
         {initials}
       </div>
 
-      <h4 className="font-display font-semibold text-white">{member.name}</h4>
-      <p className="text-xs text-offwhite/50 mb-3">Age {member.age}</p>
+      <h4 className="font-display mb-3 font-semibold text-white">{member.name}</h4>
+      {/* <p className="text-xs text-offwhite/50 mb-3">Age {member.age}</p> */}
 
       <div className="grid grid-cols-2 gap-2 w-full text-xs text-offwhite/80">
         <div className="bg-dark/50 rounded-lg py-2">

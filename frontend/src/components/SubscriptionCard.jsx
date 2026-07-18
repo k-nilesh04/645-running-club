@@ -28,7 +28,7 @@ export default function SubscriptionCard() {
       setFormData({ name: "", email: "", phone: "", tshirtSize: "M" });
     } catch (err) {
       const message =
-        err.response?.data?.message || "Something went wrong. Please try again in a moment.";
+        err.response?.data?.message || "Please Pay directly to Club Leader Aakash.";
       setStatus({ state: "error", message });
     }
   };
@@ -37,13 +37,13 @@ export default function SubscriptionCard() {
     <div id="subscribe" className="card max-w-md mx-auto border-primary/30 hover:shadow-xl hover:shadow-primary/10 transition-shadow duration-300">
       <div className="flex items-baseline justify-between mb-4">
         <h3 className="font-display text-2xl font-bold text-white">Rs 299</h3>
-        <span className="text-offwhite/60 text-sm">/ month</span>
+        <span className="text-offwhite/60 text-sm">/ year</span>
       </div>
 
       <ul className="space-y-2 mb-4">
         {perks.map((perk) => (
           <li key={perk} className="flex items-center gap-2 text-sm text-offwhite/90">
-            <span className="text-primary text-xs font-bold" aria-hidden="true">OK</span> {perk}
+            <span className="text-primary text-xs font-bold" aria-hidden="true">✓ </span> {perk}
           </li>
         ))}
       </ul>
@@ -53,7 +53,7 @@ export default function SubscriptionCard() {
         <ul className="space-y-1">
           {swags.map((swag) => (
             <li key={swag} className="flex items-center gap-2 text-sm text-offwhite/90">
-              <span className="text-accent text-xs font-bold" aria-hidden="true">OK</span> {swag}
+              <span className="text-accent text-xs font-bold" aria-hidden="true">✓ </span> {swag}
             </li>
           ))}
         </ul>
@@ -106,7 +106,7 @@ export default function SubscriptionCard() {
 
       {status.message && (
         <p
-          className={`text-sm mt-3 text-center ${
+          className={`text-md mt-3 text-center ${
             status.state === "success" ? "text-primary" : "text-red-400"
           }`}
         >

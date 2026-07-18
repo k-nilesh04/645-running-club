@@ -56,7 +56,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="w-full px-4 sm:px-6 lg:px-8 m-8 md:my-16">
+      <section className="section lg:px-20 md:px-10 sm:px-4">
         <div className="max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-lg border border-gray-100">
           <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
             <iframe
