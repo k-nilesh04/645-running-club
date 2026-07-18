@@ -12,7 +12,7 @@ const whyJoin = [
 
 const testimonials = [
   { name: "Rahul", quote: "I lost 8 kg after joining.", rating: 5 },
-  { name: "Priya", quote: "The Sunday runs became the best part of my week.", rating: 5 },
+  { name: "Radhika", quote: "The Sunday runs became the best part of my week.", rating: 5 },
   { name: "Ankit", quote: "Made real friends while getting fit.", rating: 5 },
 ];
 
@@ -50,13 +50,13 @@ export default function Home() {
             </div>
             <div className="col-span-2">
               <p className="text-offwhite/50">Distance Options</p>
-              <p className="font-display font-semibold text-primary text-lg"> 5 KM / 10 KM</p>
+              <p className="font-display font-semibold text-primary text-lg"> 3 KM / 5 KM / 10 KM</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="w-full px-4 sm:px-6 lg:px-8 my-8 md:my-16">
+      <section className="w-full px-4 sm:px-6 lg:px-8 m-8 md:my-16">
         <div className="max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-lg border border-gray-100">
           <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
             <iframe
