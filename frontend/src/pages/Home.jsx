@@ -61,7 +61,7 @@ export default function Home() {
           <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
             <iframe
               title="Google Map"
-              src="https://www.google.com/maps?q=Lake,+Sector-23+-+Cycling+and+Walking+Track,+Dwarka,+Sector+23,+New+Delhi&output=embed"
+              src="https://www.google.com/maps?q=Bagrola+Creek+Park,+Dwarka,+Sector+23,+New+Delhi&output=embed"
               className="absolute top-0 left-0 w-full h-full border-0"
               allowFullScreen=""
               loading="lazy"
