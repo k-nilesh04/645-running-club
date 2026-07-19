@@ -77,7 +77,7 @@ export default function Home() {
           {["Improves Heart Health", "Burns Calories", "Reduces Stress", "Builds Discipline", "Meet Like-minded People"].map(
             (benefit) => (
               <div key={benefit} className="card text-center text-sm text-offwhite/90 flex items-center justify-center">
-                <span className="text-primary mr-2 text-xs font-bold" aria-hidden="true">OK</span> {benefit}
+                <span className="text-primary mr-2 text-xs font-bold" aria-hidden="true">✓ </span> {benefit}
               </div>
             )
           )}
