@@ -7,7 +7,7 @@ export default function Members() {
   return (
     <div className="section">
       <div className="text-center mb-10">
-        <h1 className="section-title">Our Members</h1>
+        <h1 className="section-title">Our Official Members</h1>
         <p className="text-offwhite/60">Runners who show up, Sunday after Sunday.</p>
       </div>
 

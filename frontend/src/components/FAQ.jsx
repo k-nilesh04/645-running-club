@@ -3,7 +3,7 @@ import { useState } from "react";
 const faqs = [
   {
     q: "Where do we meet every Sunday?",
-    a: "We meet at Dwarka Sector 6 Park at 5:45 AM. Look for the group in green 645 Running Club tees.",
+    a: "We meet at Dwarka Sector 23 Park at 6:45 AM. Look for the group in blue 645 DC Running Club tees.",
   },
   {
     q: "Do I need running experience to join?",
@@ -11,11 +11,11 @@ const faqs = [
   },
   {
     q: "What do I get with the premium subscription?",
-    a: "Priority registration, fitness tracking, weekly motivation, and free club swags: a running t-shirt, wrist band, and sticker pack.",
+    a: "Priority registration, fitness tracking, weekly motivation, and free club swags: a running t-shirt, wrist band, and many more.",
   },
   {
     q: "Is there a free way to participate?",
-    a: "Yes! Showing up for the Sunday run is always free. The Rs 299/month plan is optional and unlocks swags and extra perks.",
+    a: "Yes! Showing up for the Sunday run is always free. The Rs 299/year plan is optional and unlocks swags and extra perks.",
   },
 ];
 
