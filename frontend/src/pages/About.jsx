@@ -1,3 +1,5 @@
+import PhotoGallery from "../components/PhotoGallery";
+
 const coreValues = [
   { icon: "Health", title: "Health" },
   { icon: "Team", title: "Community" },
@@ -12,6 +14,14 @@ const mission = [
   "Create friendships.",
   "Spread positivity.",
 ];
+
+const vision = [
+  "Create India's strongest running community.",
+  "Build a self-sustaining ecosystem of health advocates.",
+  "Become the benchmark for community-driven fitness initiatives.",
+  "Turn daily routines into lifelong healthy lifestyles.",
+];
+
 
 export default function About() {
   return (
@@ -32,20 +42,26 @@ export default function About() {
           <p className="text-offwhite/80 leading-relaxed">
             645 Dwarka Chapter Running Club is a community-driven initiative that encourages people
             across all age groups to build a healthier lifestyle, one Sunday at a time. Every Sunday
-            morning, runners gather at Dwarka Sector 6 Park to improve their fitness, meet like-minded
+            morning, runners gather at Dwarka Sector 24 Park to improve their fitness, meet like-minded
             people, and build a routine that lasts.
           </p>
           <p className="text-offwhite/80 leading-relaxed mt-4">
-            Our mission is simple: make India health conscious.
+            Make India health conscious.
           </p>
         </div>
       </section>
 
       <section className="section grid md:grid-cols-2 gap-6">
+
         <div className="card">
           <h3 className="font-display text-xl font-bold text-white mb-2">Vision</h3>
-          <p className="text-offwhite/80">Create India's strongest running community.</p>
+          <ul className="space-y-1 text-offwhite/80">
+            {vision.map((item) => (
+              <li key={item}>- {item}</li>
+            ))}
+          </ul>
         </div>
+
         <div className="card">
           <h3 className="font-display text-xl font-bold text-white mb-2">Mission</h3>
           <ul className="space-y-1 text-offwhite/80">
@@ -54,7 +70,10 @@ export default function About() {
             ))}
           </ul>
         </div>
+
       </section>
+
+      <PhotoGallery />
 
       <section className="section">
         <h2 className="section-title text-center mb-10">Core Values</h2>

@@ -46,7 +46,7 @@ export default function Home() {
             </div>
             <div>
               <p className="text-offwhite/50">Location</p>
-              <p className="font-display font-semibold text-primary text-lg">Dwarka Sector 23 Park</p>
+              <p className="font-display font-semibold text-primary text-lg">Dwarka Sector 24 Park</p>
             </div>
             <div className="col-span-2">
               <p className="text-offwhite/50">Distance Options</p>

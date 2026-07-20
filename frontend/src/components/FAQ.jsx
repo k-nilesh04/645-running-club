@@ -3,7 +3,7 @@ import { useState } from "react";
 const faqs = [
   {
     q: "Where do we meet every Sunday?",
-    a: "We meet at Dwarka Sector 23 Park at 6:45 AM. Look for the group in blue 645 DC Running Club tees.",
+    a: "We meet at Dwarka Sector 24 Park at 6:45 AM. Look for the group in blue 645 DC Running Club tees.",
   },
   {
     q: "Do I need running experience to join?",
