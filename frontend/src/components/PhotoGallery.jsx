@@ -77,7 +77,7 @@ function Reel({ photos, direction, speed, label }) {
 
 export default function PhotoGallery() {
   return (
-    <section className="overflow-hidden bg-[#121110] py-20 text-[#f4efe4]">
+    <section className="overflow-hidden bg-[#1A1A1A] py-20 text-[#f4efe4]">
       <style>{`
         @keyframes pg-scroll-left {
           from { transform: translateX(0); }
