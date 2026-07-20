@@ -64,9 +64,7 @@ function Reel({ photos, direction, speed, label }) {
               draggable="false"
               className="h-full w-full scale-105 object-cover grayscale brightness-90 contrast-105 transition duration-500 ease-out group-hover/frame:scale-110 group-hover/frame:grayscale-0 group-hover/frame:brightness-100"
             />
-            <span className="absolute bottom-2 left-2 translate-y-1 bg-black/55 px-1.5 py-0.5 font-mono text-[0.68rem] tracking-wider text-[#c9a24b] opacity-0 transition duration-300 ease-out group-hover/frame:translate-y-0 group-hover/frame:opacity-100">
-              {String((i % photos.length) + 1).padStart(2, "0")}
-            </span>
+            
           </figure>
         ))}
       </div>
