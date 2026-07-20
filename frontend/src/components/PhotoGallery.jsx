@@ -6,11 +6,19 @@ const REEL_A = [
   "https://picsum.photos/id/1035/600/750",
   "https://picsum.photos/id/1045/600/750",
   "https://picsum.photos/id/1055/600/750",
+  "https://picsum.photos/id/1025/600/750",
+  "https://picsum.photos/id/1035/600/750",
+  "https://picsum.photos/id/1045/600/750",
+  "https://picsum.photos/id/1055/600/750",
   "https://picsum.photos/id/1065/600/750",
 ];
 
 const REEL_B = [
   "https://picsum.photos/id/1074/600/750",
+  "https://picsum.photos/id/1084/600/750",
+  "https://picsum.photos/id/109/600/750",
+  "https://picsum.photos/id/110/600/750",
+  "https://picsum.photos/id/111/600/750",
   "https://picsum.photos/id/1084/600/750",
   "https://picsum.photos/id/109/600/750",
   "https://picsum.photos/id/110/600/750",
