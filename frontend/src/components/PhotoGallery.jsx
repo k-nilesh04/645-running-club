@@ -1,8 +1,6 @@
 import React from "react";
-import { clubImage } from "../assets";
 
-
-const images = import.meta.glob('./clubImages/*.{png,jpg,jpeg,svg,webp}', { eager: true });
+const images = import.meta.glob('../clubImage/*.{png,jpg,jpeg,svg,webp}', { eager: true });
 
 
 function Sprockets() {
@@ -20,7 +18,8 @@ function Sprockets() {
 
 function Reel({ photos, direction, speed, label }) {
   // Photos are duplicated so the strip can loop seamlessly.
-  const strip = [...photos, ...photos];
+  const photoModules = Object.values(photos);
+  const strip = [...photoModules, ...photoModules];
   const animationClass =
     direction === "right" ? "animate-pg-scroll-right" : "animate-pg-scroll-left";
 
@@ -31,23 +30,24 @@ function Reel({ photos, direction, speed, label }) {
         className={`flex gap-3.5 bg-black px-3.5 py-2.5 ${animationClass} [animation-play-state:running] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]`}
         style={{ "--pg-duration": `${speed}s` }}
       >
-        {Object.values(images).map((mod, i) => {
-          const src = mod.default; 
-        
-          <figure
-            key={`${label}-${i}`}
-            className="group/frame relative h-[220px] w-[176px] shrink-0 overflow-hidden border border-[#33302b] bg-[#1a1816] sm:h-[176px] sm:w-[140px]"
-          >
-            <img
-              src={src}
-              alt=""
-              loading="lazy"
-              draggable="false"
-              className="h-full w-full scale-105 object-cover grayscale brightness-90 contrast-105 transition duration-500 ease-out group-hover/frame:scale-110 group-hover/frame:grayscale-0 group-hover/frame:brightness-100"
-            />
-            
-          </figure>
-        })};
+        {strip.map((mod, i) => {
+          const src = mod.default;
+
+          return (
+            <figure
+              key={`${label}-${i}`}
+              className="group/frame relative h-[220px] w-[176px] shrink-0 overflow-hidden border border-[#33302b] bg-[#1a1816] sm:h-[176px] sm:w-[140px]"
+            >
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                draggable="false"
+                className="h-full w-full scale-105 object-cover grayscale brightness-90 contrast-105 transition duration-500 ease-out group-hover/frame:scale-110 group-hover/frame:grayscale-0 group-hover/frame:brightness-100"
+              />
+            </figure>
+          );
+        })}
       </div>
       <Sprockets />
     </div>
