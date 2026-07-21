@@ -1,30 +1,9 @@
 import React from "react";
+import { clubImage } from "../assets";
 
-const REEL_A = [
-  "https://picsum.photos/id/1015/600/750",
-  "https://picsum.photos/id/1025/600/750",
-  "https://picsum.photos/id/1035/600/750",
-  "https://picsum.photos/id/1045/600/750",
-  "https://picsum.photos/id/1055/600/750",
-  "https://picsum.photos/id/1025/600/750",
-  "https://picsum.photos/id/1035/600/750",
-  "https://picsum.photos/id/1045/600/750",
-  "https://picsum.photos/id/1055/600/750",
-  "https://picsum.photos/id/1065/600/750",
-];
 
-const REEL_B = [
-  "https://picsum.photos/id/1074/600/750",
-  "https://picsum.photos/id/1084/600/750",
-  "https://picsum.photos/id/109/600/750",
-  "https://picsum.photos/id/110/600/750",
-  "https://picsum.photos/id/111/600/750",
-  "https://picsum.photos/id/1084/600/750",
-  "https://picsum.photos/id/109/600/750",
-  "https://picsum.photos/id/110/600/750",
-  "https://picsum.photos/id/111/600/750",
-  "https://picsum.photos/id/1082/600/750",
-];
+const images = import.meta.glob('./clubImages/*.{png,jpg,jpeg,svg,webp}', { eager: true });
+
 
 function Sprockets() {
   return (
@@ -52,7 +31,9 @@ function Reel({ photos, direction, speed, label }) {
         className={`flex gap-3.5 bg-black px-3.5 py-2.5 ${animationClass} [animation-play-state:running] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]`}
         style={{ "--pg-duration": `${speed}s` }}
       >
-        {strip.map((src, i) => (
+        {Object.values(images).map((mod, i) => {
+          const src = mod.default; 
+        
           <figure
             key={`${label}-${i}`}
             className="group/frame relative h-[220px] w-[176px] shrink-0 overflow-hidden border border-[#33302b] bg-[#1a1816] sm:h-[176px] sm:w-[140px]"
@@ -66,7 +47,7 @@ function Reel({ photos, direction, speed, label }) {
             />
             
           </figure>
-        ))}
+        })};
       </div>
       <Sprockets />
     </div>
@@ -102,8 +83,8 @@ export default function PhotoGallery() {
       
       </header>
 
-      <Reel photos={REEL_A} direction="left" speed={42} label="a" />
-      <Reel photos={REEL_B} direction="right" speed={50} label="b" />
+      <Reel photos={images} direction="left" speed={42} label="a" />
+      <Reel photos={images} direction="right" speed={50} label="b" />
 
       
     </section>
