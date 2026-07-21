@@ -9,7 +9,7 @@ const perks = [
   "Priority Registration",
 ];
 
-const swags = ["Running T-Shirt", "Wrist Band", "Sticker Pack"];
+const swags = ["Running T-Shirt", "Wrist Band", "and many more..."];
 
 export default function SubscriptionCard() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", tshirtSize: "M" });
