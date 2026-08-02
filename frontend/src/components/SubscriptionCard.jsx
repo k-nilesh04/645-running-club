@@ -35,8 +35,8 @@ export default function SubscriptionCard() {
 
   return (
     <div id="subscribe" className="card max-w-md mx-auto border-primary/30 hover:shadow-xl hover:shadow-primary/10 transition-shadow duration-300">
-      <div className="flex justify-center items-center p-4 mb-4 border border-yellow-200 rounded-lg">
-        <h3 className="font-display text-2xl font-bold text-yellow-500 text-center border border-amber-300 px-4 py-2 rounded">
+      <div className="flex justify-center items-center p-1 mb-4 border border-yellow-200 rounded-lg">
+        <h3 className="font-display text-2xl font-bold text-yellow-500 text-center border border-amber-300 px-2 py-1 rounded">
           ₹299 One Time Payment
         </h3>
       </div>
