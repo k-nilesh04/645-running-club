@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "What do I get with the premium subscription?",
-    a: "Priority registration, fitness tracking, weekly motivation, and free club swags: a running t-shirt, wrist band, and many more.",
+    a: "Priority registration, fitness tracking, weekly events, and club swags: a running t-shirt, wrist band, and many more.",
   },
   {
     q: "Is there a free way to participate?",

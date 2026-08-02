@@ -18,7 +18,7 @@ export default function Hero() {
         <h1 className="font-display text-4xl md:text-6xl font-extrabold text-white leading-tight">
           645 Run Club
         </h1>
-        <p className="font-display text-lg md:text-2xl text-accent mt-4">
+        <p className="font-display text-base md:text-xl text-accent mt-4">
           Run Every Sunday. Stay Healthy. Inspire Others.
         </p>
         <NavLink to="/join" className="btn-primary mt-8 inline-block">
