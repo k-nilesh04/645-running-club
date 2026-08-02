@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="border-t border-white/10 mt-16">
       <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <p className="font-display font-bold text-white">645 Dwarka Chapter Running Club</p>
+          <p className="font-display font-bold text-white">645 Run Club</p>
           <p className="text-sm text-offwhite/60">Run Every Sunday.</p>
         </div>
 
@@ -20,7 +20,7 @@ export default function Footer() {
           
         </div>
 
-        <p className="text-xs text-offwhite/40">Copyright {new Date().getFullYear()} 645 Dwarka Chapter Running Club</p>
+        <p className="text-xs text-offwhite/40">Copyright {new Date().getFullYear()} 645 Run Club</p>
       </div>
     </footer>
   );

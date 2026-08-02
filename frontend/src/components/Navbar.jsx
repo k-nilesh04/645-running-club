@@ -34,7 +34,7 @@ export default function Navbar() {
           <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm">
             645
           </span>
-          Dwarka Chapter Running Club
+          Run Club
         </NavLink>
 
         <div className="hidden md:flex items-center gap-8">

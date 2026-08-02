@@ -3,7 +3,7 @@ import { useState } from "react";
 const faqs = [
   {
     q: "Where do we meet every Sunday?",
-    a: "We meet at Dwarka Sector 24 Park at 6:45 AM. Look for the group in blue 645 DC Running Club tees.",
+    a: "We meet at Dwarka Sector 19B Park at 6:15 AM. Look for the group in blue 645 Run Club tees.",
   },
   {
     q: "Do I need running experience to join?",
@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "Is there a free way to participate?",
-    a: "Yes! Showing up for the Sunday run is always free. The Rs 299/year plan is optional and unlocks swags and extra perks.",
+    a: "Yes! Showing up for the Sunday run is always free. The Rs 99/month plan is optional and unlocks swags and extra perks.",
   },
 ];
 

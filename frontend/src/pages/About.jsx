@@ -17,7 +17,6 @@ const mission = [
 
 const vision = [
   "Create India's strongest running community.",
-  "Build a self-sustaining ecosystem of health advocates.",
   "Become the benchmark for community-driven fitness initiatives.",
   "Turn daily routines into lifelong healthy lifestyles.",
 ];
@@ -40,9 +39,9 @@ export default function About() {
         <div className="card max-w-3xl mx-auto">
           <h2 className="section-title">Our Story</h2>
           <p className="text-offwhite/80 leading-relaxed">
-            645 Dwarka Chapter Running Club is a community-driven initiative that encourages people
+            645 Run Club is a community-driven initiative that encourages people
             across all age groups to build a healthier lifestyle, one Sunday at a time. Every Sunday
-            morning, runners gather at Dwarka Sector 24 Park to improve their fitness, meet like-minded
+            morning, runners gather at Dwarka Sector 19B Park to improve their fitness, meet like-minded
             people, and build a routine that lasts.
           </p>
           <p className="text-offwhite/80 leading-relaxed mt-4">

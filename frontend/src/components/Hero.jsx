@@ -13,10 +13,10 @@ export default function Hero() {
     >
       <div className="max-w-3xl">
         <p className="uppercase tracking-[0.3em] text-primary text-xs font-display font-semibold mb-4">
-          Dwarka Sector 24 | Every Sunday | 6:45 AM
+          Dwarka Sector 19B Park | Every Sunday | 6:15 AM
         </p>
         <h1 className="font-display text-4xl md:text-6xl font-extrabold text-white leading-tight">
-          645 Dwarka Chapter Running Club
+          645 Run Club
         </h1>
         <p className="font-display text-lg md:text-2xl text-accent mt-4">
           Run Every Sunday. Stay Healthy. Inspire Others.

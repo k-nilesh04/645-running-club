@@ -7,7 +7,7 @@ const whyJoin = [
   { icon: "Fit", title: "Better Physical Health" },
   { icon: "Team", title: "Amazing Community" },
   { icon: "Goal", title: "Fitness Challenges" },
-  { icon: "Gear", title: "Free Club Swags" },
+  { icon: "Gear", title: "Club Swags" },
 ];
 
 const testimonials = [
@@ -42,11 +42,11 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-6 mt-6 text-sm">
             <div>
               <p className="text-offwhite/50">Meeting Time</p>
-              <p className="font-display font-semibold text-primary text-lg">6:45 AM</p>
+              <p className="font-display font-semibold text-primary text-lg">6:15 AM</p>
             </div>
             <div>
               <p className="text-offwhite/50">Location</p>
-              <p className="font-display font-semibold text-primary text-lg">Dwarka Sector 24 Park</p>
+              <p className="font-display font-semibold text-primary text-lg">Dwarka Sector 19B Park</p>
             </div>
             <div className="col-span-2">
               <p className="text-offwhite/50">Distance Options</p>
@@ -61,7 +61,7 @@ export default function Home() {
           <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
             <iframe
               title="Google Map"
-              src="https://www.google.com/maps?q=Bagrola+Creek+Park,+Dwarka,+Sector+23,+New+Delhi&output=embed"
+              src="https://www.google.com/maps?q=19B+Park,+Dwarka,+Sector+19,+New+Delhi&output=embed"
               className="absolute top-0 left-0 w-full h-full border-0"
               allowFullScreen=""
               loading="lazy"

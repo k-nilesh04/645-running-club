@@ -6,7 +6,7 @@ const perks = [
   "Community Support",
   "Fitness Tracking",
   "Weekly Motivation",
-  "Priority Registration",
+  "Weekly Challenges",
 ];
 
 const swags = ["Running T-Shirt", "Wrist Band", "and many more..."];
@@ -36,8 +36,12 @@ export default function SubscriptionCard() {
   return (
     <div id="subscribe" className="card max-w-md mx-auto border-primary/30 hover:shadow-xl hover:shadow-primary/10 transition-shadow duration-300">
       <div className="flex items-baseline justify-between mb-4">
-        <h3 className="font-display text-2xl font-bold text-white">Rs 299</h3>
-        <span className="text-offwhite/60 text-sm">/ year</span>
+        <h3 className="font-display text-2xl font-bold text-yellow">Rs 299 One Time Payment</h3>
+      </div>
+
+      <div className="flex items-baseline justify-between mb-4">
+        <h3 className="font-display text-2xl font-bold text-white">Rs 99</h3>
+        <span className="text-offwhite/60 text-sm">/ month</span>
       </div>
 
       <ul className="space-y-2 mb-4">
@@ -49,7 +53,7 @@ export default function SubscriptionCard() {
       </ul>
 
       <div className="bg-accent/10 border border-accent/30 rounded-xl p-4 mb-4">
-        <p className="font-display font-semibold text-accent mb-2">Free Club Swags</p>
+        <p className="font-display font-semibold text-accent mb-2">Club Swags</p>
         <ul className="space-y-1">
           {swags.map((swag) => (
             <li key={swag} className="flex items-center gap-2 text-sm text-offwhite/90">
