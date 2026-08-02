@@ -14,7 +14,7 @@ export default function Footer() {
           <NavLink to="/" className="hover:text-primary">
             Email
           </NavLink>
-          <a href="https://instagram.com/645dwarkachapter" target="_blank" rel="noreferrer" className="hover:text-primary">
+          <a href="https://instagram.com/645_runclub" target="_blank" rel="noreferrer" className="hover:text-primary">
             Instagram
           </a>
           
