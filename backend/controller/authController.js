@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendEmailVerificationCode } from "./verificationController.js";
 
 const createToken = (user) => {
   if (!process.env.JWT_SECRET) {
@@ -52,17 +53,21 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
+    await sendEmailVerificationCode(user);
+
     const token = createToken(user);
 
     res.status(201).json({
       success: true,
-      message: "Account created successfully",
+      message: "Account created successfully. Verification code sent to your email.",
+      requiresEmailVerification: true,
 
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
+        emailVerified: user.emailVerified,
       },
 
       token,

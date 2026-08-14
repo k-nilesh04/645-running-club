@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
+import { isLoggedIn } from "../utils/auth.js";
 
 export default function Hero() {
+  const loggedIn = isLoggedIn();
   return (
     <section
       className="relative flex items-center justify-center text-center px-6 py-28 md:py-40 overflow-hidden"
@@ -21,9 +23,11 @@ export default function Hero() {
         <p className="font-display text-base md:text-xl text-accent mt-4">
           Run Every Sunday. Stay Healthy. Inspire Others.
         </p>
-        <NavLink to="/join" className="btn-primary mt-8 inline-block">
-          Join Now
-        </NavLink>
+        {loggedIn && (
+          <NavLink to="/join" className="btn-primary mt-8 inline-block">
+            Join Now
+          </NavLink>
+        )}
       </div>
     </section>
   );

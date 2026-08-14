@@ -1,6 +1,66 @@
 import Run from "../models/run.model.js";
 import Attendance from "../models/attendance.model.js";
 
+// Create a new run (admin only)
+export const createRun = async (req, res) => {
+  try {
+    const { title, description, date, startTime, location, distance, maxParticipants } = req.body;
+
+    if (!title || !date || !startTime) {
+      return res.status(400).json({
+        success: false,
+        message: "Title, date, and start time are required"
+      });
+    }
+
+    const run = await Run.create({
+      title,
+      description,
+      date,
+      startTime,
+      location,
+      distance,
+      maxParticipants,
+      status: "upcoming"
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Run created successfully",
+      run
+    });
+  } catch (error) {
+    console.error("Create run error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+// Get all upcoming runs
+export const getUpcomingRuns = async (req, res) => {
+  try {
+    const runs = await Run.find({
+      status: { $in: ["upcoming", "ongoing"] },
+      date: { $gte: new Date() }
+    }).sort({ date: 1 });
+
+    return res.status(200).json({
+      success: true,
+      runs
+    });
+  } catch (error) {
+    console.error("Get runs error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
 // Register user for a run
 export const registerForRun = async (req, res) => {
   try {

@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-// import { fetchMembers } from "../api/api.js";
 import fallbackMembers from "../data/members.js";
 
 export default function useMembers() {
@@ -9,30 +8,9 @@ export default function useMembers() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const loadMembers = async () => {
-      setLoading(true);
-      try {
-        const { data } = await fetchMembers();
-        if (isMounted) {
-          setMembers(data);
-          setError(null);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setMembers(fallbackMembers);
-          setError("Showing sample data because the API could not be reached.");
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    loadMembers();
-    return () => {
-      isMounted = false;
-    };
+    setMembers(fallbackMembers);
+    setError("Backend does not expose a members list API yet.");
+    setLoading(false);
   }, []);
 
   const filteredMembers = useMemo(() => {

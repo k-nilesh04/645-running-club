@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import JoinClub from "../pages/JoinClub";
+import { NavLink, useNavigate } from "react-router-dom";
+import { authChangedEvent, clearAuthSession, isLoggedIn } from "../utils/auth.js";
+import { logoutUser } from "../api/api.js";
 
 const links = [
   { to: "/", label: "Home" },
@@ -8,15 +9,66 @@ const links = [
   { to: "/members", label: "Members" },
 ];
 
+const privateLinks = [
+  { to: "/runs/register", label: "Run Register" },
+];
+
+
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn());
+  const [userInitial, setUserInitial] = useState("U");
+  const navigate = useNavigate();
+  
+  const handleButtonClick = () => {
+    if (!loggedIn) {
+      return alert("Please sign up or sign in to continue!");
+    }
+    console.log("Proceeding with action...");
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const syncAuth = () => {
+      setLoggedIn(isLoggedIn());
+
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        setUserInitial((user.name || user.email || "U").trim().charAt(0).toUpperCase());
+      } catch (error) {
+        setUserInitial("U");
+      }
+    };
+
+    syncAuth();
+
+    window.addEventListener(authChangedEvent, syncAuth);
+    window.addEventListener("storage", syncAuth);
+
+    return () => {
+      window.removeEventListener(authChangedEvent, syncAuth);
+      window.removeEventListener("storage", syncAuth);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      // Local logout should still happen if the backend session is already gone.
+    } finally {
+      clearAuthSession();
+      setMenuOpen(false);
+      navigate("/auth");
+    }
+  };
 
   const navLinkClass = ({ isActive }) =>
     `font-display text-sm font-medium transition-colors ${
@@ -43,18 +95,69 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
-          <NavLink to="/join" className="btn-primary py-2 px-5 text-sm">
-            Join Club
-          </NavLink>
+          {
+            privateLinks.map((link) => (
+              <NavLink key={link.to} to={link.to} onClick={handleButtonClick} className={navLinkClass}>
+                {link.label}
+              </NavLink>
+            ))}
+          {loggedIn && (
+            <NavLink to="/join" className="btn-primary py-2 px-5 text-sm">
+              Join Club
+            </NavLink>
+          )}
+          {loggedIn ? (
+            <>
+              <NavLink
+                to="/profile"
+                aria-label="Profile"
+                title="Profile"
+                className={({ isActive }) =>
+                  `w-10 h-10 rounded-full flex items-center justify-center font-display font-bold border transition-colors ${
+                    isActive
+                      ? "bg-primary text-white border-primary"
+                      : "bg-dark text-primary border-primary/60 hover:bg-primary hover:text-white"
+                  }`
+                }
+              >
+                {userInitial}
+              </NavLink>
+              <button type="button" onClick={handleLogout} className="btn-outline py-2 px-5 text-sm">
+                Logout
+              </button>
+            </>
+          ) : (
+            <NavLink to="/auth" className="btn-outline py-2 px-5 text-sm">
+              Login
+            </NavLink>
+          )}
         </div>
 
-        <button
-          className="md:hidden text-white font-medium border border-white rounded mx-2 px-3 py-1 hover:bg-white hover:text-dark transition-colors"
-          onClick={() => setMenuOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? "Close" : "Menu"}
-        </button>
+        <div className="md:hidden flex items-center gap-3">
+          {loggedIn && (
+            <NavLink
+              to="/profile"
+              aria-label="Profile"
+              title="Profile"
+              className={({ isActive }) =>
+                `w-10 h-10 rounded-full flex items-center justify-center font-display font-bold border transition-colors ${
+                  isActive
+                    ? "bg-primary text-white border-primary"
+                    : "bg-dark text-primary border-primary/60 hover:bg-primary hover:text-white"
+                }`
+              }
+            >
+              {userInitial}
+            </NavLink>
+          )}
+          <button
+            className="text-white font-medium border border-white rounded px-3 py-1 hover:bg-white hover:text-dark transition-colors"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
+        </div>
       </nav>
 
       {menuOpen && (
@@ -70,9 +173,31 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
-          <NavLink to="/join" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
-            Join Club
-          </NavLink>
+          {
+            privateLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={navLinkClass}
+                onClick={() => { handleButtonClick(); setMenuOpen(false); }}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          {loggedIn && (
+            <NavLink to="/join" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
+              Join Club
+            </NavLink>
+          )}
+          {loggedIn ? (
+            <button type="button" onClick={handleLogout} className="btn-outline text-center">
+              Logout
+            </button>
+          ) : (
+            <NavLink to="/auth" className="btn-outline text-center" onClick={() => setMenuOpen(false)}>
+              Login
+            </NavLink>
+          )}
         </div>
       )}
     </header>

@@ -8,11 +8,7 @@ export default function MemberCard({ member, rank }) {
 
   return (
     <div className="card flex flex-col items-center text-center hover:-translate-y-1 transition-transform duration-200">
-      {typeof rank === "number" && (
-        <span className="self-start bg-accent text-dark text-xs font-display font-bold px-2 py-1 rounded-full mb-2">
-          #{rank}
-        </span>
-      )}
+      
 
       <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center font-display font-bold text-primary text-lg mb-3">
         {initials}

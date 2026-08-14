@@ -21,7 +21,6 @@ export default function Members() {
         />
       </div>
 
-      {error && <p className="text-center text-accent text-sm mb-6">{error}</p>}
 
       {loading ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -32,7 +31,7 @@ export default function Members() {
       ) : members.length === 0 ? (
         <p className="text-center text-offwhite/50">No members match that search.</p>
       ) : (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
           {members.map((member, index) => (
             <MemberCard key={member._id} member={member} rank={index + 1} />
           ))}
