@@ -16,3 +16,14 @@ Authorization: Bearer looki
 {
     "email": "k.nilesh4230@gmail.com"
 }
+
+###
+POST http://localhost:3000/api/verification/verify-otp
+Content-Type: application/json
+Authorization: Bearer looki
+
+{
+    "email": "k.nilesh4230@gmail.com",
+    "otp": "876154"
+}
+
