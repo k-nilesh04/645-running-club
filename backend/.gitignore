@@ -1,59 +1,46 @@
-# =========================================================================
-# 1. DEPENDENCIES & PACKAGES (Never push these, they make your repo massive)
-# =========================================================================
-node_modules/
-**/node_modules/
-jspm_packages/
-typings/
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
 
-# =========================================================================
-# 2. SECURITY & ENVIRONMENT VARIABLES (CRITICAL: Never leak your API/DB keys)
-# =========================================================================
+# Environment and configuration variables
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
-*.env
-config.js
-config/local.js
+.env.*.local
 
-# =========================================================================
-# 3. PRODUCTION BUILDS & OUTPUTS (Generated automatically on deployment)
-# =========================================================================
-# Frontend build folders (React / Vite / Create React App)
-dist/
-build/
-**/dist/
-**/build/
-out/
-.next/
+# Editor and IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
 
-# =========================================================================
-# 4. LOGS, CACHES, AND DIAGNOSTICS
-# =========================================================================
+# Logs and databases
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-.eslintcache
-.stylelintcache
-.cache/
+*.sqlite
+*.sqlite3
 
-# =========================================================================
-# 5. IDE, EDITORS, AND SYSTEM FILES (Specific to your personal computer)
-# =========================================================================
-# IDEs
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.swp
-
-# Operating Systems
-.DS_Store
-Thumbs.db
-ehthumbs.db
+# Build outputs and dependencies
+node_modules/
+dist/
+build/
+target/
+out/
+bin/
+*.class
+*.pyc
+*.pyo
+.pnp*
+.next/
+.nuxt/

@@ -1,24 +1,24 @@
 {
-  "name": "645-running-club-backend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Backend API for 645 Dwarka Chapter Running Club",
-  "main": "server.js",
+  "description": "",
+  "license": "ISC",
+  "author": "papa",
   "type": "module",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "seed": "node seed.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.22.2",
-    "mongoose": "^8.5.0"
-  },
-  "devDependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.2",
+    "nodemailer": "^9.0.5",
     "nodemon": "^3.1.14"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  }
 }
