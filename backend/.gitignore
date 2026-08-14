@@ -12,6 +12,9 @@ Desktop.ini
 .env
 .env.local
 .env.*.local
+.env.development
+.env.test
+.env.production
 
 # Editor and IDE files
 .idea/
@@ -30,6 +33,7 @@ yarn-error.log*
 pnpm-debug.log*
 *.sqlite
 *.sqlite3
+*.pid
 
 # Build outputs and dependencies
 node_modules/
@@ -45,3 +49,9 @@ bin/
 .next/
 .nuxt/
 test.rest
+
+# Test coverage and temporary files
+coverage/
+.nyc_output/
+tmp/
+temp/

@@ -11,9 +11,13 @@ typings/
 # =========================================================================
 .env
 .env.local
+.env.development
+.env.test
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*.local
 *.env
 config.js
 config/local.js
@@ -40,6 +44,8 @@ pnpm-debug.log*
 .eslintcache
 .stylelintcache
 .cache/
+coverage/
+.nyc_output/
 
 # =========================================================================
 # 5. IDE, EDITORS, AND SYSTEM FILES (Specific to your personal computer)
@@ -57,4 +63,6 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 ehthumbs.db
+Desktop.ini
 backend/test.rest
+test.rest
