@@ -57,3 +57,4 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 ehthumbs.db
+test.rest

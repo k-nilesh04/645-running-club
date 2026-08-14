@@ -14,13 +14,15 @@ const transporter = nodemailer.createTransport({
 });
 
 // Verify transporter connection
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("Email transporter error:", error.message);
-  } else {
-    console.log("Email transporter is ready");
-  }
-});
+if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+  transporter.verify((error) => {
+    if (error) {
+      console.error("Email transporter error:", error.message);
+    } else {
+      console.log("Email transporter is ready");
+    }
+  });
+}
 
 // GENERATE OTP
 const generateOTP = () => {
@@ -126,7 +128,7 @@ const sendVerificationOTP = async (req, res) => {
           If you didn't create a 645 Run Club account, you can safely ignore this email.
         </p>
         <p style="margin: 20px 0 0; font-size: 14px; color: #111827;">
-          Keep running 🏃‍♂️<br />
+          Miles better together.🏃‍♂️<br />
           <strong>The 645 Run Club Team</strong>
         </p>
       </div>

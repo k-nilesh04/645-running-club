@@ -5,6 +5,7 @@ import connectDB from './utils/db.js';
 import dotenv from 'dotenv';
 import userRoutes from './route/user.route.js';
 import verificationRoutes from './route/verificationRoutes.js';
+import runRoutes from './route/run.route.js';
 
 
 dotenv.config({});
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
  
 app.use('/api/user', userRoutes);
 app.use("/api/verification", verificationRoutes);
+app.use("/api/runs", runRoutes);
 
 app.listen(port, () => {
   connectDB(); 

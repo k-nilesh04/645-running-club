@@ -44,3 +44,4 @@ bin/
 .pnp*
 .next/
 .nuxt/
+test.rest

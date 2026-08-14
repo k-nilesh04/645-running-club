@@ -2,6 +2,22 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+const createToken = (user) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not configured");
+  }
+
+  return jwt.sign(
+    {
+      id: user._id,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
+};
 
 // SIGNUP
 export const signup = async (req, res) => {
@@ -36,17 +52,7 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    // Create JWT
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      },
-    );
+    const token = createToken(user);
 
     res.status(201).json({
       success: true,
@@ -106,17 +112,7 @@ export const login = async (req, res) => {
       });
     }
 
-    // Create JWT
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      },
-    );
+    const token = createToken(user);
     return res
       .status(200)
       .cookie("token", token, {
