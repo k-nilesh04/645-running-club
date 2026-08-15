@@ -1,7 +1,11 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendEmailVerificationCode } from "./verificationController.js";
+import {
+  pendingSignups,
+  generateOTP,
+  sendEmailVerificationCode,
+} from "./verificationController.js";
 
 const createToken = (user) => {
   if (!process.env.JWT_SECRET) {
@@ -24,9 +28,10 @@ const createToken = (user) => {
 export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    const normalizedEmail = String(email || "").trim().toLowerCase();
 
     // Check required fields
-    if (!name || !email || !password) {
+    if (!name || !normalizedEmail || !password) {
       return res.status(400).json({
         success: false,
         message: "Name, email and password are required",
@@ -34,7 +39,7 @@ export const signup = async (req, res) => {
     }
 
     // Check existing email
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: normalizedEmail });
 
     if (existingUser) {
       return res.status(400).json({
@@ -43,29 +48,32 @@ export const signup = async (req, res) => {
       });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const otp = generateOTP();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // Create user but keep the account pending verification until OTP succeeds.
-    const user = await User.create({
+    pendingSignups.set(normalizedEmail, {
       name,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
-      emailVerified: false,
+      otp,
+      expiresAt,
     });
 
-    await sendEmailVerificationCode(user);
+    await sendEmailVerificationCode({
+      email: normalizedEmail,
+      otp,
+      name,
+    });
 
     return res.status(201).json({
       success: true,
       message: "Account created successfully. Verification code sent to your email.",
       requiresEmailVerification: true,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        emailVerified: user.emailVerified,
+        name,
+        email: normalizedEmail,
+        emailVerified: false,
       },
     });
   } catch (error) {
@@ -73,7 +81,7 @@ export const signup = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Server error",
+      message: error.message || "Server error",
     });
   }
 };
@@ -145,7 +153,7 @@ export const login = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Server error",
+      message: error.message || "Server error",
     });
   }
 };
@@ -168,7 +176,7 @@ export const logout = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Server error",
+      message: error.message || "Server error",
     });
   }
 };

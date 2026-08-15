@@ -23,30 +23,23 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
   });
 }
 
-const generateOTP = () => {
+export const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-export const sendEmailVerificationCode = async (user) => {
+export const pendingSignups = new Map();
+
+export const sendEmailVerificationCode = async ({ email, otp, name }) => {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     throw new Error("Email service not configured");
   }
 
-  if (user.emailVerified) {
-    throw new Error("Email is already verified");
-  }
-
-  const otp = generateOTP();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-  user.emailVerificationCode = otp;
-  user.emailVerificationExpires = expiresAt;
-
-  await user.save();
+  const normalizedEmail = String(email).trim().toLowerCase();
+  const code = otp || generateOTP();
 
   await transporter.sendMail({
     from: `"645 Run Club" <${process.env.EMAIL_USER}>`,
-    to: user.email,
+    to: normalizedEmail,
     subject: "Verify your 645 Run Club account",
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; background: #ffffff;">
@@ -56,10 +49,10 @@ export const sendEmailVerificationCode = async (user) => {
         <div style="border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px; padding: 32px;">
           <h2 style="margin: 0 0 8px; font-size: 20px; color: #111827;">Verify your email</h2>
           <p style="margin: 0 0 24px; font-size: 15px; color: #6b7280; line-height: 1.5;">
-            Use the code below to verify your email address and finish setting up your account.
+            Hi ${name || "runner"}, use the code below to verify your email address and finish setting up your account.
           </p>
           <div style="font-size: 34px; font-weight: 700; letter-spacing: 10px; text-align: center; padding: 22px 10px; background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 10px; color: #111827; margin: 0 0 20px;">
-            ${otp}
+            ${code}
           </div>
           <p style="margin: 0 0 24px; font-size: 13px; color: #9ca3af; text-align: center;">
             This code expires in <strong style="color: #6b7280;">10 minutes</strong>.
@@ -79,29 +72,47 @@ export const sendEmailVerificationCode = async (user) => {
       </div>
     `,
   });
+
+  return code;
 };
 
 const sendVerificationOTP = async (req, res) => {
   try {
     const { email } = req.body;
+    const normalizedEmail = String(email || "").trim().toLowerCase();
 
-    if (!email) {
+    if (!normalizedEmail) {
       return res.status(400).json({
         success: false,
         message: "Email is required",
       });
     }
 
-    const user = await User.findOne({ email });
+    const pending = pendingSignups.get(normalizedEmail);
 
-    if (!user) {
+    if (!pending) {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: "Signup request not found or expired",
       });
     }
 
-    await sendEmailVerificationCode(user);
+    if (pending.expiresAt < new Date()) {
+      pendingSignups.delete(normalizedEmail);
+      return res.status(400).json({
+        success: false,
+        message: "Verification code has expired. Please signup again.",
+      });
+    }
+
+    const otp = await sendEmailVerificationCode({
+      email: pending.email,
+      otp: pending.otp,
+      name: pending.name,
+    });
+
+    pending.otp = otp;
+    pending.expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     return res.status(200).json({
       success: true,
@@ -120,55 +131,63 @@ const sendVerificationOTP = async (req, res) => {
 const verifyEmailOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
+    const normalizedEmail = String(email || "").trim().toLowerCase();
 
-    if (!email || !otp) {
+    if (!normalizedEmail || !otp) {
       return res.status(400).json({
         success: false,
         message: "Email and OTP are required",
       });
     }
 
-    const user = await User.findOne({ email });
+    const pending = pendingSignups.get(normalizedEmail);
 
-    if (!user) {
+    if (!pending) {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: "Signup request not found or expired",
       });
     }
 
-    if (user.emailVerified) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is already verified",
-      });
-    }
-
-    if (user.emailVerificationCode !== otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid verification code",
-      });
-    }
-
-    if (
-      !user.emailVerificationExpires ||
-      user.emailVerificationExpires < new Date()
-    ) {
+    if (pending.expiresAt < new Date()) {
+      pendingSignups.delete(normalizedEmail);
       return res.status(400).json({
         success: false,
         message: "Verification code has expired",
       });
     }
 
-    user.emailVerified = true;
-    user.emailVerificationCode = undefined;
-    user.emailVerificationExpires = undefined;
+    if (pending.otp !== String(otp).trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid verification code",
+      });
+    }
 
-    await user.save();
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      pendingSignups.delete(normalizedEmail);
+      return res.status(400).json({
+        success: false,
+        message: "Email is already registered",
+      });
+    }
+
+    const createdUser = await User.create({
+      name: pending.name,
+      email: pending.email,
+      password: pending.password,
+      emailVerified: true,
+    });
+
+    pendingSignups.delete(normalizedEmail);
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not configured");
+    }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { id: createdUser._id, role: createdUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -178,11 +197,11 @@ const verifyEmailOTP = async (req, res) => {
       message: "Email verified successfully",
       token,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        emailVerified: user.emailVerified,
+        id: createdUser._id,
+        name: createdUser.name,
+        email: createdUser.email,
+        role: createdUser.role,
+        emailVerified: createdUser.emailVerified,
       },
     });
   } catch (error) {
@@ -190,7 +209,7 @@ const verifyEmailOTP = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Failed to verify email",
+      message: error.message || "Failed to verify email",
     });
   }
 };
