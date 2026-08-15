@@ -223,6 +223,10 @@ export default function AdminDashboard() {
                         <p className="text-white">{selectedAttendance.user?.gender || "N/A"}</p>
                       </div>
                       <div className="bg-dark/40 rounded-lg p-3">
+                        <p className="text-offwhite/50 mb-1">Contact</p>
+                        <p className="text-white">{selectedAttendance.user?.emergencyContact.phone || "N/A"}</p>
+                      </div>
+                      <div className="bg-dark/40 rounded-lg p-3">
                         <p className="text-offwhite/50 mb-1">Run</p>
                         <p className="text-white">{selectedAttendance.run?.title || "No run"}</p>
                       </div>
