@@ -29,7 +29,7 @@ export default function EmailVerificationModal({ email, onVerified }) {
     try {
       const { data } = await verifyEmailOtp({ email, otp });
 
-      saveAuthSession({ user: data.user });
+      saveAuthSession({ token: data.token, user: data.user });
 
       setStatus({
         type: "success",

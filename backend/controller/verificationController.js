@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -166,9 +167,16 @@ const verifyEmailOTP = async (req, res) => {
 
     await user.save();
 
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
     return res.status(200).json({
       success: true,
       message: "Email verified successfully",
+      token,
       user: {
         id: user._id,
         name: user.name,

@@ -46,22 +46,20 @@ export const signup = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Create user but keep the account pending verification until OTP succeeds.
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
+      emailVerified: false,
     });
 
     await sendEmailVerificationCode(user);
 
-    const token = createToken(user);
-
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Account created successfully. Verification code sent to your email.",
       requiresEmailVerification: true,
-
       user: {
         id: user._id,
         name: user.name,
@@ -69,8 +67,6 @@ export const signup = async (req, res) => {
         role: user.role,
         emailVerified: user.emailVerified,
       },
-
-      token,
     });
   } catch (error) {
     console.error("Signup Error:", error);
@@ -114,6 +110,13 @@ export const login = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
+      });
+    }
+
+    if (!user.emailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: "Please verify your email before logging in",
       });
     }
 

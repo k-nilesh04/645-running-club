@@ -38,8 +38,6 @@ export default function Auth() {
         : { email: formData.email, password: formData.password };
       const { data } = isSignup ? await signupUser(payload) : await loginUser(payload);
 
-      saveAuthSession({ token: data.token, user: data.user });
-
       setStatus({
         type: "success",
         message: data.message || "Success",
@@ -50,6 +48,7 @@ export default function Auth() {
         return;
       }
 
+      saveAuthSession({ token: data.token, user: data.user });
       navigate(redirectPath);
     } catch (error) {
       console.error("Auth Error:", error);
