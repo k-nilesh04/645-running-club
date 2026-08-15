@@ -21,7 +21,7 @@ const corsOptions = {
     'http://localhost:5173', 
     'http://127.0.0.1:5173', 
     'https://645-running-club.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true, // Allow cookies to be sent with requests
 }
@@ -38,8 +38,29 @@ app.use("/api/runs", runRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/admin", adminRoutes);
 
-app.listen(port, () => {
-  connectDB(); 
-  console.log(`Server is running on port ${port}`);
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ success: true, message: 'API is running' });
 });
+
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: `Route not found: ${req.originalUrl}` });
+});
+
+app.use((error, req, res, next) => {
+  console.error('Unhandled error:', error);
+  res.status(error.status || 500).json({
+    success: false,
+    message: error.message || 'Server error',
+  });
+});
+
+const startServer = async () => {
+  await connectDB();
+
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+};
+
+startServer();
 

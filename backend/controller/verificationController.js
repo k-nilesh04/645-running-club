@@ -40,6 +40,17 @@ export const generateOTP = () => {
 
 export const pendingSignups = new Map();
 
+// Pending signups live in memory, so expired entries are dropped to avoid unbounded growth.
+export const prunePendingSignups = () => {
+  const now = new Date();
+
+  for (const [email, pending] of pendingSignups) {
+    if (pending.expiresAt < now) {
+      pendingSignups.delete(email);
+    }
+  }
+};
+
 export const sendEmailVerificationCode = async ({ email, otp, name }) => {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     throw new Error("Email service not configured");

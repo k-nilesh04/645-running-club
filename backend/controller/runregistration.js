@@ -1,5 +1,12 @@
+import mongoose from "mongoose";
 import Run from "../models/run.model.js";
 import Attendance from "../models/attendance.model.js";
+
+const invalidRunIdResponse = (res) =>
+  res.status(400).json({
+    success: false,
+    message: "Invalid run id"
+  });
 
 // Create a new run (admin only)
 export const createRun = async (req, res) => {
@@ -21,7 +28,8 @@ export const createRun = async (req, res) => {
       location,
       distance,
       maxParticipants,
-      status: "upcoming"
+      status: "upcoming",
+      createdBy: req.user?.id
     });
 
     return res.status(201).json({
@@ -42,9 +50,12 @@ export const createRun = async (req, res) => {
 // Get all upcoming runs
 export const getUpcomingRuns = async (req, res) => {
   try {
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
     const runs = await Run.find({
       status: { $in: ["upcoming", "ongoing"] },
-      date: { $gte: new Date() }
+      date: { $gte: startOfToday }
     }).sort({ date: 1 });
 
     return res.status(200).json({
@@ -71,7 +82,9 @@ export const getMyRegistrations = async (req, res) => {
       status: { $in: ["registered", "present"] }
     }).select("run");
 
-    const runIds = registrations.map((item) => item.run.toString());
+    const runIds = registrations
+      .filter((item) => item.run)
+      .map((item) => item.run.toString());
 
     return res.status(200).json({
       success: true,
@@ -92,6 +105,10 @@ export const registerForRun = async (req, res) => {
   try {
     const userId = req.user.id;
     const { runId } = req.params;
+
+    if (!mongoose.isValidObjectId(runId)) {
+      return invalidRunIdResponse(res);
+    }
 
     // 1. Check if run exists
     const run = await Run.findById(runId);
@@ -178,6 +195,10 @@ export const unregisterForRun = async (req, res) => {
   try {
     const userId = req.user.id;
     const { runId } = req.params;
+
+    if (!mongoose.isValidObjectId(runId)) {
+      return invalidRunIdResponse(res);
+    }
 
     const registration = await Attendance.findOneAndDelete({
       user: userId,

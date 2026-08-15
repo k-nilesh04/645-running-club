@@ -63,7 +63,7 @@ export default function Home() {
               title="Google Map"
               src="https://www.google.com/maps?q=19B+Park,+Dwarka,+Sector+19,+New+Delhi&output=embed"
               className="absolute top-0 left-0 w-full h-full border-0"
-              allowFullScreen=""
+              allowFullScreen
               loading="lazy"
             ></iframe>
           </div>

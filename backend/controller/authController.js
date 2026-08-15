@@ -5,7 +5,16 @@ import {
   pendingSignups,
   generateOTP,
   sendEmailVerificationCode,
+  prunePendingSignups,
 } from "./verificationController.js";
+
+const isProduction = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+};
 
 const createToken = (user) => {
   if (!process.env.JWT_SECRET) {
@@ -47,6 +56,8 @@ export const signup = async (req, res) => {
         message: "Email is already registered",
       });
     }
+
+    prunePendingSignups();
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const otp = generateOTP();
@@ -92,9 +103,10 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = String(email || "").trim().toLowerCase();
 
     // Check fields
-    if (!email || !password) {
+    if (!normalizedEmail || !password) {
       return res.status(400).json({
         success: false,
         message: "Email and password are required",
@@ -102,7 +114,7 @@ export const login = async (req, res) => {
     }
 
     // Find user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
       return res.status(401).json({
@@ -132,9 +144,8 @@ export const login = async (req, res) => {
     return res
       .status(200)
       .cookie("token", token, {
-        maxAge: 1 * 24 * 60 * 60 * 1000 * 7,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        ...cookieOptions,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .json({
         success: true,
@@ -166,7 +177,7 @@ export const logout = async (req, res) => {
   try {
     return res
       .status(200)
-      .cookie("token", "", { maxAge: 0 })
+      .clearCookie("token", cookieOptions)
       .json({
         success: true,
         message: "Logout successful",

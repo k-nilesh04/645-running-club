@@ -1,17 +1,26 @@
+import mongoose from "mongoose";
 import Membership from "../models/membership.model.js";
 import Payment from "../models/payment.model.js";
-import User from "../models/user.model.js";
+
+// Prices are defined on the server so they cannot be tampered with by the client.
+const PLAN_PRICES = {
+  monthly: 99,
+  quarterly: 279,
+  yearly: 999,
+  lifetime: 2999,
+};
 
 // Initiate payment (for Razorpay or similar gateway)
 export const initiatePayment = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { plan, amount } = req.body;
+    const { plan } = req.body;
+    const amount = PLAN_PRICES[plan];
 
-    if (!plan || !amount) {
+    if (!amount) {
       return res.status(400).json({
         success: false,
-        message: "Plan and amount are required",
+        message: `Invalid plan. Choose one of: ${Object.keys(PLAN_PRICES).join(", ")}`,
       });
     }
 
@@ -81,12 +90,31 @@ export const verifyPayment = async (req, res) => {
       });
     }
 
-    // Update payment status to success
-    const payment = await Payment.findByIdAndUpdate(
-      paymentId,
+    if (
+      !mongoose.isValidObjectId(paymentId) ||
+      !mongoose.isValidObjectId(membershipId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payment or membership id",
+      });
+    }
+
+    // Only the owner of the payment and membership may verify them.
+    const membership = await Membership.findOne({ _id: membershipId, user: userId });
+    if (!membership) {
+      return res.status(404).json({
+        success: false,
+        message: "Membership not found",
+      });
+    }
+
+    const payment = await Payment.findOneAndUpdate(
+      { _id: paymentId, user: userId, membership: membership._id },
       {
         status: "success",
         transactionId: transactionId,
+        paidAt: new Date(),
       },
       { new: true }
     );
@@ -102,14 +130,6 @@ export const verifyPayment = async (req, res) => {
     const startDate = new Date();
     let endDate = new Date();
 
-    const membership = await Membership.findById(membershipId);
-    if (!membership) {
-      return res.status(404).json({
-        success: false,
-        message: "Membership not found",
-      });
-    }
-
     if (membership.plan === "monthly") {
       endDate.setMonth(endDate.getMonth() + 1);
     } else if (membership.plan === "quarterly") {
@@ -122,7 +142,7 @@ export const verifyPayment = async (req, res) => {
 
     // Update membership status to active
     const updatedMembership = await Membership.findByIdAndUpdate(
-      membershipId,
+      membership._id,
       {
         status: "active",
         startDate: startDate,
