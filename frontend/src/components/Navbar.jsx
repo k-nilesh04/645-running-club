@@ -208,8 +208,7 @@ export default function Navbar() {
           {loggedIn && currentUser.role === "admin" && (
             <NavLink
               to="/admin"
-              className="font-display text-sm font-medium text-primary hover:text-white"
-              onClick={() => setMenuOpen(false)}>
+              className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
               Admin
             </NavLink>
           )}
