@@ -9,7 +9,14 @@ export default function ProtectedRoute({ children, requiredRole }) {
   }
 
   if (requiredRole) {
-    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    let storedUser = {};
+
+    try {
+      storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    } catch (error) {
+      storedUser = {};
+    }
+
     if (storedUser.role !== requiredRole) {
       return <Navigate to="/" replace />;
     }

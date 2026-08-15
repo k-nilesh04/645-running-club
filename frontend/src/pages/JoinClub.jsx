@@ -4,7 +4,7 @@ import SubscriptionCard from '../components/SubscriptionCard'
 const JoinClub = () => {
   return (
     <div>
-      <section className="section">
+      <section id="subscribe" className="section">
         <div className="text-center mb-10">
           <h2 className="section-title">Become a Premium Runner</h2>
           <p className="text-offwhite/60">Support our mission and receive exclusive club merchandise.</p>

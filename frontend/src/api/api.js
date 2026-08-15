@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearAuthSession } from "../utils/auth.js";
 
 const API_BASE_URL =
   (import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api").replace(/\/$/, "");
@@ -18,6 +19,20 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const isExpiredSession =
+      error.response?.status === 401 && localStorage.getItem("token");
+
+    if (isExpiredSession) {
+      clearAuthSession();
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export const signupUser = (payload) => api.post("/user/signup", payload);
 

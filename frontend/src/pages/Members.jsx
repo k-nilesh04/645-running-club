@@ -2,7 +2,7 @@ import useMembers from "../hooks/useMembers.js";
 import MemberCard from "../components/MemberCard.jsx";
 
 export default function Members() {
-  const { members, search, setSearch, loading, error } = useMembers();
+  const { members, search, setSearch, loading } = useMembers();
 
   return (
     <div className="section">

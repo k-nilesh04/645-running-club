@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { initiatePayment, verifyPayment, getMembershipStatus } from "../api/api.js";
 import { isLoggedIn } from "../utils/auth.js";
 
@@ -12,6 +13,38 @@ const perks = [
 
 const swags = ["Running T-Shirt", "Wrist Band", "and many more..."];
 
+const RAZORPAY_SCRIPT_SRC = "https://checkout.razorpay.com/v1/checkout.js";
+
+const storedUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem("user") || "{}");
+  } catch (error) {
+    return {};
+  }
+};
+
+const loadRazorpayScript = () =>
+  new Promise((resolve, reject) => {
+    if (window.Razorpay) {
+      resolve();
+      return;
+    }
+
+    const existingScript = document.querySelector(`script[src="${RAZORPAY_SCRIPT_SRC}"]`);
+    const script = existingScript || document.createElement("script");
+
+    script.addEventListener("load", () => resolve());
+    script.addEventListener("error", () =>
+      reject(new Error("Could not load the payment gateway. Check your connection."))
+    );
+
+    if (!existingScript) {
+      script.src = RAZORPAY_SCRIPT_SRC;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  });
+
 export default function SubscriptionCard() {
   const [formData, setFormData] = useState({
     tshirtSize: "M",
@@ -20,8 +53,6 @@ export default function SubscriptionCard() {
   const [loading, setLoading] = useState(false);
   const [hasMembership, setHasMembership] = useState(false);
   const [membershipData, setMembershipData] = useState(null);
-  const [paymentId, setPaymentId] = useState(null);
-  const [membershipId, setMembershipId] = useState(null);
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -56,77 +87,69 @@ export default function SubscriptionCard() {
       return;
     }
 
+    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY;
+
+    if (!razorpayKey) {
+      setStatus({
+        state: "error",
+        message: "Payments are not configured yet. Please try again later.",
+      });
+      return;
+    }
+
     setLoading(true);
     setStatus({ state: "idle", message: "" });
 
     try {
-      // Initiate payment
-      const { data } = await initiatePayment({
-        plan: "monthly",
-        amount: 99,
+      const { data } = await initiatePayment({ plan: "monthly" });
+      const paymentId = data.payment.id;
+      const membershipId = data.membership;
+
+      await loadRazorpayScript();
+
+      const rzp = new window.Razorpay({
+        key: razorpayKey,
+        amount: data.payment.amount * 100, // Razorpay expects paise
+        currency: data.payment.currency || "INR",
+        name: "645 Run Club",
+        description: "Monthly Subscription",
+        handler: async (response) => {
+          try {
+            const verifyData = await verifyPayment({
+              paymentId,
+              membershipId,
+              transactionId: response.razorpay_payment_id,
+            });
+
+            if (verifyData.data.success) {
+              setStatus({
+                state: "success",
+                message: "Payment successful! Welcome to 645 Run Club Premium.",
+              });
+              setHasMembership(true);
+              setMembershipData(verifyData.data.membership);
+              setFormData({ tshirtSize: "M" });
+            }
+          } catch (error) {
+            setStatus({
+              state: "error",
+              message: "Payment verification failed. Please try again.",
+            });
+          }
+        },
+        prefill: {
+          name: storedUser().name || "",
+          email: storedUser().email || "",
+        },
+        theme: {
+          color: "#0F9D58",
+        },
       });
 
-      setPaymentId(data.payment.id);
-      setMembershipId(data.membership);
-
-      // Load Razorpay script
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.async = true;
-      script.onload = () => {
-        const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY || "rzp_live_1234567890", // Add to .env
-          amount: 99 * 100, // Amount in paise (99 * 100)
-          currency: "INR",
-          name: "645 Run Club",
-          description: "Monthly Subscription",
-          order_id: data.payment.id,
-          handler: async (response) => {
-            try {
-              // Verify payment
-              const verifyData = await verifyPayment({
-                paymentId: paymentId,
-                membershipId: membershipId,
-                transactionId: response.razorpay_payment_id,
-              });
-
-              if (verifyData.data.success) {
-                setStatus({
-                  state: "success",
-                  message:
-                    "Payment successful! Welcome to 645 Run Club Premium.",
-                });
-                setHasMembership(true);
-                setMembershipData(verifyData.data.membership);
-                setFormData({ tshirtSize: "M" });
-              }
-            } catch (error) {
-              setStatus({
-                state: "error",
-                message: "Payment verification failed. Please try again.",
-              });
-            }
-          },
-          prefill: {
-            name: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).name
-              : "",
-            email: localStorage.getItem("user")
-              ? JSON.parse(localStorage.getItem("user")).email
-              : "",
-          },
-          theme: {
-            color: "#FF6B6B",
-          },
-        };
-
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      };
-      document.body.appendChild(script);
+      rzp.open();
     } catch (err) {
       const message =
-        err.response?.data?.message || "Could not initiate payment. Try again.";
+        err.response?.data?.message || err.message || "Could not initiate payment. Try again.";
       setStatus({ state: "error", message });
     } finally {
       setLoading(false);
@@ -142,9 +165,9 @@ export default function SubscriptionCard() {
         <p className="text-offwhite/70 mb-6">
           Please log in to access our premium membership plans and exclusive benefits.
         </p>
-        <a href="/auth" className="btn-primary w-full text-center">
+        <Link to="/auth" className="btn-primary w-full text-center">
           Login to Subscribe
-        </a>
+        </Link>
       </div>
     );
   }

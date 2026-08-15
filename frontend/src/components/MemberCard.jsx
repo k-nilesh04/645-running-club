@@ -1,6 +1,8 @@
 export default function MemberCard({ member, rank }) {
-  const initials = member.name
-    .split(" ")
+  const initials = (member.name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
     .map((part) => part[0])
     .join("")
     .slice(0, 2)
@@ -8,8 +10,6 @@ export default function MemberCard({ member, rank }) {
 
   return (
     <div className="card flex flex-col items-center text-center hover:-translate-y-1 transition-transform duration-200">
-      
-
       <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center font-display font-bold text-primary text-lg mb-3">
         {initials}
       </div>

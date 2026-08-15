@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Attendance from "../models/attendance.model.js";
 import Membership from "../models/membership.model.js";
 import Run from "../models/run.model.js";
@@ -82,6 +83,13 @@ export const updateAttendanceStatus = async (req, res) => {
   try {
     const { attendanceId } = req.params;
     const { status, checkInTime } = req.body;
+
+    if (!mongoose.isValidObjectId(attendanceId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid attendance id",
+      });
+    }
 
     const validStatuses = ["registered", "present", "absent", "cancelled"];
     if (!validStatuses.includes(status)) {

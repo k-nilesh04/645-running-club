@@ -23,11 +23,11 @@ export default function Navbar() {
   const [currentUser, setCurrentUser] = useState({ role: "member" });
   const navigate = useNavigate();
   
-  const handleButtonClick = () => {
-    if (!loggedIn) {
-      return alert("Please sign up or sign in to continue!");
-    }
-    console.log("Proceeding with action...");
+  const handlePrivateLinkClick = (event, to) => {
+    if (loggedIn) return;
+
+    event.preventDefault();
+    navigate("/auth", { state: { from: to } });
   };
 
   useEffect(() => {
@@ -100,7 +100,12 @@ export default function Navbar() {
           ))}
           {
             privateLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} onClick={handleButtonClick} className={navLinkClass}>
+              <NavLink
+                key={link.to}
+                to={link.to}
+                onClick={(event) => handlePrivateLinkClick(event, link.to)}
+                className={navLinkClass}
+              >
                 {link.label}
               </NavLink>
             ))}
@@ -187,7 +192,10 @@ export default function Navbar() {
                 key={link.to}
                 to={link.to}
                 className={navLinkClass}
-                onClick={() => { handleButtonClick(); setMenuOpen(false); }}
+                onClick={(event) => {
+                  handlePrivateLinkClick(event, link.to);
+                  setMenuOpen(false);
+                }}
               >
                 {link.label}
               </NavLink>
