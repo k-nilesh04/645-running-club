@@ -68,12 +68,12 @@ export default function EmailVerificationModal({ email, onVerified }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4">
-      <div className="card w-full max-w-md border-primary/30 shadow-2xl shadow-black/50">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm">
+      <div className="card w-full max-w-md border-primary/40 bg-[#181818] shadow-[0_0_30px_rgba(15,157,88,0.2)]">
         <h2 className="font-display text-2xl font-bold text-white mb-2">
           Verify your email
         </h2>
-        <p className="text-sm text-offwhite/60 mb-5">
+        <p className="text-sm text-offwhite/70 mb-5">
           Enter the 6 digit code sent to {email}.
         </p>
 
@@ -82,11 +82,12 @@ export default function EmailVerificationModal({ email, onVerified }) {
             type="text"
             inputMode="numeric"
             maxLength="6"
+            autoComplete="one-time-code"
             placeholder="Verification code"
             value={otp}
             onChange={(event) => setOtp(event.target.value.replace(/\D/g, ""))}
             required
-            className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-center text-lg tracking-[0.35em] text-white placeholder:text-sm placeholder:tracking-normal placeholder:text-offwhite/40 focus:outline-none focus:border-primary"
+            className="w-full bg-[#111111] border-2 border-primary/50 rounded-xl px-4 py-3 text-center text-xl font-semibold tracking-[0.4em] text-white placeholder:text-base placeholder:tracking-normal placeholder:text-offwhite/35 focus:outline-none focus:border-primary shadow-inner shadow-black/20"
           />
 
           <button type="submit" disabled={loading === "verify"} className="btn-primary w-full">
