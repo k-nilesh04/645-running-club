@@ -7,6 +7,7 @@ import userRoutes from './route/user.route.js';
 import verificationRoutes from './route/verificationRoutes.js';
 import runRoutes from './route/run.route.js';
 import paymentRoutes from './route/payment.route.js';
+import adminRoutes from './route/admin.route.js';
 
 
 dotenv.config({});
@@ -35,6 +36,7 @@ app.use('/api/user', userRoutes);
 app.use("/api/verification", verificationRoutes);
 app.use("/api/runs", runRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.listen(port, () => {
   connectDB(); 

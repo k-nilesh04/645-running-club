@@ -51,4 +51,10 @@ export const getMembershipStatus = () => api.get("/payment/status");
 
 export const cancelMembership = () => api.post("/payment/cancel");
 
+export const getAdminDashboard = (date) =>
+  api.get("/admin/dashboard", { params: { date } });
+
+export const updateAttendanceStatus = (attendanceId, status, checkInTime) =>
+  api.patch(`/admin/attendance/${attendanceId}`, { status, checkInTime });
+
 export default api;

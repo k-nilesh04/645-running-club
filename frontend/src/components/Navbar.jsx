@@ -20,6 +20,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [loggedIn, setLoggedIn] = useState(isLoggedIn());
   const [userInitial, setUserInitial] = useState("U");
+  const [currentUser, setCurrentUser] = useState({ role: "member" });
   const navigate = useNavigate();
   
   const handleButtonClick = () => {
@@ -41,8 +42,10 @@ export default function Navbar() {
 
       try {
         const user = JSON.parse(localStorage.getItem("user") || "{}");
+        setCurrentUser(user);
         setUserInitial((user.name || user.email || "U").trim().charAt(0).toUpperCase());
       } catch (error) {
+        setCurrentUser({ role: "member" });
         setUserInitial("U");
       }
     };
@@ -104,6 +107,11 @@ export default function Navbar() {
           {loggedIn && (
             <NavLink to="/join" className="btn-primary py-2 px-5 text-sm">
               Join Club
+            </NavLink>
+          )}
+          {loggedIn && currentUser.role === "admin" && (
+            <NavLink to="/admin" className="text-sm text-primary hover:text-white font-display font-medium">
+              Admin
             </NavLink>
           )}
           {loggedIn ? (

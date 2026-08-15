@@ -10,6 +10,7 @@ import JoinClub from "./pages/JoinClub.jsx";
 import Auth from "./pages/Auth.jsx";
 import Profile from "./pages/Profile.jsx";
 import RegisterRun from "./pages/RegisterRun.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import { Analytics } from '@vercel/analytics/react';
 
@@ -46,6 +47,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <RegisterRun />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />

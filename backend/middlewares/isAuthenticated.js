@@ -30,6 +30,7 @@ const isAuthenticated = (req, res, next) => {
     }
 
     const userId = decoded.id || decoded.userId || decoded._id;
+    const role = decoded.role || "member";
 
     if (!userId) {
       return res.status(401).json({
@@ -38,7 +39,7 @@ const isAuthenticated = (req, res, next) => {
       });
     }
 
-    req.user = { id: userId };
+    req.user = { id: userId, role };
     next();
   } catch (error) {
     return res.status(401).json({
