@@ -71,11 +71,22 @@ export const signup = async (req, res) => {
       expiresAt,
     });
 
-    await sendEmailVerificationCode({
-      email: normalizedEmail,
-      otp,
-      name,
-    });
+    try {
+      await sendEmailVerificationCode({
+        email: normalizedEmail,
+        otp,
+        name,
+      });
+    } catch (emailError) {
+      pendingSignups.delete(normalizedEmail);
+      console.error("Signup email error:", emailError.message || emailError);
+
+      return res.status(502).json({
+        success: false,
+        message:
+          "We could not send your verification email right now. Please try again in a few minutes.",
+      });
+    }
 
     return res.status(201).json({
       success: true,

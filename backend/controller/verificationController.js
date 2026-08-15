@@ -1,38 +1,13 @@
 import User from "../models/user.model.js";
-import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { getEmailProvider, sendEmail } from "../utils/emailSender.js";
 
 dotenv.config();
 
-export const createEmailTransport = () => {
-  return nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    family: 4,
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 20000,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-};
+export { createEmailTransport } from "../utils/emailSender.js";
 
-const transporter = createEmailTransport();
-
-if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-  transporter.verify((error) => {
-    if (error) {
-      console.error("Email transporter error:", error.message);
-    } else {
-      console.log("Email transporter is ready");
-    }
-  });
-}
+console.log(`Email provider: ${getEmailProvider() || "not configured"}`);
 
 export const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -52,15 +27,10 @@ export const prunePendingSignups = () => {
 };
 
 export const sendEmailVerificationCode = async ({ email, otp, name }) => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error("Email service not configured");
-  }
-
   const normalizedEmail = String(email).trim().toLowerCase();
   const code = otp || generateOTP();
 
-  await transporter.sendMail({
-    from: `"645 Run Club" <${process.env.EMAIL_USER}>`,
+  await sendEmail({
     to: normalizedEmail,
     subject: "Verify your 645 Run Club account",
     html: `
@@ -127,11 +97,23 @@ const sendVerificationOTP = async (req, res) => {
       });
     }
 
-    const otp = await sendEmailVerificationCode({
-      email: pending.email,
-      otp: pending.otp,
-      name: pending.name,
-    });
+    let otp;
+
+    try {
+      otp = await sendEmailVerificationCode({
+        email: pending.email,
+        otp: pending.otp,
+        name: pending.name,
+      });
+    } catch (emailError) {
+      console.error("Send OTP email error:", emailError.message || emailError);
+
+      return res.status(502).json({
+        success: false,
+        message:
+          "We could not send your verification email right now. Please try again in a few minutes.",
+      });
+    }
 
     pending.otp = otp;
     pending.expiresAt = new Date(Date.now() + 10 * 60 * 1000);
