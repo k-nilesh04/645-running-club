@@ -205,6 +205,14 @@ export default function Navbar() {
               Join Club
             </NavLink>
           )}
+          {loggedIn && currentUser.role === "admin" && (
+            <NavLink
+              to="/admin"
+              className="font-display text-sm font-medium text-primary hover:text-white"
+              onClick={() => setMenuOpen(false)}>
+              Admin
+            </NavLink>
+          )}
           {loggedIn ? (
             <button type="button" onClick={handleLogout} className="btn-outline text-center">
               Logout
