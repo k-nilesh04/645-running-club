@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL || "https://localhost:6000/api").replace(/\/$/, "");
+  (import.meta.env.VITE_API_BASE_URL || "https://localhost:5000/api").replace(/\/$/, "");
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -37,7 +37,11 @@ export const verifyEmailOtp = (payload) =>
 
 export const getUpcomingRuns = () => api.get("/runs/upcoming");
 
+export const getMyRegistrations = () => api.get("/runs/my-registrations");
+
 export const registerForRun = (runId) => api.post(`/runs/${runId}/register`);
+
+export const unregisterForRun = (runId) => api.delete(`/runs/${runId}/unregister`);
 
 export const initiatePayment = (payload) => api.post("/payment/initiate", payload);
 

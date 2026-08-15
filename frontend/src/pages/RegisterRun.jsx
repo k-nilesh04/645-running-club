@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerForRun, getUpcomingRuns } from "../api/api.js";
+import { registerForRun, getUpcomingRuns, getMyRegistrations, unregisterForRun } from "../api/api.js";
 import { isLoggedIn } from "../utils/auth.js";
 
 export default function RegisterRun() {
@@ -19,8 +19,22 @@ export default function RegisterRun() {
   const fetchRuns = async () => {
     setLoading(true);
     try {
-      const { data } = await getUpcomingRuns();
-      setRuns(data.runs || []);
+      const requests = [getUpcomingRuns()];
+
+      if (isLoggedIn()) {
+        requests.push(getMyRegistrations());
+      }
+
+      const [runsResponse, myRegistrationsResponse] = await Promise.all(requests);
+
+      setRuns(runsResponse.data.runs || []);
+
+      if (myRegistrationsResponse) {
+        setRegisteredRuns(new Set(myRegistrationsResponse.data.runIds || []));
+      } else {
+        setRegisteredRuns(new Set());
+      }
+
       setStatus({ type: "", message: "" });
     } catch (error) {
       setStatus({
@@ -38,34 +52,34 @@ export default function RegisterRun() {
       return;
     }
 
-    // If already registered, unregister
-    if (registeredRuns.has(runId)) {
-      setRegisteredRuns((prev) => {
-        const newSet = new Set([...prev]);
-        newSet.delete(runId);
-        return newSet;
-      });
-      setStatus({
-        type: "success",
-        message: "You have unregistered from this run",
-      });
-      return;
-    }
-
     setRegistering((prev) => ({ ...prev, [runId]: true }));
     setStatus({ type: "", message: "" });
 
     try {
-      const { data } = await registerForRun(runId);
+      if (registeredRuns.has(runId)) {
+        await unregisterForRun(runId);
+        setRegisteredRuns((prev) => {
+          const next = new Set(prev);
+          next.delete(runId);
+          return next;
+        });
+        setStatus({
+          type: "success",
+          message: "You have unregistered successfully",
+        });
+        return;
+      }
+
+      await registerForRun(runId);
+      setRegisteredRuns((prev) => new Set([...prev, runId]));
       setStatus({
         type: "success",
         message: "You have registered successfully!",
       });
-      setRegisteredRuns((prev) => new Set([...prev, runId]));
     } catch (error) {
       setStatus({
         type: "error",
-        message: error.response?.data?.message || "Could not register for this run",
+        message: error.response?.data?.message || "Could not update registration for this run",
       });
     } finally {
       setRegistering((prev) => ({ ...prev, [runId]: false }));

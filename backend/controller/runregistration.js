@@ -61,6 +61,32 @@ export const getUpcomingRuns = async (req, res) => {
   }
 };
 
+// Get all runs the logged-in user has registered for
+export const getMyRegistrations = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const registrations = await Attendance.find({
+      user: userId,
+      status: { $in: ["registered", "present"] }
+    }).select("run");
+
+    const runIds = registrations.map((item) => item.run.toString());
+
+    return res.status(200).json({
+      success: true,
+      runIds
+    });
+  } catch (error) {
+    console.error("Get my registrations error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
 // Register user for a run
 export const registerForRun = async (req, res) => {
   try {
@@ -138,6 +164,40 @@ export const registerForRun = async (req, res) => {
 
   } catch (error) {
     console.error("Run registration error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+};
+
+// Unregister user from a run
+export const unregisterForRun = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { runId } = req.params;
+
+    const registration = await Attendance.findOneAndDelete({
+      user: userId,
+      run: runId,
+      status: { $in: ["registered", "present"] }
+    });
+
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: "You are not registered for this run"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "You have unregistered successfully"
+    });
+  } catch (error) {
+    console.error("Unregister run error:", error);
 
     return res.status(500).json({
       success: false,
