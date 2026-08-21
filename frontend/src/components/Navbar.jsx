@@ -109,11 +109,11 @@ export default function Navbar() {
                 {link.label}
               </NavLink>
             ))}
-          {loggedIn && (
+          /* {loggedIn && (
             <NavLink to="/join" className="btn-primary py-2 px-5 text-sm">
               Join Club
             </NavLink>
-          )}
+          )} */
           {loggedIn && currentUser.role === "admin" && (
             <NavLink to="/admin" className="text-sm text-primary hover:text-white font-display font-medium">
               Admin
@@ -200,11 +200,11 @@ export default function Navbar() {
                 {link.label}
               </NavLink>
             ))}
-          {loggedIn && (
+          /* {loggedIn && (
             <NavLink to="/join" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
               Join Club
             </NavLink>
-          )}
+          )} */
           {loggedIn && currentUser.role === "admin" && (
             <NavLink
               to="/admin"
