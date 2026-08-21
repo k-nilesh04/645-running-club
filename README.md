@@ -82,7 +82,7 @@ The root project includes a shared development command for running both applicat
 - Node.js test runner
 - Git and GitHub
 
-The frontend dependencies and build tooling are defined in `frontend/package.json`, while the backend uses Express, Mongoose, JWT, bcryptjs, Nodemailer, and related server-side packages. fileciteturn8file0 fileciteturn7file0
+The frontend dependencies and build tooling are defined in `frontend/package.json`, while the backend uses Express, Mongoose, JWT, bcryptjs, Nodemailer, and related server-side packages.
 
 ## Data Models
 
@@ -251,10 +251,6 @@ Contributions and improvements are welcome.
 4. Test the changes locally.
 5. Commit your work with a clear commit message.
 6. Open a pull request describing the changes.
-
-## License
-
-License information will be added to the repository as the project reaches its release stage.
 
 ## Author
 
