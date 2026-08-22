@@ -195,8 +195,7 @@ From the project root:
 npm start
 ```
 
-The root start script launches the backend and frontend development servers concurrently. fileciteturn3file0
-
+The root start script launches the backend and frontend development servers concurrently.
 Alternatively, run them independently:
 
 ```bash
