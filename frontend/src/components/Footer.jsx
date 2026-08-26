@@ -11,9 +11,9 @@ export default function Footer() {
 
         <div className="flex gap-6 text-sm text-offwhite/70">
 
-          <NavLink to="/" className="hover:text-primary">
-            Email
-          </NavLink>
+          {/* <NavLink to="/" className="hover:text-primary">
+            Email 
+          </NavLink> */}
           <a href="https://instagram.com/645_runclub" target="_blank" rel="noreferrer" className="hover:text-primary">
             Instagram
           </a>
