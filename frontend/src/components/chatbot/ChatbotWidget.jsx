@@ -68,10 +68,12 @@ export default function ChatbotWidget() {
         { role: "assistant", content: data.answer || "I couldn't get an answer just now." },
       ]);
     } catch (requestError) {
+      const responseMessage =
+        requestError.response?.data?.answer || requestError.response?.data?.message;
       const friendlyMessage =
-        requestError.response?.data?.answer ||
-        requestError.response?.data?.message ||
-        "I'm having trouble responding right now. Please try again in a moment.";
+        responseMessage || (requestError.response
+          ? "I'm having trouble responding right now. Please try again in a moment."
+          : "I can't reach the Run Club service right now. Please try again later.");
       setMessages((current) => [...current, { role: "assistant", content: friendlyMessage }]);
       setError(requestError.response?.status === 429 ? "Rate limit reached." : "");
     } finally {

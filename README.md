@@ -267,7 +267,7 @@ Visitors use `POST /api/chat` with a `message` and optional recent `history`. Th
 
 ### Local development and deployment
 
-Install backend dependencies after pulling the chatbot changes, configure MongoDB and the backend environment, then run the project with `npm start` from the repository root. Production deployments must set the backend environment variables in the hosting provider's secret/configuration settings, set `FRONTEND_ORIGIN` to the deployed site origin, and set `VITE_API_BASE_URL` to the deployed backend API URL before building the frontend. Keep the Gemini key out of browser bundles and frontend build logs.
+Install backend dependencies after pulling the chatbot changes, configure MongoDB and the backend environment, then run the project with `npm start` from the repository root. For deployment, configure the backend service with `MONGO_URI` and `FRONTEND_ORIGIN` (the Vercel site origin only, for example `https://645-running-club.vercel.app`, with no trailing slash). Configure the Vercel project with `VITE_API_BASE_URL` set to the full Render API URL, including `/api` (for example `https://your-service.onrender.com/api`), for every deployment environment, then redeploy so Vite includes it in the build. Render must use `backend` as its root directory, with `npm install` as the build command and `npm start` as the start command; the backend does not listen until it has connected to MongoDB. Keep the Gemini key out of browser bundles and frontend build logs.
 
 ### Appearance and instructions
 

@@ -1,8 +1,8 @@
 import axios from "axios";
 import { clearAuthSession } from "../utils/auth.js";
 
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api").replace(/\/$/, "");
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+const API_BASE_URL = (configuredApiBaseUrl || "http://localhost:5000/api").replace(/\/+$/, "");
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,6 +11,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  if (import.meta.env.PROD && !configuredApiBaseUrl) {
+    throw new Error("VITE_API_BASE_URL is not configured for this deployment.");
+  }
+
   const token = localStorage.getItem("token");
 
   if (token) {
