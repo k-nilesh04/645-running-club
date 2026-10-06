@@ -12,6 +12,7 @@ import Profile from "./pages/Profile.jsx";
 import RegisterRun from "./pages/RegisterRun.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import ChatbotWidget from "./components/chatbot/ChatbotWidget.jsx";
 import { Analytics } from '@vercel/analytics/react';
 
 function ScrollToTop() {
@@ -62,6 +63,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <ChatbotWidget />
       <Analytics />
     </div>
   );

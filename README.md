@@ -234,6 +234,45 @@ Preview the production frontend locally with:
 npm run preview
 ```
 
+## Run Club chatbot
+
+The site includes an optional Run Club-only chatbot. It answers only from active entries that an administrator has added; it does not ship with fabricated club schedules, locations, prices, or policies. If the knowledge base is empty, club-related questions return the configured “I don't have that information yet” response.
+
+### Configuration
+
+Add the following backend settings to `backend/.env` (copy `backend/.env.example`):
+
+```dotenv
+GEMINI_API_KEY=your-server-side-gemini-api-key
+GEMINI_MODEL=gemini-2.5-flash
+CHAT_MAX_MESSAGE_LENGTH=1000
+CHAT_RATE_LIMIT_MAX=20
+CHAT_RATE_LIMIT_WINDOW_MS=60000
+FRONTEND_ORIGIN=https://your-run-club-site.example
+TRUST_PROXY_HOPS=0
+```
+
+The Gemini key is read only by the backend. Do not add it to a `VITE_` variable or frontend environment file. MongoDB uses the existing `MONGO_URI` configuration and stores entries in the `chatbot_knowledge` collection. The existing `VITE_API_BASE_URL` setting points the browser to the backend API (for example, `http://localhost:5000/api`).
+
+### Add and manage knowledge
+
+Sign in with an administrator account and open `/admin`. The **Chatbot knowledge base** panel lets admins add, search, edit, disable, enable, and delete entries. Add only verified Run Club information, choose a category, and add useful matching keywords. Active changes are available to new chatbot requests immediately; disabled entries are not retrieved or offered as suggestions.
+
+Knowledge management routes require the existing JWT authentication and admin role:
+
+- `GET/POST /api/chat/knowledge`
+- `PATCH/DELETE /api/chat/knowledge/:entryId`
+
+Visitors use `POST /api/chat` with a `message` and optional recent `history`. The public `GET /api/chat/suggestions` endpoint returns up to four active questions. Requests are validated and rate-limited by IP; the rate limiter is in-memory per backend process. `TRUST_PROXY_HOPS` defaults to `0`; set it to the exact number of trusted reverse-proxy hops for deployments behind proxies, rather than trusting arbitrary forwarded headers. For horizontally scaled deployments, use a shared rate-limit store at the proxy or application layer.
+
+### Local development and deployment
+
+Install backend dependencies after pulling the chatbot changes, configure MongoDB and the backend environment, then run the project with `npm start` from the repository root. Production deployments must set the backend environment variables in the hosting provider's secret/configuration settings, set `FRONTEND_ORIGIN` to the deployed site origin, and set `VITE_API_BASE_URL` to the deployed backend API URL before building the frontend. Keep the Gemini key out of browser bundles and frontend build logs.
+
+### Appearance and instructions
+
+The floating widget's layout and colors are in `frontend/src/components/chatbot/chatbot.css`; the site green is set to the existing `#0F9D58` theme color. Gemini's server-side system instruction is in `backend/services/geminiService.js`. The backend scope filter and knowledge retrieval are implemented separately in `backend/services/chatbotKnowledgeService.js`; do not weaken either layer to add new supported topics—add verified knowledge entries instead.
+
 ## Project Status
 
 645 Run Club is an active full-stack project and is being developed as a production-oriented platform for managing a running community.

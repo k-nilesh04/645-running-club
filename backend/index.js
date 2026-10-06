@@ -8,12 +8,18 @@ import verificationRoutes from './route/verificationRoutes.js';
 import runRoutes from './route/run.route.js';
 import paymentRoutes from './route/payment.route.js';
 import adminRoutes from './route/admin.route.js';
+import chatbotRoutes from './route/chatbot.route.js';
 
 
 dotenv.config({});
 
 const app = express();
 const port = process.env.PORT || 5000;
+const trustProxyHops = Number(process.env.TRUST_PROXY_HOPS || 0);
+if (!Number.isInteger(trustProxyHops) || trustProxyHops < 0) {
+  throw new Error("TRUST_PROXY_HOPS must be a non-negative integer");
+}
+app.set('trust proxy', trustProxyHops);
 
 const corsOptions = {
   origin: ['http://localhost:3000', 
@@ -25,8 +31,11 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true, // Allow cookies to be sent with requests
 }
+if (process.env.FRONTEND_ORIGIN) {
+  corsOptions.origin.push(process.env.FRONTEND_ORIGIN);
+}
 
-app.use(express.json());
+app.use(express.json({ limit: '16kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
@@ -37,6 +46,7 @@ app.use("/api/verification", verificationRoutes);
 app.use("/api/runs", runRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/chat", chatbotRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, message: 'API is running' });
@@ -48,9 +58,12 @@ app.use((req, res) => {
 
 app.use((error, req, res, next) => {
   console.error('Unhandled error:', error);
+  if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+    return res.status(400).json({ success: false, message: 'Invalid JSON request body.' });
+  }
   res.status(error.status || 500).json({
     success: false,
-    message: error.message || 'Server error',
+    message: error.status && error.status < 500 ? 'Invalid request.' : 'Server error',
   });
 });
 
@@ -63,4 +76,3 @@ const startServer = async () => {
 };
 
 startServer();
-

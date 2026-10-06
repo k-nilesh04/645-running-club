@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getAdminDashboard, updateAttendanceStatus } from "../api/api.js";
+import ChatbotKnowledgeAdmin from "../components/chatbot/ChatbotKnowledgeAdmin.jsx";
 
 const formatDate = (value) => {
   if (!value) return "—";
@@ -289,6 +290,7 @@ export default function AdminDashboard() {
             </div>
           </>
         )}
+        <ChatbotKnowledgeAdmin />
       </div>
     </section>
   );

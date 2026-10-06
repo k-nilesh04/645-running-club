@@ -72,4 +72,17 @@ export const getAdminDashboard = (date) =>
 export const updateAttendanceStatus = (attendanceId, status, checkInTime) =>
   api.patch(`/admin/attendance/${attendanceId}`, { status, checkInTime });
 
+export const sendChatMessage = (payload) => api.post("/chat", payload);
+
+export const getChatbotSuggestions = () => api.get("/chat/suggestions");
+
+export const getChatbotKnowledge = (params) => api.get("/chat/knowledge", { params });
+
+export const createChatbotKnowledge = (payload) => api.post("/chat/knowledge", payload);
+
+export const updateChatbotKnowledge = (entryId, payload) =>
+  api.patch(`/chat/knowledge/${entryId}`, payload);
+
+export const deleteChatbotKnowledge = (entryId) => api.delete(`/chat/knowledge/${entryId}`);
+
 export default api;
