@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   buildRetrievalQuery,
   findRelevantKnowledge,
+  getChatbotQuickReply,
   isRunClubRelated,
 } from "../services/chatbotKnowledgeService.js";
 
@@ -38,6 +39,15 @@ test("uses a previous Run Club question to resolve a short follow-up", () => {
   const history = [{ role: "user", content: "When is the next Run Club run?" }];
   assert.equal(isRunClubRelated("Where is it?", history), true);
   assert.equal(buildRetrievalQuery("Where is it?", history), "When is the next Run Club run? Where is it?");
+  assert.equal(isRunClubRelated("Tell me more", history), true);
+  assert.equal(buildRetrievalQuery("Tell me more", history), "When is the next Run Club run? Tell me more");
+});
+
+test("responds helpfully to greetings, vague prompts, and health concerns", () => {
+  assert.match(getChatbotQuickReply("hi").answer, /645 Run Club assistant/);
+  assert.match(getChatbotQuickReply("tell").answer, /What would you like to know about 645 Run Club/);
+  assert.match(getChatbotQuickReply("tell me health issue").answer, /healthcare professional/);
+  assert.equal(getChatbotQuickReply("How do I join the club?"), null);
 });
 
 test("retrieves matching knowledge and returns no fabricated fallback data", () => {

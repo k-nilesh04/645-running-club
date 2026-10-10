@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import ChatbotKnowledge from "../models/chatbotKnowledge.model.js";
-import { buildRetrievalQuery, findRelevantKnowledge, isRunClubRelated } from "../services/chatbotKnowledgeService.js";
+import { buildRetrievalQuery, findRelevantKnowledge, getChatbotQuickReply, isRunClubRelated } from "../services/chatbotKnowledgeService.js";
 import { generateRunClubAnswer } from "../services/geminiService.js";
 
 const categories = [
@@ -63,6 +63,11 @@ export const chat = async (req, res) => {
   }
 
   const { message, history } = payload;
+  const quickReply = getChatbotQuickReply(message, history);
+  if (quickReply) {
+    return res.json({ success: true, ...quickReply, source: "conversation" });
+  }
+
   if (!isRunClubRelated(message, history)) {
     return res.json({
       success: true,

@@ -38,7 +38,41 @@ const UNRELATED_TOPIC_PATTERN =
 const RUN_CLUB_PATTERN =
   /\b(run club|running club|645|run|runs|runner|runners|running|jog|jogging|race|marathon|membership|member|join|sign[\s-]?up|enroll|register|registration|club|training|workout|event|schedule|fees?|dues|announcement|facility|facilities|location|meet|meeting|shoes?|trail)\b/i;
 
-const FOLLOW_UP_PATTERN = /^(where|when|what about|and|there|it|that|how much|which one)\b/i;
+const FOLLOW_UP_PATTERN = /^(where|when|what about|and|there|it|that|how much|which one|tell(?: me)?|explain|more|details|help)\b/i;
+
+const GREETING_PATTERN = /^(hi|hello|hey|good morning|good afternoon|good evening)[!. ]*$/i;
+const HEALTH_PATTERN = /\b(health|injur(?:y|ies|ed)|pain|hurt|sick|ill|dizzy|medical|unwell)\b/i;
+const CLARIFICATION_PATTERN = /^(tell(?: me)?|help|explain|more|details|go on)[?.! ]*$/i;
+
+export const getChatbotQuickReply = (message, history = []) => {
+  if (GREETING_PATTERN.test(message.trim())) {
+    return {
+      category: "greeting",
+      answer: "Hi! I'm the 645 Run Club assistant. I can help with membership, runs, registration, events, fees, and club information. What would you like to know?",
+    };
+  }
+
+  if (HEALTH_PATTERN.test(message)) {
+    return {
+      category: "safety",
+      answer: "If you feel unwell or are injured during a Run Club activity, stop running and contact a healthcare professional. For an emergency, contact local emergency services. I can't diagnose or provide medical advice.",
+    };
+  }
+
+  if (CLARIFICATION_PATTERN.test(message.trim())) {
+    const previousUserMessage = [...history]
+      .reverse()
+      .find((entry) => entry.role === "user")?.content;
+    if (!previousUserMessage || !isRunClubRelated(previousUserMessage)) {
+      return {
+        category: "clarification",
+        answer: "Sure. What would you like to know about 645 Run Club? I can help with membership, runs, registration, events, fees, and club information.",
+      };
+    }
+  }
+
+  return null;
+};
 
 export const isRunClubRelated = (message, history = []) => {
   if (INJECTION_PATTERN.test(message) || UNRELATED_TOPIC_PATTERN.test(message)) return false;
