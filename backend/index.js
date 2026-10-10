@@ -22,15 +22,17 @@ if (!Number.isInteger(trustProxyHops) || trustProxyHops < 0) {
 app.set('trust proxy', trustProxyHops);
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 
-    'http://127.0.0.1:3000', 
-    'http://localhost:5173', 
-    'http://127.0.0.1:5173', 
+  origin: ['http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:4173',
+    'http://127.0.0.1:4173',
     'https://645-running-club.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], 
-  allowedHeaders: ['Content-Type', 'Authorization'], 
-  credentials: true, // Allow cookies to be sent with requests
-}
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
 if (process.env.FRONTEND_ORIGIN) {
   corsOptions.origin.push(process.env.FRONTEND_ORIGIN);
 }
@@ -70,7 +72,7 @@ app.use((error, req, res, next) => {
 const startServer = async () => {
   await connectDB();
 
-  app.listen(port, () => {
+  app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port ${port}`);
   });
 };
