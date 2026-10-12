@@ -294,4 +294,5 @@ Contributions and improvements are welcome.
 
 Developed by [K Nilesh](https://github.com/k-nilesh04).
 
+Workflow: [Diagram](https://gitdiagram.com/k-nilesh04/645-running-club)
 Repository: [k-nilesh04/645-running-club](https://github.com/k-nilesh04/645-running-club)
