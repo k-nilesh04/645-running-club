@@ -6,7 +6,7 @@ const API_BASE_URL = (configuredApiBaseUrl || "http://localhost:5000/api").repla
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
+  headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
   withCredentials: true,
   timeout: 15000,
 });
