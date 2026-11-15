@@ -1,226 +1,148 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { authChangedEvent, clearAuthSession, isLoggedIn } from "../utils/auth.js";
 import { logoutUser } from "../api/api.js";
+import { authChangedEvent, clearAuthSession, isLoggedIn } from "../utils/auth.js";
 
-const links = [
-  { to: "/", label: "Home" },
+const primaryLinks = [
+  { to: "/", label: "Home", end: true },
   { to: "/about", label: "About" },
   { to: "/members", label: "Members" },
+  { to: "/runs/register", label: "Runs" },
 ];
-
-const privateLinks = [
-  { to: "/runs/register", label: "Run Register" },
-];
-
-
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [loggedIn, setLoggedIn] = useState(isLoggedIn());
-  const [userInitial, setUserInitial] = useState("U");
-  const [currentUser, setCurrentUser] = useState({ role: "member" });
+  const [currentUser, setCurrentUser] = useState({});
   const navigate = useNavigate();
-  
-  const handlePrivateLinkClick = (event, to) => {
-    if (loggedIn) return;
-
-    event.preventDefault();
-    navigate("/auth", { state: { from: to } });
-  };
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     const syncAuth = () => {
       setLoggedIn(isLoggedIn());
-
       try {
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        setCurrentUser(user);
-        setUserInitial((user.name || user.email || "U").trim().charAt(0).toUpperCase());
-      } catch (error) {
-        setCurrentUser({ role: "member" });
-        setUserInitial("U");
+        setCurrentUser(JSON.parse(localStorage.getItem("user") || "{}"));
+      } catch {
+        setCurrentUser({});
       }
     };
 
     syncAuth();
-
     window.addEventListener(authChangedEvent, syncAuth);
     window.addEventListener("storage", syncAuth);
-
     return () => {
       window.removeEventListener(authChangedEvent, syncAuth);
       window.removeEventListener("storage", syncAuth);
     };
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const closeMenu = () => setMenuOpen(false);
+  const userInitial = (currentUser.name || currentUser.email || "U").trim().charAt(0).toUpperCase();
+
   const handleLogout = async () => {
     try {
       await logoutUser();
-    } catch (error) {
-      // Local logout should still happen if the backend session is already gone.
+    } catch {
+      // Clear the local display state even if the previous session has expired.
     } finally {
       clearAuthSession();
-      setMenuOpen(false);
-      navigate("/auth");
+      closeMenu();
+      navigate("/", { replace: true });
     }
   };
 
-  const navLinkClass = ({ isActive }) =>
-    `font-display text-sm font-medium transition-colors ${
-      isActive ? "text-primary" : "text-offwhite hover:text-primary"
+  const navClass = ({ isActive }) =>
+    `relative py-2 font-display text-sm font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-px after:bg-primary after:transition-all ${
+      isActive ? "text-white after:w-full" : "text-offwhite/65 hover:text-white after:w-0 hover:after:w-full"
     }`;
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-shadow ${
-        scrolled ? "shadow-lg shadow-black/40 bg-dark/95 backdrop-blur" : "bg-dark/80 backdrop-blur"
-      }`}
-    >
-      <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-        <NavLink to="/" className="flex items-center gap-2 font-display font-bold text-lg text-white">
-          <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-sm">
+    <header className={`sticky top-0 z-50 border-b transition-all ${
+      scrolled ? "border-white/10 bg-dark/95 shadow-xl shadow-black/20 backdrop-blur-xl" : "border-transparent bg-dark/80 backdrop-blur-md"
+    }`}>
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-6">
+        <NavLink to="/" onClick={closeMenu} className="group flex items-center gap-3" aria-label="645 Run Club home">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary font-display text-sm font-extrabold tracking-tight text-white shadow-lg shadow-primary/20 transition-transform group-hover:-rotate-6">
             645
           </span>
-          Run Club
+          <span className="leading-none">
+            <span className="block font-display text-base font-bold tracking-tight text-white">Run Club</span>
+            <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">Every Sunday</span>
+          </span>
         </NavLink>
 
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <NavLink key={link.to} to={link.to} className={navLinkClass} end={link.to === "/"}>
+        <div className="hidden items-center gap-7 lg:flex">
+          {primaryLinks.map((link) => (
+            <NavLink key={link.to} to={link.to} end={link.end} className={navClass}>
               {link.label}
             </NavLink>
           ))}
-          {
-            privateLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                onClick={(event) => handlePrivateLinkClick(event, link.to)}
-                className={navLinkClass}
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          {/* loggedIn && (
-            <NavLink to="/join" className="btn-primary py-2 px-5 text-sm">
-              Join Club
-            </NavLink>
-          ) */}
           {loggedIn && currentUser.role === "admin" && (
-            <NavLink to="/admin" className="text-sm text-primary hover:text-white font-display font-medium">
-              Admin
-            </NavLink>
+            <NavLink to="/admin" className={navClass}>Admin</NavLink>
           )}
+        </div>
+
+        <div className="hidden items-center gap-3 md:flex">
           {loggedIn ? (
             <>
-              <NavLink
-                to="/profile"
-                aria-label="Profile"
-                title="Profile"
-                className={({ isActive }) =>
-                  `w-10 h-10 rounded-full flex items-center justify-center font-display font-bold border transition-colors ${
-                    isActive
-                      ? "bg-primary text-white border-primary"
-                      : "bg-dark text-primary border-primary/60 hover:bg-primary hover:text-white"
-                  }`
-                }
-              >
+              <NavLink to="/profile" className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-display text-sm font-bold text-primary transition hover:bg-primary hover:text-white" aria-label="Open profile">
                 {userInitial}
               </NavLink>
-              <button type="button" onClick={handleLogout} className="btn-outline py-2 px-5 text-sm">
-                Logout
+              <button type="button" onClick={handleLogout} className="text-sm font-medium text-offwhite/65 transition hover:text-white">
+                Log out
               </button>
             </>
           ) : (
-            <NavLink to="/auth" className="btn-outline py-2 px-5 text-sm">
-              Login
-            </NavLink>
+            <>
+              <NavLink to="/auth" className="px-2 py-2 text-sm font-medium text-offwhite/75 transition hover:text-white">Log in</NavLink>
+              <NavLink to="/auth" className="btn-primary px-5 py-2.5 text-sm">Join the club</NavLink>
+            </>
           )}
         </div>
 
-        <div className="md:hidden flex items-center gap-3">
-          {loggedIn && (
-            <NavLink
-              to="/profile"
-              aria-label="Profile"
-              title="Profile"
-              className={({ isActive }) =>
-                `w-10 h-10 rounded-full flex items-center justify-center font-display font-bold border transition-colors ${
-                  isActive
-                    ? "bg-primary text-white border-primary"
-                    : "bg-dark text-primary border-primary/60 hover:bg-primary hover:text-white"
-                }`
-              }
-            >
-              {userInitial}
-            </NavLink>
-          )}
-          <button
-            className="text-white font-medium border border-white rounded px-3 py-1 hover:bg-white hover:text-dark transition-colors"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? "Close" : "Menu"}
-          </button>
-        </div>
+        <button
+          type="button"
+          className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 text-white transition hover:border-primary/60 hover:bg-primary/10 md:hidden"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={menuOpen}
+        >
+          <span className="text-lg leading-none">{menuOpen ? "×" : "≡"}</span>
+        </button>
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col gap-4 px-6 pb-6">
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={navLinkClass}
-              end={link.to === "/"}
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-          {
-            privateLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={navLinkClass}
-                onClick={(event) => {
-                  handlePrivateLinkClick(event, link.to);
-                  setMenuOpen(false);
-                }}
-              >
+        <div className="border-t border-white/10 bg-[#161616] px-5 pb-6 pt-4 md:hidden">
+          <div className="mx-auto flex max-w-6xl flex-col gap-1">
+            {primaryLinks.map((link) => (
+              <NavLink key={link.to} to={link.to} end={link.end} onClick={closeMenu} className={({ isActive }) => `rounded-xl px-4 py-3 font-display text-sm font-medium ${isActive ? "bg-primary/10 text-primary" : "text-offwhite/75 hover:bg-white/5 hover:text-white"}`}>
                 {link.label}
               </NavLink>
             ))}
-          {/* loggedIn && (
-            <NavLink to="/join" className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
-              Join Club
-            </NavLink>
-          ) */}
-          {loggedIn && currentUser.role === "admin" && (
-            <NavLink
-              to="/admin"
-              className="btn-primary text-center" onClick={() => setMenuOpen(false)}>
-              Admin
-            </NavLink>
-          )}
-          {loggedIn ? (
-            <button type="button" onClick={handleLogout} className="btn-outline text-center">
-              Logout
-            </button>
-          ) : (
-            <NavLink to="/auth" className="btn-outline text-center" onClick={() => setMenuOpen(false)}>
-              Login
-            </NavLink>
-          )}
+            {loggedIn && currentUser.role === "admin" && (
+              <NavLink to="/admin" onClick={closeMenu} className="rounded-xl px-4 py-3 font-display text-sm font-medium text-primary hover:bg-primary/10">Admin</NavLink>
+            )}
+            <div className="mt-3 border-t border-white/10 pt-4">
+              {loggedIn ? (
+                <div className="flex items-center justify-between px-4">
+                  <NavLink to="/profile" onClick={closeMenu} className="font-display text-sm font-medium text-white">My profile</NavLink>
+                  <button type="button" onClick={handleLogout} className="text-sm font-medium text-primary">Log out</button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <NavLink to="/auth" onClick={closeMenu} className="btn-outline px-4 py-2.5 text-center text-sm">Log in</NavLink>
+                  <NavLink to="/auth" onClick={closeMenu} className="btn-primary px-4 py-2.5 text-center text-sm">Join now</NavLink>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </header>
