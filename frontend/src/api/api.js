@@ -8,85 +8,46 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
+  timeout: 15000,
 });
 
 api.interceptors.request.use((config) => {
   if (import.meta.env.PROD && !configuredApiBaseUrl) {
     throw new Error("VITE_API_BASE_URL is not configured for this deployment.");
   }
-
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const isExpiredSession =
-      error.response?.status === 401 && localStorage.getItem("token");
-
-    if (isExpiredSession) {
-      clearAuthSession();
-    }
-
+    if (error.response?.status === 401) clearAuthSession();
     return Promise.reject(error);
-  }
+  },
 );
 
 export const signupUser = (payload) => api.post("/user/signup", payload);
-
 export const loginUser = (payload) => api.post("/user/login", payload);
-
 export const logoutUser = () => api.post("/user/logout");
-
 export const getMyProfile = () => api.get("/user/profile");
-
 export const updateMyProfile = (payload) => api.put("/user/profile/update", payload);
-
-export const sendVerificationOtp = (email) =>
-  api.post("/verification/send-otp", { email });
-
-export const verifyEmailOtp = (payload) =>
-  api.post("/verification/verify-otp", payload);
-
+export const sendVerificationOtp = (email) => api.post("/verification/send-otp", { email });
+export const verifyEmailOtp = (payload) => api.post("/verification/verify-otp", payload);
 export const getUpcomingRuns = () => api.get("/runs/upcoming");
-
 export const getMyRegistrations = () => api.get("/runs/my-registrations");
-
 export const registerForRun = (runId) => api.post(`/runs/${runId}/register`);
-
 export const unregisterForRun = (runId) => api.delete(`/runs/${runId}/unregister`);
-
 export const initiatePayment = (payload) => api.post("/payment/initiate", payload);
-
 export const verifyPayment = (payload) => api.post("/payment/verify", payload);
-
 export const getMembershipStatus = () => api.get("/payment/status");
-
 export const cancelMembership = () => api.post("/payment/cancel");
-
-export const getAdminDashboard = (date) =>
-  api.get("/admin/dashboard", { params: { date } });
-
-export const updateAttendanceStatus = (attendanceId, status, checkInTime) =>
-  api.patch(`/admin/attendance/${attendanceId}`, { status, checkInTime });
-
+export const getAdminDashboard = (date) => api.get("/admin/dashboard", { params: { date } });
+export const updateAttendanceStatus = (attendanceId, status, checkInTime) => api.patch(`/admin/attendance/${attendanceId}`, { status, checkInTime });
 export const sendChatMessage = (payload) => api.post("/chat", payload);
-
 export const getChatbotSuggestions = () => api.get("/chat/suggestions");
-
 export const getChatbotKnowledge = (params) => api.get("/chat/knowledge", { params });
-
 export const createChatbotKnowledge = (payload) => api.post("/chat/knowledge", payload);
-
-export const updateChatbotKnowledge = (entryId, payload) =>
-  api.patch(`/chat/knowledge/${entryId}`, payload);
-
+export const updateChatbotKnowledge = (entryId, payload) => api.patch(`/chat/knowledge/${entryId}`, payload);
 export const deleteChatbotKnowledge = (entryId) => api.delete(`/chat/knowledge/${entryId}`);
 
 export default api;
