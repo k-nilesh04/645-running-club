@@ -9,6 +9,7 @@ import runRoutes from "./route/run.route.js";
 import paymentRoutes from "./route/payment.route.js";
 import adminRoutes from "./route/admin.route.js";
 import chatbotRoutes from "./route/chatbot.route.js";
+import csrfProtection from "./middlewares/csrfProtection.js";
 
 dotenv.config();
 
@@ -40,7 +41,7 @@ const corsOptions = {
     return callback(error);
   },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,
   maxAge: 600,
 };
@@ -57,6 +58,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: false, limit: "16kb" }));
 app.use(cookieParser());
+app.use(csrfProtection);
 
 app.use("/api/user", userRoutes);
 app.use("/api/verification", verificationRoutes);
