@@ -1,28 +1,23 @@
+import crypto from "node:crypto";
 import User from "../models/user.model.js";
-import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
 import { getEmailProvider, sendEmail } from "../utils/emailSender.js";
-
-dotenv.config();
+import { createToken, setAuthCookie } from "./authController.js";
 
 export { createEmailTransport } from "../utils/emailSender.js";
 
 console.log(`Email provider: ${getEmailProvider() || "not configured"}`);
 
-export const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+const OTP_TTL_MS = 10 * 60 * 1000;
+const RESEND_COOLDOWN_MS = 60 * 1000;
+const MAX_OTP_ATTEMPTS = 5;
 
+export const generateOTP = () => crypto.randomInt(100000, 1000000).toString();
 export const pendingSignups = new Map();
 
-// Pending signups live in memory, so expired entries are dropped to avoid unbounded growth.
 export const prunePendingSignups = () => {
   const now = new Date();
-
   for (const [email, pending] of pendingSignups) {
-    if (pending.expiresAt < now) {
-      pendingSignups.delete(email);
-    }
+    if (pending.expiresAt < now) pendingSignups.delete(email);
   }
 };
 
@@ -46,21 +41,9 @@ export const sendEmailVerificationCode = async ({ email, otp, name }) => {
           <div style="font-size: 34px; font-weight: 700; letter-spacing: 10px; text-align: center; padding: 22px 10px; background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 10px; color: #111827; margin: 0 0 20px;">
             ${code}
           </div>
-          <p style="margin: 0 0 24px; font-size: 13px; color: #9ca3af; text-align: center;">
-            This code expires in <strong style="color: #6b7280;">10 minutes</strong>.
-          </p>
-          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
-          <p style="margin: 0 0 8px; font-size: 13px; color: #9ca3af; line-height: 1.5;">
-            If you didn't create a 645 Run Club account, you can safely ignore this email.
-          </p>
-          <p style="margin: 20px 0 0; font-size: 14px; color: #111827;">
-            Miles better together.<br />
-            <strong>The 645 Run Club Team</strong>
-          </p>
+          <p style="margin: 0 0 24px; font-size: 13px; color: #9ca3af; text-align: center;">This code expires in <strong style="color: #6b7280;">10 minutes</strong>.</p>
+          <p style="margin: 0; font-size: 13px; color: #9ca3af; line-height: 1.5;">If you didn't create a 645 Run Club account, you can safely ignore this email.</p>
         </div>
-        <p style="text-align: center; font-size: 11px; color: #d1d5db; margin: 16px 0 0;">
-          &copy; ${new Date().getFullYear()} 645 Run Club. All rights reserved.
-        </p>
       </div>
     `,
   });
@@ -68,113 +51,69 @@ export const sendEmailVerificationCode = async ({ email, otp, name }) => {
   return code;
 };
 
+const validOtp = (provided, expected) => {
+  const candidate = Buffer.from(String(provided || "").trim());
+  const actual = Buffer.from(String(expected || ""));
+  return candidate.length === actual.length && crypto.timingSafeEqual(candidate, actual);
+};
+
 const sendVerificationOTP = async (req, res) => {
   try {
-    const { email } = req.body;
-    const normalizedEmail = String(email || "").trim().toLowerCase();
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const pending = pendingSignups.get(email);
 
-    if (!normalizedEmail) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is required",
-      });
+    if (!pending || pending.expiresAt < new Date()) {
+      pendingSignups.delete(email);
+      return res.status(400).json({ success: false, message: "Signup request not found or expired" });
     }
 
-    const pending = pendingSignups.get(normalizedEmail);
-
-    if (!pending) {
-      return res.status(404).json({
-        success: false,
-        message: "Signup request not found or expired",
-      });
+    const now = new Date();
+    if (pending.resendAvailableAt && pending.resendAvailableAt > now) {
+      const seconds = Math.ceil((pending.resendAvailableAt - now) / 1000);
+      res.set("Retry-After", String(seconds));
+      return res.status(429).json({ success: false, message: `Please wait ${seconds} seconds before requesting another code.` });
     }
 
-    if (pending.expiresAt < new Date()) {
-      pendingSignups.delete(normalizedEmail);
-      return res.status(400).json({
-        success: false,
-        message: "Verification code has expired. Please signup again.",
-      });
-    }
-
-    let otp;
-
-    try {
-      otp = await sendEmailVerificationCode({
-        email: pending.email,
-        otp: pending.otp,
-        name: pending.name,
-      });
-    } catch (emailError) {
-      console.error("Send OTP email error:", emailError.message || emailError);
-
-      return res.status(502).json({
-        success: false,
-        message:
-          "We could not send your verification email right now. Please try again in a few minutes.",
-      });
-    }
-
+    const otp = generateOTP();
+    await sendEmailVerificationCode({ email: pending.email, otp, name: pending.name });
     pending.otp = otp;
-    pending.expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    pending.attempts = 0;
+    pending.expiresAt = new Date(Date.now() + OTP_TTL_MS);
+    pending.resendAvailableAt = new Date(Date.now() + RESEND_COOLDOWN_MS);
 
-    return res.status(200).json({
-      success: true,
-      message: "Verification code sent to your email",
-    });
+    return res.status(200).json({ success: true, message: "Verification code sent to your email" });
   } catch (error) {
     console.error("Send OTP Error:", error.message || error);
-
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Failed to send verification code",
-    });
+    return res.status(502).json({ success: false, message: "We could not send a verification email right now." });
   }
 };
 
 const verifyEmailOTP = async (req, res) => {
   try {
-    const { email, otp } = req.body;
-    const normalizedEmail = String(email || "").trim().toLowerCase();
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const otp = String(req.body?.otp || "").trim();
+    const pending = pendingSignups.get(email);
 
-    if (!normalizedEmail || !otp) {
+    if (!pending || pending.expiresAt < new Date()) {
+      pendingSignups.delete(email);
+      return res.status(400).json({ success: false, message: "Verification code is invalid or has expired" });
+    }
+
+    if (!/^\d{6}$/.test(otp) || !validOtp(otp, pending.otp)) {
+      pending.attempts = (pending.attempts || 0) + 1;
+      if (pending.attempts >= MAX_OTP_ATTEMPTS) pendingSignups.delete(email);
       return res.status(400).json({
         success: false,
-        message: "Email and OTP are required",
+        message: pending.attempts >= MAX_OTP_ATTEMPTS
+          ? "Too many incorrect codes. Please sign up again."
+          : "Verification code is invalid or has expired",
       });
     }
 
-    const pending = pendingSignups.get(normalizedEmail);
-
-    if (!pending) {
-      return res.status(404).json({
-        success: false,
-        message: "Signup request not found or expired",
-      });
-    }
-
-    if (pending.expiresAt < new Date()) {
-      pendingSignups.delete(normalizedEmail);
-      return res.status(400).json({
-        success: false,
-        message: "Verification code has expired",
-      });
-    }
-
-    if (pending.otp !== String(otp).trim()) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid verification code",
-      });
-    }
-
-    const existingUser = await User.findOne({ email: normalizedEmail });
+    const existingUser = await User.exists({ email });
     if (existingUser) {
-      pendingSignups.delete(normalizedEmail);
-      return res.status(400).json({
-        success: false,
-        message: "Email is already registered",
-      });
+      pendingSignups.delete(email);
+      return res.status(409).json({ success: false, message: "An account already exists for this email." });
     }
 
     const createdUser = await User.create({
@@ -183,38 +122,23 @@ const verifyEmailOTP = async (req, res) => {
       password: pending.password,
       emailVerified: true,
     });
+    pendingSignups.delete(email);
 
-    pendingSignups.delete(normalizedEmail);
-
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET is not configured");
-    }
-
-    const token = jwt.sign(
-      { id: createdUser._id, role: createdUser.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    return res.status(200).json({
+    const token = createToken(createdUser);
+    return setAuthCookie(res, token).status(200).json({
       success: true,
       message: "Email verified successfully",
-      token,
       user: {
         id: createdUser._id,
         name: createdUser.name,
         email: createdUser.email,
         role: createdUser.role,
-        emailVerified: createdUser.emailVerified,
+        emailVerified: true,
       },
     });
   } catch (error) {
     console.error("Verify OTP Error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Failed to verify email",
-    });
+    return res.status(500).json({ success: false, message: "Unable to verify your email right now." });
   }
 };
 
