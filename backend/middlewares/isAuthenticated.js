@@ -1,51 +1,37 @@
 import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
-const isAuthenticated = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token =
-    req.cookies?.token ||
-    (authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null);
+const isAuthenticated = async (req, res, next) => {
+  const token = req.cookies?.token;
 
   if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized: No token provided",
-    });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
   try {
     if (!process.env.JWT_SECRET) {
-      return res.status(500).json({
-        success: false,
-        message: "JWT secret is not configured",
-      });
+      return res.status(500).json({ success: false, message: "Authentication is not configured" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized: Invalid token",
-      });
-    }
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+      issuer: "645-run-club",
+      audience: "645-run-club-client",
+    });
     const userId = decoded.id || decoded.userId || decoded._id;
-    const role = decoded.role || "member";
 
     if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized: Invalid token",
-      });
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    req.user = { id: userId, role };
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized: Invalid token",
-    });
+    const user = await User.findById(userId).select("role emailVerified");
+    if (!user || !user.emailVerified) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    req.user = { id: user._id, role: user.role };
+    return next();
+  } catch {
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 };
 
