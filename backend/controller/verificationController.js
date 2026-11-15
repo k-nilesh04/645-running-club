@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import User from "../models/user.model.js";
 import { getEmailProvider, sendEmail } from "../utils/emailSender.js";
-import { createToken, setAuthCookie } from "./authController.js";
+import { createToken, setAuthCookie } from "../utils/authSession.js";
 
 export { createEmailTransport } from "../utils/emailSender.js";
 
