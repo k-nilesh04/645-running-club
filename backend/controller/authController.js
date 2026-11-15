@@ -1,6 +1,5 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import {
   pendingSignups,
   generateOTP,
@@ -8,39 +7,11 @@ import {
   prunePendingSignups,
 } from "./verificationController.js";
 
-const isProduction = process.env.NODE_ENV === "production";
+import { createToken, setAuthCookie, cookieOptions } from "../utils/authSession.js";
+
 const MAX_LOGIN_ATTEMPTS = 8;
 const LOGIN_LOCK_MS = 15 * 60 * 1000;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-export const cookieOptions = {
-  httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "none" : "lax",
-  path: "/",
-};
-
-export const createToken = (user) => {
-  if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET is not configured");
-  }
-
-  return jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN || "7d",
-      issuer: "645-run-club",
-      audience: "645-run-club-client",
-    },
-  );
-};
-
-export const setAuthCookie = (res, token) =>
-  res.cookie("token", token, {
-    ...cookieOptions,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+const EMAIL_PATTERN = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
 
 const validateSignup = ({ name, email, password }) => {
   if (!name || !email || !password) return "Name, email and password are required";
