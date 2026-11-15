@@ -11,7 +11,7 @@ import { createToken, setAuthCookie, cookieOptions } from "../utils/authSession.
 
 const MAX_LOGIN_ATTEMPTS = 8;
 const LOGIN_LOCK_MS = 15 * 60 * 1000;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\\.[^\s@]+$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const validateSignup = ({ name, email, password }) => {
   if (!name || !email || !password) return "Name, email and password are required";
