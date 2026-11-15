@@ -12,9 +12,6 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  if (import.meta.env.PROD && !configuredApiBaseUrl) {
-    throw new Error("VITE_API_BASE_URL is not configured for this deployment.");
-  }
   return config;
 });
 
