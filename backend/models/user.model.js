@@ -5,21 +5,26 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
+      maxlength: 80,
     },
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
+      trim: true,
+      maxlength: 254,
     },
     password: {
       type: String,
       required: true,
+      select: false,
     },
     profilePicture: {
       type: String,
       default:
-        "https://plus.unsplash.com/premium_photo-1739786996022-5ed5b56834e2?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://plus.unsplash.com/premium_photo-1739786996022-5ed5b56834e2?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D",
     },
     gender: {
       type: String,
@@ -46,11 +51,15 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    emailVerificationCode: {
-      type: String,
+    loginAttempts: {
+      type: Number,
+      default: 0,
+      select: false,
     },
-    emailVerificationExpires: {
+    loginLockUntil: {
       type: Date,
+      default: null,
+      select: false,
     },
   },
   { timestamps: true },
