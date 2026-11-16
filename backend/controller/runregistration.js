@@ -298,3 +298,77 @@ export const getCommunityHighlights = async (req, res) => {
     return res.status(500).json({ success: false, message: "Could not load community highlights" });
   }
 };
+
+
+// Admin run management. These handlers are mounted behind authentication + admin middleware.
+export const getAllRunsForAdmin = async (req, res) => {
+  try {
+    const runs = await Run.find().sort({ date: -1, createdAt: -1 }).lean();
+    const counts = await Attendance.aggregate([
+      { $group: { _id: "$run", count: { $sum: 1 } } },
+    ]);
+    const countByRun = new Map(counts.map((item) => [item._id.toString(), item.count]));
+    return res.status(200).json({
+      success: true,
+      runs: runs.map((run) => ({ ...run, registrationCount: countByRun.get(run._id.toString()) || 0 })),
+    });
+  } catch (error) {
+    console.error("Admin list runs error:", error);
+    return res.status(500).json({ success: false, message: "Could not load runs" });
+  }
+};
+
+export const updateRunByAdmin = async (req, res) => {
+  try {
+    const { runId } = req.params;
+    if (!mongoose.isValidObjectId(runId)) return invalidRunIdResponse(res);
+
+    const allowed = ["title", "description", "date", "startTime", "location", "distance", "maxParticipants", "status"];
+    const updates = {};
+    for (const key of allowed) {
+      if (Object.prototype.hasOwnProperty.call(req.body, key)) updates[key] = req.body[key];
+    }
+    if (updates.title !== undefined && !String(updates.title).trim()) {
+      return res.status(400).json({ success: false, message: "Run title cannot be empty" });
+    }
+    if (updates.date !== undefined && Number.isNaN(new Date(updates.date).getTime())) {
+      return res.status(400).json({ success: false, message: "Enter a valid run date" });
+    }
+    if (updates.status !== undefined && !["upcoming", "ongoing", "completed", "cancelled"].includes(updates.status)) {
+      return res.status(400).json({ success: false, message: "Invalid run status" });
+    }
+    if (updates.distance !== undefined && updates.distance !== "" && (!Number.isFinite(Number(updates.distance)) || Number(updates.distance) <= 0)) {
+      return res.status(400).json({ success: false, message: "Distance must be greater than zero" });
+    }
+    if (updates.maxParticipants !== undefined && updates.maxParticipants !== "" && (!Number.isInteger(Number(updates.maxParticipants)) || Number(updates.maxParticipants) < 1)) {
+      return res.status(400).json({ success: false, message: "Maximum participants must be a positive whole number" });
+    }
+    if (updates.title !== undefined) updates.title = String(updates.title).trim();
+    if (updates.distance !== undefined) updates.distance = updates.distance === "" ? undefined : Number(updates.distance);
+    if (updates.maxParticipants !== undefined) updates.maxParticipants = updates.maxParticipants === "" ? undefined : Number(updates.maxParticipants);
+
+    const run = await Run.findByIdAndUpdate(runId, { $set: updates }, { new: true, runValidators: true });
+    if (!run) return res.status(404).json({ success: false, message: "Run not found" });
+    return res.status(200).json({ success: true, message: "Run updated", run });
+  } catch (error) {
+    console.error("Admin update run error:", error);
+    return res.status(500).json({ success: false, message: "Could not update run" });
+  }
+};
+
+export const deleteRunByAdmin = async (req, res) => {
+  try {
+    const { runId } = req.params;
+    if (!mongoose.isValidObjectId(runId)) return invalidRunIdResponse(res);
+    const run = await Run.findById(runId);
+    if (!run) return res.status(404).json({ success: false, message: "Run not found" });
+
+    // Remove dependent registrations so no orphaned attendance records remain.
+    await Attendance.deleteMany({ run: runId });
+    await Run.deleteOne({ _id: runId });
+    return res.status(200).json({ success: true, message: "Run and its registrations deleted" });
+  } catch (error) {
+    console.error("Admin delete run error:", error);
+    return res.status(500).json({ success: false, message: "Could not delete run" });
+  }
+};
