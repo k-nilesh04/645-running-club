@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import Membership from "../models/membership.model.js";
 
 // =========================
 // GET MY PROFILE
@@ -14,9 +15,27 @@ export const getMyProfile = async (req, res) => {
       });
     }
 
+    const now = new Date();
+    await Membership.updateMany(
+      { user: user._id, status: "active", endDate: { $ne: null, $lte: now } },
+      { $set: { status: "expired" } }
+    );
+    const latestMembership = await Membership.findOne({ user: user._id })
+      .sort({ startDate: -1, createdAt: -1 })
+      .select("plan price startDate endDate status autoRenew createdAt")
+      .lean();
+    const subscriptionActive = Boolean(latestMembership && latestMembership.status === "active" &&
+      (!latestMembership.endDate || new Date(latestMembership.endDate) > now));
     res.status(200).json({
-      success: true,
-      user,
+      success: true, user,
+      subscription: latestMembership ? {
+        ...latestMembership,
+        effectiveStatus: latestMembership.status,
+        isActive: subscriptionActive,
+        daysRemaining: latestMembership.endDate
+          ? Math.max(0, Math.ceil((new Date(latestMembership.endDate).getTime() - now.getTime()) / 86400000))
+          : null,
+      } : null,
     });
   } catch (error) {
     console.error("Get Profile Error:", error);
