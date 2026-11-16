@@ -1,92 +1,21 @@
-import React from "react";
-
-const images = import.meta.glob('../clubImage/*.{png,jpg,jpeg,svg,webp}', { eager: true });
-
-
-function Sprockets() {
-  return (
-    <div
-      className="flex h-[220px] w-3.5 shrink-0 flex-col justify-between bg-black px-0 py-1.5 sm:h-[176px]"
-      aria-hidden="true"
-    >
-      {Array.from({ length: 12 }).map((_, i) => (
-        <span key={i} className="mx-auto h-1.5 w-1.5 rounded-sm bg-[#121110]" />
-      ))}
-    </div>
-  );
-}
-
-function Reel({ photos, direction, speed, label }) {
-  // Photos are duplicated so the strip can loop seamlessly.
-  const photoModules = Object.values(photos);
-  const strip = [...photoModules, ...photoModules];
-  const animationClass =
-    direction === "right" ? "animate-pg-scroll-right" : "animate-pg-scroll-left";
-
-  return (
-    <div className="group relative my-6 flex items-stretch">
-      <Sprockets />
-      <div
-        className={`flex gap-3.5 bg-black px-3.5 py-2.5 ${animationClass} [animation-play-state:running] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]`}
-        style={{ "--pg-duration": `${speed}s` }}
-      >
-        {strip.map((mod, i) => {
-          const src = mod.default;
-
-          return (
-            <figure
-              key={`${label}-${i}`}
-              className="group/frame relative h-[220px] w-[176px] shrink-0 overflow-hidden border border-[#33302b] bg-[#1a1816] sm:h-[176px] sm:w-[140px]"
-            >
-              <img
-                src={src}
-                alt=""
-                loading="lazy"
-                draggable="false"
-                className="h-full w-full scale-105 object-cover grayscale brightness-90 contrast-105 transition duration-500 ease-out group-hover/frame:scale-110 group-hover/frame:grayscale-0 group-hover/frame:brightness-100"
-              />
-            </figure>
-          );
-        })}
-      </div>
-      <Sprockets />
-    </div>
-  );
-}
+const images = Object.values(import.meta.glob("../clubImage/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" }));
 
 export default function PhotoGallery() {
+  if (!images.length) return null;
+
   return (
-    <section className="overflow-hidden bg-[#1A1A1A] py-20 text-[#f4efe4]">
-      <style>{`
-        @keyframes pg-scroll-left {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        @keyframes pg-scroll-right {
-          from { transform: translateX(-50%); }
-          to { transform: translateX(0); }
-        }
-        .animate-pg-scroll-left { animation: pg-scroll-left var(--pg-duration, 42s) linear infinite; }
-        .animate-pg-scroll-right { animation: pg-scroll-right var(--pg-duration, 50s) linear infinite; }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-pg-scroll-left, .animate-pg-scroll-right {
-            animation: none;
-            overflow-x: auto;
-          }
-        }
-      `}</style>
-
-      <header className="mx-auto mb-12 max-w-xl px-8 text-center">
-        <span className="font-display text-4xl md:text-5xl font-bold text-white text-center mb-10">
-          Gallery
-        </span>
-      
-      </header>
-
-      <Reel photos={images} direction="left" speed={42} label="a" />
-      <Reel photos={images} direction="right" speed={50} label="b" />
-
-      
+    <section className="overflow-hidden">
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">From our Sundays</p><h2 className="mt-2 font-display text-2xl font-bold text-white">Good people. Good miles.</h2></div>
+        <span className="hidden text-xs text-offwhite/40 sm:block">645 Run Club · Dwarka</span>
+      </div>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+        {images.slice(0, 8).map((src, index) => (
+          <figure key={src} className={`group overflow-hidden bg-[#202420] ${index === 0 ? "col-span-2 row-span-2" : ""} ${index === 0 ? "aspect-square" : "aspect-[4/3]"}`}>
+            <img src={src} alt={`645 Run Club community moment ${index + 1}`} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+          </figure>
+        ))}
+      </div>
     </section>
   );
 }
