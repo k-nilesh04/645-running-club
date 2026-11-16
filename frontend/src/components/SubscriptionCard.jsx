@@ -63,10 +63,9 @@ export default function SubscriptionCard() {
   const checkMembershipStatus = async () => {
     try {
       const { data } = await getMembershipStatus();
-      if (data.hasMembership) {
-        setHasMembership(true);
-        setMembershipData(data.membership);
-      }
+      // Always sync both values so an expired plan cannot retain stale Premium access.
+      setHasMembership(Boolean(data.hasMembership));
+      setMembershipData(data.membership || null);
     } catch (error) {
       console.error("Error checking membership:", error);
     }
@@ -224,9 +223,16 @@ export default function SubscriptionCard() {
 
   return (
     <div className="card max-w-md mx-auto border-primary/30 hover:shadow-xl hover:shadow-primary/10 transition-shadow duration-300">
+      {membershipData && !hasMembership && (
+        <div className="mb-5 border border-amber-400/25 bg-amber-400/10 p-4">
+          <p className="font-semibold capitalize text-amber-300">Previous {membershipData.plan} subscription · {membershipData.status}</p>
+          <p className="mt-1 text-sm text-offwhite/65">Validity: {membershipData.startDate ? new Date(membershipData.startDate).toLocaleDateString("en-IN") : "—"} to {membershipData.endDate ? new Date(membershipData.endDate).toLocaleDateString("en-IN") : "—"}.</p>
+          <p className="mt-1 text-xs text-offwhite/50">Your Premium access is not currently active. Subscribe again to restore it.</p>
+        </div>
+      )}
       <div className="flex justify-center items-center p-1 mb-4 border border-yellow-200 rounded-lg">
         <h3 className="font-display text-2xl font-bold text-yellow-500 text-center">
-          ₹299 One Time Payment
+          Monthly membership
         </h3>
       </div>
 
