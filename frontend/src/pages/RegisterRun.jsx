@@ -12,228 +12,93 @@ export default function RegisterRun() {
   const [registeredRuns, setRegisteredRuns] = useState(new Set());
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
 
-  useEffect(() => {
-    fetchRuns();
-  }, []);
+  useEffect(() => { fetchRuns(); }, []);
 
   const fetchRuns = async () => {
     setLoading(true);
     try {
       const requests = [getUpcomingRuns()];
-
-      if (isLoggedIn()) {
-        requests.push(getMyRegistrations());
-      }
-
+      if (isLoggedIn()) requests.push(getMyRegistrations());
       const [runsResponse, myRegistrationsResponse] = await Promise.all(requests);
-
       setRuns(runsResponse.data.runs || []);
-
-      if (myRegistrationsResponse) {
-        setRegisteredRuns(new Set(myRegistrationsResponse.data.runIds || []));
-      } else {
-        setRegisteredRuns(new Set());
-      }
-
+      setRegisteredRuns(myRegistrationsResponse ? new Set(myRegistrationsResponse.data.runIds || []) : new Set());
       setStatus({ type: "", message: "" });
     } catch (error) {
-      setStatus({
-        type: "error",
-        message: error.response?.data?.message || "Could not fetch runs",
-      });
-    } finally {
-      setLoading(false);
-    }
+      setStatus({ type: "error", message: error.response?.data?.message || "Could not fetch runs" });
+    } finally { setLoading(false); }
   };
 
   const handleRegister = async (runId) => {
-    if (!isLoggedIn()) {
-      setShowSignupPrompt(true);
-      return;
-    }
-
+    if (!isLoggedIn()) { setShowSignupPrompt(true); return; }
     setRegistering((prev) => ({ ...prev, [runId]: true }));
     setStatus({ type: "", message: "" });
-
     try {
       if (registeredRuns.has(runId)) {
         await unregisterForRun(runId);
-        setRegisteredRuns((prev) => {
-          const next = new Set(prev);
-          next.delete(runId);
-          return next;
-        });
-        setStatus({
-          type: "success",
-          message: "You have unregistered successfully",
-        });
+        setRegisteredRuns((prev) => { const next = new Set(prev); next.delete(runId); return next; });
+        setStatus({ type: "success", message: "You have unregistered successfully" });
         return;
       }
-
       await registerForRun(runId);
       setRegisteredRuns((prev) => new Set([...prev, runId]));
-      setStatus({
-        type: "success",
-        message: "You have registered successfully!",
-      });
+      setStatus({ type: "success", message: "You have registered successfully!" });
     } catch (error) {
-      setStatus({
-        type: "error",
-        message: error.response?.data?.message || "Could not update registration for this run",
-      });
-    } finally {
-      setRegistering((prev) => ({ ...prev, [runId]: false }));
-    }
+      setStatus({ type: "error", message: error.response?.data?.message || "Could not update registration for this run" });
+    } finally { setRegistering((prev) => ({ ...prev, [runId]: false })); }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+  const formatDate = (dateString) => new Date(dateString).toLocaleDateString("en-IN", {
+    weekday: "short", month: "short", day: "numeric", year: "numeric",
+  });
 
-  if (showSignupPrompt) {
-    return (
-      <section className="section">
+  return (
+    <section className="section min-h-[60vh]">
+      {showSignupPrompt && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4">
-          <div className="card w-full max-w-md border-primary/30 shadow-2xl shadow-black/50">
-            <h2 className="font-display text-2xl font-bold text-white mb-4">Sign Up Required</h2>
-            <p className="text-offwhite/70 mb-6">
-              You need to sign up to register for runs. Create an account to get started!
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowSignupPrompt(false)}
-                className="btn-outline flex-1"
-              >
-                Continue Browsing
-              </button>
-              <button
-                onClick={() => navigate("/auth")}
-                className="btn-primary flex-1"
-              >
-                Sign Up Now
-              </button>
+          <div className="w-full max-w-md rounded-xl border border-white/10 bg-[#202420] p-6 shadow-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">One quick step</p>
+            <h2 className="mt-3 font-display text-2xl font-bold text-white">Join before you run</h2>
+            <p className="mb-6 mt-3 text-sm leading-6 text-offwhite/60">Create an account or sign in to register for a club run.</p>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button onClick={() => setShowSignupPrompt(false)} className="btn-outline flex-1">Maybe later</button>
+              <button onClick={() => navigate("/auth")} className="btn-primary flex-1">Sign in / Sign up</button>
             </div>
           </div>
         </div>
-      </section>
-    );
-  }
+      )}
 
-  return (
-    <section className="section">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="font-display text-4xl font-bold text-white mb-2">
-          Upcoming Runs
-        </h1>
-        <p className="text-offwhite/60 text-sm mb-8">
-          Register for an upcoming Sunday run. Click the register button to join!
-        </p>
-
-        {status.message && (
-          <div
-            className={`mb-6 p-4 rounded-lg text-center ${
-              status.type === "success"
-                ? "bg-primary/20 text-primary border border-primary/30"
-                : "bg-red-500/20 text-red-400 border border-red-500/30"
-            }`}
-          >
-            {status.message}
-          </div>
-        )}
-
-        {loading ? (
-          <div className="text-center text-offwhite/60 py-12">
-            Loading upcoming runs...
-          </div>
-        ) : runs.length === 0 ? (
-          <div className="text-center text-offwhite/60 py-12 card">
-            No upcoming runs available at the moment.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {runs.map((run) => (
-              <div
-                key={run._id}
-                className="card border-primary/30 hover:border-primary/60 transition-all hover:shadow-lg hover:shadow-primary/20"
-              >
-                <h3 className="font-display text-xl font-bold text-white mb-3">
-                  {run.title}
-                </h3>
-
-                <div className="space-y-3 mb-4">
-                  <div>
-                    <p className="text-xs text-offwhite/50 uppercase tracking-wide">
-                      Date
-                    </p>
-                    <p className="text-sm text-white font-semibold">
-                      {formatDate(run.date)}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-offwhite/50 uppercase tracking-wide">
-                      Start Time
-                    </p>
-                    <p className="text-sm text-white font-semibold">
-                      {run.startTime}
-                    </p>
-                  </div>
-
-                  {run.location?.name && (
-                    <div>
-                      <p className="text-xs text-offwhite/50 uppercase tracking-wide">
-                        Location
-                      </p>
-                      <p className="text-sm text-white font-semibold">
-                        {run.location.name}
-                      </p>
-                    </div>
-                  )}
-
-                  {run.distance && (
-                    <div>
-                      <p className="text-xs text-offwhite/50 uppercase tracking-wide">
-                        Distance
-                      </p>
-                      <p className="text-sm text-white font-semibold">
-                        {run.distance} km
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {run.description && (
-                  <p className="text-sm text-offwhite/70 mb-4 line-clamp-2">
-                    {run.description}
-                  </p>
-                )}
-
-                <button
-                  onClick={() => handleRegister(run._id)}
-                  disabled={registering[run._id]}
-                  className={`w-full py-2 rounded-lg font-semibold text-sm transition-all ${
-                    registeredRuns.has(run._id)
-                      ? "bg-green-500/20 text-green-400 border border-green-500/50 hover:bg-green-500/30"
-                      : "btn-primary"
-                  }`}
-                >
-                  {registering[run._id]
-                    ? "Registering..."
-                    : registeredRuns.has(run._id)
-                    ? "✓ Registered"
-                    : "Register"}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="mb-10 border-b border-white/10 pb-8">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">Come run with us</p>
+        <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl">Upcoming runs<span className="text-primary">.</span></h1>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-offwhite/55">See what's coming up and reserve your place. We'd love to see you there.</p>
       </div>
+
+      {status.message && <div role="status" className={`mb-6 border-l-2 px-4 py-3 text-sm ${status.type === "success" ? "border-primary bg-primary/10 text-primary" : "border-red-400 bg-red-400/10 text-red-300"}`}>{status.message}</div>}
+
+      {loading ? (
+        <div className="space-y-4">{[1, 2, 3].map((item) => <div key={item} className="h-36 animate-pulse rounded-xl border border-white/10 bg-white/[0.03]" />)}</div>
+      ) : runs.length === 0 ? (
+        <div className="border-y border-white/10 py-16 text-center"><p className="font-display text-xl font-semibold text-white">No upcoming runs just yet</p><p className="mt-2 text-sm text-offwhite/45">Check back soon. We'll see you on the next Sunday.</p></div>
+      ) : (
+        <div className="space-y-4">
+          {runs.map((run) => (
+            <article key={run._id} className="grid gap-5 rounded-xl border border-white/10 bg-[#202420] p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6">
+              <div>
+                <div className="flex flex-wrap items-center gap-3"><h2 className="font-display text-xl font-semibold text-white">{run.title}</h2>{registeredRuns.has(run._id) && <span className="rounded-full bg-primary/15 px-3 py-1 text-[11px] font-semibold text-primary">You're registered</span>}</div>
+                <p className="mt-2 text-sm text-offwhite/55">{run.description || "Join the community for a run together."}</p>
+                <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-xs text-offwhite/65">
+                  <span><span className="mr-2 text-primary">◷</span>{formatDate(run.date)} · {run.startTime}</span>
+                  {run.location?.name && <span><span className="mr-2 text-primary">⌖</span>{run.location.name}</span>}
+                  {run.distance && <span><span className="mr-2 text-primary">↗</span>{run.distance} km</span>}
+                </div>
+              </div>
+              <button onClick={() => handleRegister(run._id)} disabled={registering[run._id]} className={`min-w-36 rounded-lg px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${registeredRuns.has(run._id) ? "border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20" : "btn-primary"}`}>
+                {registering[run._id] ? "Please wait..." : registeredRuns.has(run._id) ? "Cancel registration" : "Register"}
+              </button>
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
