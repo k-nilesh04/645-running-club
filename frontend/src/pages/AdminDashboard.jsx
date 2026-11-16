@@ -213,10 +213,34 @@ export default function AdminDashboard() {
             </form>
 
             <div>
-              <div className="mb-4 flex flex-col gap-3 sm:flex-row"><input value={runSearch} onChange={(e) => setRunSearch(e.target.value)} placeholder="Search runs…" className={inputClass} /><select value={runStatusFilter} onChange={(e) => setRunStatusFilter(e.target.value)} className={inputClass}><option value="all">All statuses</option>{["upcoming", "ongoing", "completed", "cancelled"].map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
+              <div className="mb-4 space-y-3">
+                <input value={runSearch} onChange={(e) => setRunSearch(e.target.value)} placeholder="Search runs by title or location…" className={inputClass} />
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  {[{ id: "all", label: "All" }, { id: "upcoming", label: "Upcoming" }, { id: "ongoing", label: "Ongoing" }, { id: "completed", label: "Completed" }, { id: "cancelled", label: "Cancelled" }].map((item) => {
+                    const count = item.id === "all" ? runs.length : runs.filter((run) => run.status === item.id).length;
+                    return <button key={item.id} type="button" onClick={() => setRunStatusFilter(item.id)} className={`border px-3 py-2 text-left transition ${runStatusFilter === item.id ? "border-primary bg-primary/10 text-primary" : "border-white/10 bg-[#1b201c] text-offwhite/60 hover:border-white/25"}`}>
+                      <span className="block text-xs font-semibold">{item.label}</span><span className="mt-0.5 block text-[11px] opacity-65">{count} runs</span>
+                    </button>;
+                  })}
+                </div>
+              </div>
               <div className="mb-3 flex items-center justify-between"><h2 className="font-display text-xl font-semibold text-white">All runs</h2><button onClick={fetchRuns} className="text-xs text-primary hover:underline">Refresh</button></div>
               {runsLoading ? <p className="py-10 text-center text-sm text-offwhite/50">Loading runs…</p> : filteredRuns.length === 0 ? <div className="border border-white/10 py-12 text-center text-sm text-offwhite/45">No runs match this filter.</div> : <div className="space-y-3">{filteredRuns.map((run) => <article key={run._id} className="border border-white/10 bg-[#1b201c] p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-display text-lg font-semibold text-white">{run.title}</h3><span className="border border-primary/25 px-2 py-0.5 text-[10px] uppercase tracking-wide text-primary">{run.status}</span></div><p className="mt-1 text-xs text-offwhite/50">{formatDate(run.date)} · {run.startTime} · {run.distance ? `${run.distance} KM` : "Distance not set"}</p><p className="mt-2 text-xs text-offwhite/45">{run.location?.name || "Location not set"} {run.location?.address ? `· ${run.location.address}` : ""}</p><p className="mt-2 text-xs text-offwhite/60">{run.registrationCount || 0} registrations{run.maxParticipants ? ` / ${run.maxParticipants} spots` : ""}</p></div><div className="flex shrink-0 gap-2"><button onClick={() => startEditRun(run)} className="border border-white/15 px-3 py-2 text-xs text-white hover:border-primary">Edit</button><button onClick={() => removeRun(run)} className="border border-red-500/30 px-3 py-2 text-xs text-red-300 hover:bg-red-500/10">Delete</button></div></div>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-display text-lg font-semibold text-white">{run.title}</h3><span className={`border px-2 py-0.5 text-[10px] uppercase tracking-wide ${run.status === "upcoming" ? "border-sky-400/30 text-sky-300" : run.status === "ongoing" ? "border-primary/40 text-primary" : run.status === "completed" ? "border-emerald-400/30 text-emerald-300" : "border-red-400/30 text-red-300"}`}>{run.status || "upcoming"}</span></div><p className="mt-1 text-xs text-offwhite/50">{formatDate(run.date)} · {run.startTime} · {run.distance ? `${run.distance} KM` : "Distance not set"}</p><p className="mt-2 text-xs text-offwhite/45">{run.location?.name || "Location not set"} {run.location?.address ? `· ${run.location.address}` : ""}</p><p className="mt-2 text-xs text-offwhite/60">{run.registrationCount || 0} registrations{run.maxParticipants ? ` / ${run.maxParticipants} spots` : ""}</p></div><div className="flex shrink-0 flex-wrap gap-2">
+                    <select aria-label={`Change status for ${run.title}`} value={run.status || "upcoming"} onChange={async (event) => {
+                      const nextStatus = event.target.value;
+                      try {
+                        await updateAdminRun(run._id, { status: nextStatus });
+                        setNotice(`Run marked as ${nextStatus}.`);
+                        setError("");
+                        await fetchRuns();
+                      } catch (err) { setError(err.response?.data?.message || "Could not change run status"); }
+                    }} className="border border-white/15 bg-[#171b18] px-2 py-2 text-xs text-white outline-none focus:border-primary">
+                      {["upcoming", "ongoing", "completed", "cancelled"].map((status) => <option key={status} value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</option>)}
+                    </select>
+                    <button onClick={() => startEditRun(run)} className="border border-white/15 px-3 py-2 text-xs text-white hover:border-primary">Edit</button>
+                    <button onClick={() => removeRun(run)} className="border border-red-500/30 px-3 py-2 text-xs text-red-300 hover:bg-red-500/10">Delete</button>
+                  </div></div>
               </article>)}</div>}
             </div>
           </div>
