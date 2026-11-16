@@ -227,3 +227,60 @@ export const unregisterForRun = async (req, res) => {
     });
   }
 };
+
+// Public community highlights are based only on completed runs and verified attendance.
+export const getCommunityHighlights = async (req, res) => {
+  try {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - 6);
+    weekStart.setHours(0, 0, 0, 0);
+
+    const monthlyRuns = await Run.find({
+      status: "completed",
+      date: { $gte: monthStart, $lte: now },
+    }).select("_id distance").lean();
+    const monthlyRunIds = monthlyRuns.map((run) => run._id);
+    const monthlyAttendance = monthlyRunIds.length
+      ? await Attendance.find({ run: { $in: monthlyRunIds }, status: "present" }).select("user").lean()
+      : [];
+
+    const weeklyRuns = await Run.find({
+      status: "completed",
+      date: { $gte: weekStart, $lte: now },
+    }).select("_id").lean();
+    const weeklyRunIds = weeklyRuns.map((run) => run._id);
+    const weeklyAttendance = weeklyRunIds.length
+      ? await Attendance.find({ run: { $in: weeklyRunIds }, status: "present" })
+          .populate("user", "name").select("user").lean()
+      : [];
+
+    const runnerCounts = new Map();
+    for (const record of weeklyAttendance) {
+      if (!record.user?._id || !record.user?.name) continue;
+      const id = record.user._id.toString();
+      const current = runnerCounts.get(id) || { name: record.user.name, checkIns: 0 };
+      current.checkIns += 1;
+      runnerCounts.set(id, current);
+    }
+    const weeklySpotlight = [...runnerCounts.values()]
+      .sort((a, b) => b.checkIns - a.checkIns || a.name.localeCompare(b.name))[0] || null;
+    const uniqueRunners = new Set(monthlyAttendance.map((record) => record.user?.toString()).filter(Boolean));
+
+    return res.status(200).json({
+      success: true,
+      month: now.toLocaleDateString("en-IN", { month: "long", year: "numeric" }),
+      monthly: {
+        runsHeld: monthlyRuns.length,
+        runnerCheckIns: monthlyAttendance.length,
+        uniqueRunners: uniqueRunners.size,
+        routeKmHosted: monthlyRuns.reduce((total, run) => total + (Number(run.distance) || 0), 0),
+      },
+      weeklySpotlight,
+    });
+  } catch (error) {
+    console.error("Community highlights error:", error);
+    return res.status(500).json({ success: false, message: "Could not load community highlights" });
+  }
+};
