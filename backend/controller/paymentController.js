@@ -24,11 +24,17 @@ export const initiatePayment = async (req, res) => {
       });
     }
 
-    // Check if user already has an active membership
+    // Expire stale memberships before checking whether the user can subscribe again.
+    const now = new Date();
+    await Membership.updateMany(
+      { user: userId, status: "active", endDate: { $ne: null, $lte: now } },
+      { $set: { status: "expired" } }
+    );
     const existingMembership = await Membership.findOne({
       user: userId,
       status: "active",
-    });
+      $or: [{ endDate: null }, { endDate: { $gt: now } }],
+    }).sort({ endDate: -1, createdAt: -1 });
 
     if (existingMembership) {
       return res.status(400).json({
@@ -171,39 +177,31 @@ export const verifyPayment = async (req, res) => {
 export const getMembershipStatus = async (req, res) => {
   try {
     const userId = req.user.id;
-
-    const membership = await Membership.findOne({
-      user: userId,
-      status: "active",
-    });
-
-    if (!membership) {
-      return res.status(200).json({
-        success: true,
-        hasMembership: false,
-        message: "No active membership found",
-      });
+    const now = new Date();
+    await Membership.updateMany(
+      { user: userId, status: "active", endDate: { $ne: null, $lte: now } },
+      { $set: { status: "expired" } }
+    );
+    const latest = await Membership.findOne({ user: userId }).sort({ startDate: -1, createdAt: -1 });
+    if (!latest) {
+      return res.status(200).json({ success: true, hasMembership: false, membership: null, message: "No subscription history found" });
     }
-
+    const isWithinPeriod = !latest.endDate || new Date(latest.endDate) > now;
+    const isActive = latest.status === "active" && isWithinPeriod;
+    const effectiveStatus = latest.status === "active" && !isWithinPeriod ? "expired" : latest.status;
     return res.status(200).json({
       success: true,
-      hasMembership: true,
+      hasMembership: isActive,
       membership: {
-        id: membership._id,
-        plan: membership.plan,
-        price: membership.price,
-        startDate: membership.startDate,
-        endDate: membership.endDate,
-        status: membership.status,
+        id: latest._id, plan: latest.plan, price: latest.price,
+        startDate: latest.startDate, endDate: latest.endDate,
+        status: effectiveStatus, autoRenew: latest.autoRenew, createdAt: latest.createdAt,
       },
+      message: isActive ? "Active subscription" : "No active subscription",
     });
   } catch (error) {
     console.error("Get membership error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: error.message,
-    });
+    return res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
 
