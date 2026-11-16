@@ -52,36 +52,36 @@ export default function Navbar() {
   };
 
   const navClass = ({ isActive }) =>
-    `border-b-2 py-2 text-sm font-medium transition-colors ${isActive ? "border-primary text-white" : "border-transparent text-offwhite/60 hover:text-white"}`;
+    `whitespace-nowrap border-b-2 py-2 text-xs font-medium transition-colors xl:text-sm ${isActive ? "border-primary text-white" : "border-transparent text-offwhite/60 hover:text-white"}`;
 
   return (
     <header className={`sticky top-0 z-50 border-b transition-colors ${scrolled ? "border-white/10 bg-[#171b18]/95 backdrop-blur" : "border-white/5 bg-[#171b18]"}`}>
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
-        <NavLink to="/" onClick={closeMenu} className="flex items-center gap-3" aria-label="645 Run Club home">
+      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-5 lg:gap-6 lg:px-8 lg:py-3.5">
+        <NavLink to="/" onClick={closeMenu} className="flex shrink-0 items-center gap-2 sm:gap-3" aria-label="645 Run Club home">
           <span className="font-display text-2xl font-black tracking-tighter text-primary">645<span className="text-white">.</span></span>
-          <span className="border-l border-white/15 pl-3 leading-tight"><span className="block font-display text-sm font-semibold text-white">Run Club</span><span className="mt-1 block text-[9px] uppercase tracking-[0.17em] text-offwhite/45">Dwarka, Delhi</span></span>
+          <span className="border-l border-white/15 pl-2.5 leading-tight sm:pl-3"><span className="block font-display text-sm font-semibold text-white">Run Club</span><span className="mt-1 block text-[9px] uppercase tracking-[0.17em] text-offwhite/45">Dwarka, Delhi</span></span>
         </NavLink>
 
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="hidden min-w-0 flex-1 items-center justify-center gap-3 md:flex lg:gap-5 xl:gap-7">
           {primaryLinks.map((link) => <NavLink key={link.to} to={link.to} end={link.end} className={navClass}>{link.label}</NavLink>)}
           {loggedIn && currentUser.role === "admin" && <NavLink to="/admin" className={navClass}>Admin</NavLink>}
         </div>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden shrink-0 items-center gap-3 md:flex lg:gap-4">
           {loggedIn ? (
             <>
               <NavLink to="/profile" className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-sm font-semibold text-white transition hover:border-primary hover:text-primary" aria-label="Open profile">{userInitial}</NavLink>
-              <button type="button" onClick={handleLogout} className="text-sm text-offwhite/55 transition hover:text-white">Log out</button>
+              <button type="button" onClick={handleLogout} className="whitespace-nowrap text-xs text-offwhite/55 transition hover:text-white lg:text-sm">Log out</button>
             </>
           ) : (
             <>
-              <NavLink to="/auth" className="text-sm text-offwhite/65 transition hover:text-white">Log in</NavLink>
-              <NavLink to="/auth" className="border border-primary px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Join the club</NavLink>
+              <NavLink to="/auth" className="whitespace-nowrap text-xs text-offwhite/65 transition hover:text-white lg:text-sm">Log in</NavLink>
+              <NavLink to="/auth" className="whitespace-nowrap border border-primary px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary hover:text-white lg:px-4 lg:text-sm">Join the club</NavLink>
             </>
           )}
         </div>
 
-        <button type="button" className="grid h-10 w-10 place-items-center border border-white/15 text-white md:hidden" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen}>
+        <button type="button" className="grid h-10 w-10 shrink-0 place-items-center border border-white/15 text-white md:hidden" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen}>
           <span className="text-xl leading-none">{menuOpen ? "×" : "≡"}</span>
         </button>
       </nav>
