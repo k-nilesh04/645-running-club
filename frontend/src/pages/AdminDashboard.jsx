@@ -258,11 +258,36 @@ export default function AdminDashboard() {
 
         {activeTab === "members" && (
           <div>
-            <div className="mb-5"><h2 className="font-display text-2xl font-semibold text-white">Memberships</h2><p className="mt-1 text-sm text-offwhite/45">Active paid members and their subscription details.</p></div>
-            {loading ? <p className="py-10 text-center text-sm text-offwhite/50">Loading members…</p> : <div className="overflow-x-auto border border-white/10"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-[#202620] text-xs uppercase tracking-wide text-offwhite/50"><tr><th className="px-4 py-3">Member</th><th className="px-4 py-3">Plan</th><th className="px-4 py-3">Price</th><th className="px-4 py-3">Start</th><th className="px-4 py-3">End</th><th className="px-4 py-3">Status</th></tr></thead><tbody>{dashboard.paidMembers.map((membership) => <tr key={membership._id} className="border-t border-white/10"><td className="px-4 py-3"><p className="font-medium text-white">{membership.user?.name || "Unknown"}</p><p className="text-xs text-offwhite/40">{membership.user?.email || "—"}</p></td><td className="px-4 py-3 text-offwhite/70">{membership.plan}</td><td className="px-4 py-3 text-white">₹{membership.price}</td><td className="px-4 py-3 text-offwhite/70">{formatDate(membership.startDate)}</td><td className="px-4 py-3 text-offwhite/70">{membership.endDate ? formatDate(membership.endDate) : "Lifetime"}</td><td className="px-4 py-3 text-primary">{membership.status}</td></tr>)}</tbody></table>{dashboard.paidMembers.length === 0 && <p className="py-10 text-center text-sm text-offwhite/45">No active paid memberships found.</p>}</div>}
+            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div><h2 className="font-display text-2xl font-semibold text-white">Member subscriptions</h2><p className="mt-1 text-sm text-offwhite/45">Latest subscription for every account, including expired and cancelled plans.</p></div>
+              <button type="button" onClick={fetchDashboard} className="border border-white/15 px-3 py-2 text-xs text-offwhite/70 hover:border-primary">Refresh records</button>
+            </div>
+            {loading ? <p className="py-10 text-center text-sm text-offwhite/50">Loading member records…</p> : (
+              <div className="space-y-3">
+                {(dashboard.memberSubscriptions || []).map((record) => {
+                  const membership = record.latestSubscription;
+                  const status = membership?.effectiveStatus || "never subscribed";
+                  const statusClass = status === "active" ? "text-primary border-primary/30" : status === "expired" ? "text-amber-300 border-amber-400/30" : status === "cancelled" ? "text-red-300 border-red-400/30" : status === "pending" ? "text-sky-300 border-sky-400/30" : "text-offwhite/45 border-white/15";
+                  return <article key={record.user._id} className="border border-white/10 bg-[#1b201c] p-4 sm:p-5">
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                      <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-semibold text-white">{record.user.name}</h3><span className={`border px-2 py-0.5 text-[10px] uppercase tracking-wide ${statusClass}`}>{status}</span></div><p className="mt-1 text-xs text-offwhite/45">{record.user.email} · {record.user.city || "City not set"}</p></div>
+                      {membership ? <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 lg:min-w-[600px]">
+                        <div><p className="text-[11px] text-offwhite/40">Last plan</p><p className="mt-1 text-sm font-medium capitalize text-white">{membership.plan}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Last payment</p><p className="mt-1 text-sm font-medium text-white">₹{membership.price}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Start date</p><p className="mt-1 text-sm text-white">{formatDate(membership.startDate)}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Due / expiry date</p><p className="mt-1 text-sm text-white">{membership.endDate ? formatDate(membership.endDate) : membership.plan === "lifetime" ? "Lifetime" : "Not set"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Days remaining</p><p className="mt-1 text-sm text-white">{membership.endDate ? (status === "active" ? membership.daysRemaining : "0") : "—"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Auto renew</p><p className="mt-1 text-sm text-white">{membership.autoRenew ? "On" : "Off"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Record created</p><p className="mt-1 text-sm text-white">{formatDate(membership.createdAt)}</p></div>
+                      </div> : <p className="text-sm text-offwhite/45">No subscription purchased yet.</p>}
+                    </div>
+                  </article>;
+                })}
+                {(dashboard.memberSubscriptions || []).length === 0 && <p className="border border-white/10 py-10 text-center text-sm text-offwhite/45">No member accounts found.</p>}
+              </div>
+            )}
           </div>
         )}
-
         {activeTab === "assistant" && <ChatbotKnowledgeAdmin />}
       </div>
     </section>
