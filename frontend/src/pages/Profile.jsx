@@ -17,6 +17,7 @@ function Field({ label, className = "", ...props }) {
 
 export default function Profile() {
   const [profile, setProfile] = useState(initialProfile);
+  const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
@@ -29,6 +30,7 @@ export default function Profile() {
         const user = data.user || {};
         if (isMounted) {
           setProfile({ ...initialProfile, ...user, age: user.age || "", emergencyContact: { ...initialProfile.emergencyContact, ...(user.emergencyContact || {}) } });
+          setSubscription(data.subscription || null);
           setStatus({ type: "", message: "" });
         }
       } catch (error) {
@@ -85,6 +87,19 @@ export default function Profile() {
         <div className="min-w-0"><h2 className="truncate font-display text-xl font-semibold text-white">{profile.name || "Your name"}</h2><p className="mt-1 text-sm text-offwhite/45">{profile.city || "Add your city"}{profile.age ? ` · ${profile.age} years` : ""}</p></div>
       </div>
 
+      <section className="mb-9 max-w-4xl border border-white/10 bg-[#1b201c] p-5 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Membership</p><h2 className="mt-2 font-display text-2xl font-semibold text-white">Your subscription</h2><p className="mt-1 text-sm text-offwhite/50">Your latest plan and its validity period.</p></div>
+          <span className={`border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${subscription?.isActive ? "border-primary/30 text-primary" : subscription?.effectiveStatus === "expired" ? "border-amber-400/30 text-amber-300" : "border-white/15 text-offwhite/50"}`}>{subscription?.isActive ? "Active" : subscription?.effectiveStatus || "No subscription"}</span>
+        </div>
+        {subscription ? <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div><p className="text-xs text-offwhite/40">Latest plan</p><p className="mt-1 font-semibold capitalize text-white">{subscription.plan}</p></div>
+          <div><p className="text-xs text-offwhite/40">Amount paid</p><p className="mt-1 font-semibold text-white">₹{subscription.price}</p></div>
+          <div><p className="text-xs text-offwhite/40">Started on</p><p className="mt-1 font-semibold text-white">{subscription.startDate ? new Date(subscription.startDate).toLocaleDateString("en-IN") : "—"}</p></div>
+          <div><p className="text-xs text-offwhite/40">Valid until / Due date</p><p className="mt-1 font-semibold text-white">{subscription.endDate ? new Date(subscription.endDate).toLocaleDateString("en-IN") : subscription.plan === "lifetime" ? "Lifetime" : "Not set"}</p></div>
+          {subscription.isActive && subscription.daysRemaining !== null && <div className="sm:col-span-2 lg:col-span-4"><p className="text-sm text-primary">{subscription.daysRemaining === 0 ? "Expires today" : `${subscription.daysRemaining} days remaining`}</p></div>}
+        </div> : <p className="mt-5 text-sm text-offwhite/55">You do not have a subscription history yet. Explore membership options to become a Premium member.</p>}
+      </section>
       <form onSubmit={handleSubmit} className="max-w-4xl">
         <div className="grid gap-10 md:grid-cols-2">
           <div>
