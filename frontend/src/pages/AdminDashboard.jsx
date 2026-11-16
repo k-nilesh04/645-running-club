@@ -43,6 +43,7 @@ export default function AdminDashboard() {
   const [runSaving, setRunSaving] = useState(false);
   const [runSearch, setRunSearch] = useState("");
   const [runStatusFilter, setRunStatusFilter] = useState("all");
+  const [expandedMemberId, setExpandedMemberId] = useState(null);
 
   const fetchDashboard = async () => {
     setLoading(true);
@@ -268,19 +269,38 @@ export default function AdminDashboard() {
                   const membership = record.latestSubscription;
                   const status = membership?.effectiveStatus || "never subscribed";
                   const statusClass = status === "active" ? "text-primary border-primary/30" : status === "expired" ? "text-amber-300 border-amber-400/30" : status === "cancelled" ? "text-red-300 border-red-400/30" : status === "pending" ? "text-sky-300 border-sky-400/30" : "text-offwhite/45 border-white/15";
+                  const isExpanded = expandedMemberId === record.user._id;
                   return <article key={record.user._id} className="border border-white/10 bg-[#1b201c] p-4 sm:p-5">
-                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                      <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-semibold text-white">{record.user.name}</h3><span className={`border px-2 py-0.5 text-[10px] uppercase tracking-wide ${statusClass}`}>{status}</span></div><p className="mt-1 text-xs text-offwhite/45">{record.user.email} · {record.user.city || "City not set"}</p></div>
-                      {membership ? <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 lg:min-w-[600px]">
-                        <div><p className="text-[11px] text-offwhite/40">Last plan</p><p className="mt-1 text-sm font-medium capitalize text-white">{membership.plan}</p></div>
-                        <div><p className="text-[11px] text-offwhite/40">Last payment</p><p className="mt-1 text-sm font-medium text-white">₹{membership.price}</p></div>
-                        <div><p className="text-[11px] text-offwhite/40">Start date</p><p className="mt-1 text-sm text-white">{formatDate(membership.startDate)}</p></div>
-                        <div><p className="text-[11px] text-offwhite/40">Due / expiry date</p><p className="mt-1 text-sm text-white">{membership.endDate ? formatDate(membership.endDate) : membership.plan === "lifetime" ? "Lifetime" : "Not set"}</p></div>
-                        <div><p className="text-[11px] text-offwhite/40">Days remaining</p><p className="mt-1 text-sm text-white">{membership.endDate ? (status === "active" ? membership.daysRemaining : "0") : "—"}</p></div>
-                        <div><p className="text-[11px] text-offwhite/40">Auto renew</p><p className="mt-1 text-sm text-white">{membership.autoRenew ? "On" : "Off"}</p></div>
-                        <div><p className="text-[11px] text-offwhite/40">Record created</p><p className="mt-1 text-sm text-white">{formatDate(membership.createdAt)}</p></div>
-                      </div> : <p className="text-sm text-offwhite/45">No subscription purchased yet.</p>}
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex min-w-0 items-center gap-3">
+                        {record.user.profilePicture ? <img src={record.user.profilePicture} alt="" className="h-11 w-11 rounded-full object-cover" /> : <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 font-semibold text-primary">{(record.user.name || "M").charAt(0).toUpperCase()}</div>}
+                        <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-semibold text-white">{record.user.name}</h3><span className={`border px-2 py-0.5 text-[10px] uppercase tracking-wide ${statusClass}`}>{status}</span></div><p className="mt-1 truncate text-xs text-offwhite/45">{record.user.email} · {record.user.city || "City not set"}</p></div>
+                      </div>
+                      <button type="button" aria-expanded={isExpanded} onClick={() => setExpandedMemberId(isExpanded ? null : record.user._id)} className="flex shrink-0 items-center justify-center gap-2 border border-primary/40 px-4 py-2.5 text-xs font-semibold text-primary transition hover:bg-primary/10">{isExpanded ? "Hide details" : "View details"}<span aria-hidden="true">{isExpanded ? "↑" : "↓"}</span></button>
                     </div>
+                    {isExpanded && <div className="mt-5 border-t border-white/10 pt-5">
+                      <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-primary">Member information</h4>
+                      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        <div><p className="text-[11px] text-offwhite/40">Full name</p><p className="mt-1 break-words text-sm text-white">{record.user.name || "—"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Email address</p><p className="mt-1 break-all text-sm text-white">{record.user.email || "—"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">City</p><p className="mt-1 text-sm text-white">{record.user.city || "—"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Account role</p><p className="mt-1 text-sm capitalize text-white">{record.user.role || "member"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Joined club</p><p className="mt-1 text-sm text-white">{formatDate(record.user.createdAt)}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">User ID</p><p className="mt-1 break-all text-xs text-offwhite/70">{record.user._id}</p></div>
+                      </div>
+                      <h4 className="mb-3 mt-6 text-xs font-semibold uppercase tracking-[0.15em] text-primary">Latest subscription</h4>
+                      {membership ? <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        <div><p className="text-[11px] text-offwhite/40">Plan</p><p className="mt-1 text-sm font-medium capitalize text-white">{membership.plan}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Subscription status</p><p className="mt-1 text-sm capitalize text-white">{status}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Last payment amount</p><p className="mt-1 text-sm text-white">₹{membership.price ?? "—"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Start date</p><p className="mt-1 text-sm text-white">{formatDate(membership.startDate)}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Expiry / due date</p><p className="mt-1 text-sm text-white">{membership.endDate ? formatDate(membership.endDate) : membership.plan === "lifetime" ? "Lifetime" : "Not set"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Days remaining</p><p className="mt-1 text-sm text-white">{membership.endDate ? (status === "active" ? membership.daysRemaining : "0") : membership.plan === "lifetime" ? "Unlimited" : "—"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Auto renewal</p><p className="mt-1 text-sm text-white">{membership.autoRenew ? "Enabled" : "Disabled"}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Subscription record created</p><p className="mt-1 text-sm text-white">{formatDate(membership.createdAt)}</p></div>
+                        <div><p className="text-[11px] text-offwhite/40">Subscription ID</p><p className="mt-1 break-all text-xs text-offwhite/70">{membership._id}</p></div>
+                      </div> : <p className="border border-white/10 bg-black/10 p-4 text-sm text-offwhite/50">This user has not purchased a subscription yet.</p>}
+                    </div>}
                   </article>;
                 })}
                 {(dashboard.memberSubscriptions || []).length === 0 && <p className="border border-white/10 py-10 text-center text-sm text-offwhite/45">No member accounts found.</p>}
