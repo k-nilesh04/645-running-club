@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Attendance from "../models/attendance.model.js";
 import Membership from "../models/membership.model.js";
 import Run from "../models/run.model.js";
+import User from "../models/user.model.js";
 import { summarizeAttendance } from "../utils/adminDashboard.js";
 
 const getDateRange = (dateString) => {
@@ -52,22 +53,42 @@ export const getAdminDashboard = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-    const activeMemberships = await Membership.find({ status: "active" })
-      .populate({
-        path: "user",
-        select: "name email city age gender profilePicture role",
-      })
-      .sort({ updatedAt: -1 });
-
+    const now = new Date();
+    await Membership.updateMany(
+      { status: "active", endDate: { $ne: null, $lte: now } },
+      { $set: { status: "expired" } }
+    );
+    const users = await User.find({})
+      .select("name email city role profilePicture createdAt")
+      .sort({ createdAt: -1 }).lean();
+    const allMemberships = await Membership.find({})
+      .populate({ path: "user", select: "name email city role profilePicture" })
+      .sort({ startDate: -1, createdAt: -1 }).lean();
+    const latestByUser = new Map();
+    for (const membership of allMemberships) {
+      const userId = membership.user?._id?.toString();
+      if (!userId || latestByUser.has(userId)) continue;
+      const isExpiredByDate = membership.status === "active" && membership.endDate && new Date(membership.endDate) <= now;
+      latestByUser.set(userId, {
+        ...membership,
+        effectiveStatus: isExpiredByDate ? "expired" : membership.status,
+        daysRemaining: membership.endDate
+          ? Math.max(0, Math.ceil((new Date(membership.endDate).getTime() - now.getTime()) / 86400000))
+          : null,
+      });
+    }
+    const memberSubscriptions = users.map((user) => ({
+      user,
+      latestSubscription: latestByUser.get(user._id.toString()) || null,
+    }));
+    const activeMemberships = allMemberships.filter((membership) =>
+      membership.status === "active" && (!membership.endDate || new Date(membership.endDate) > now)
+    );
     const summary = summarizeAttendance(attendanceRecords, activeMemberships.length);
-
     return res.status(200).json({
-      success: true,
-      date: selectedDate,
-      summary,
-      attendance: attendanceRecords,
-      paidMembers: activeMemberships,
-      runs: runsForDay,
+      success: true, date: selectedDate, summary,
+      attendance: attendanceRecords, paidMembers: activeMemberships,
+      memberSubscriptions, runs: runsForDay,
     });
   } catch (error) {
     console.error("Admin dashboard error:", error);
