@@ -268,6 +268,15 @@ export const getCommunityHighlights = async (req, res) => {
       .sort((a, b) => b.checkIns - a.checkIns || a.name.localeCompare(b.name))[0] || null;
     const uniqueRunners = new Set(monthlyAttendance.map((record) => record.user?.toString()).filter(Boolean));
 
+    const allCompletedRuns = await Run.find({
+      status: "completed",
+      date: { $lte: now },
+    }).select("_id distance").lean();
+    const allRunIds = allCompletedRuns.map((run) => run._id);
+    const allTimeCheckIns = allRunIds.length
+      ? await Attendance.countDocuments({ run: { $in: allRunIds }, status: "present" })
+      : 0;
+
     return res.status(200).json({
       success: true,
       month: now.toLocaleDateString("en-IN", { month: "long", year: "numeric" }),
@@ -276,6 +285,11 @@ export const getCommunityHighlights = async (req, res) => {
         runnerCheckIns: monthlyAttendance.length,
         uniqueRunners: uniqueRunners.size,
         routeKmHosted: monthlyRuns.reduce((total, run) => total + (Number(run.distance) || 0), 0),
+      },
+      allTime: {
+        runsHeld: allCompletedRuns.length,
+        runnerCheckIns: allTimeCheckIns,
+        routeKmHosted: allCompletedRuns.reduce((total, run) => total + (Number(run.distance) || 0), 0),
       },
       weeklySpotlight,
     });
