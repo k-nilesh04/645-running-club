@@ -31,6 +31,7 @@ export const updateMyProfile = (payload) => api.put("/user/profile/update", payl
 export const sendVerificationOtp = (email) => api.post("/verification/send-otp", { email });
 export const verifyEmailOtp = (payload) => api.post("/verification/verify-otp", payload);
 export const getUpcomingRuns = () => api.get("/runs/upcoming");
+export const getCommunityHighlights = () => api.get("/runs/community-highlights");
 export const getMyRegistrations = () => api.get("/runs/my-registrations");
 export const registerForRun = (runId) => api.post(`/runs/${runId}/register`);
 export const unregisterForRun = (runId) => api.delete(`/runs/${runId}/unregister`);
