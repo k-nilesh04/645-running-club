@@ -51,6 +51,16 @@ function CommunityHighlights() {
             {data.weeklySpotlight ? <><p className="font-display text-2xl font-semibold text-white">{data.weeklySpotlight.name}</p><p className="mt-1 text-sm text-offwhite/55">Attended {data.weeklySpotlight.checkIns} {data.weeklySpotlight.checkIns === 1 ? "run" : "runs"} this week</p></> : <><p className="font-display text-lg font-semibold text-white">Your name could be next.</p><p className="mt-1 text-sm text-offwhite/55">The shout-out appears after attendance is recorded for a completed run.</p></>}
           </div>
         </div>
+        {data.allTime && (
+          <div className="mt-9 border-t border-white/10 pt-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Since day one</p>
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              <div><p className="font-display text-2xl font-bold text-white">{data.allTime.runsHeld}</p><p className="mt-1 text-xs text-offwhite/45">Runs completed</p></div>
+              <div><p className="font-display text-2xl font-bold text-white">{data.allTime.runnerCheckIns}</p><p className="mt-1 text-xs text-offwhite/45">Runner check-ins</p></div>
+              <div><p className="font-display text-2xl font-bold text-white">{data.allTime.routeKmHosted}</p><p className="mt-1 text-xs text-offwhite/45">Route km hosted</p></div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
