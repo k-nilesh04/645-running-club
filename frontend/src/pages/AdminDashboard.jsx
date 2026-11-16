@@ -265,7 +265,20 @@ export default function AdminDashboard() {
             </div>
             {loading ? <p className="py-10 text-center text-sm text-offwhite/50">Loading member records…</p> : (
               <div className="space-y-3">
-                {(dashboard.memberSubscriptions || []).map((record) => {
+                {[...(dashboard.memberSubscriptions || [])]
+                  .sort((a, b) => {
+                    const rank = (record) => {
+                      const status = record.latestSubscription?.effectiveStatus;
+                      if (status === "active") return 0;
+                      if (status === "expired") return 1;
+                      if (!record.latestSubscription) return 3;
+                      return 2;
+                    };
+                    const order = rank(a) - rank(b);
+                    if (order !== 0) return order;
+                    return (a.user?.name || "").localeCompare(b.user?.name || "");
+                  })
+                  .map((record) => {
                   const membership = record.latestSubscription;
                   const status = membership?.effectiveStatus || "never subscribed";
                   const statusClass = status === "active" ? "text-primary border-primary/30" : status === "expired" ? "text-amber-300 border-amber-400/30" : status === "cancelled" ? "text-red-300 border-red-400/30" : status === "pending" ? "text-sky-300 border-sky-400/30" : "text-offwhite/45 border-white/15";
