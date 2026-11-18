@@ -290,7 +290,6 @@ export default function Auth() {
               </svg>
             </div>
           </div>
-          </div>
         </aside>
 
         <div className="auth-form-panel min-w-0 p-5 sm:p-9 lg:p-10 xl:p-12">
