@@ -148,7 +148,10 @@ export const login = async (req, res) => {
 const OTP_LOGIN_TTL_MS = 10 * 60 * 1000;
 const OTP_LOGIN_RESEND_MS = 60 * 1000;
 const OTP_LOGIN_MAX_ATTEMPTS = 5;
-const hashLoginOtp = (otp) => crypto.createHmac("sha256", process.env.JWT_SECRET || "645-run-club-otp-fallback").update(String(otp)).digest("hex");
+const hashLoginOtp = (otp) => {
+  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is not configured");
+  return crypto.createHmac("sha256", process.env.JWT_SECRET).update(String(otp)).digest("hex");
+};
 const safeEqualHash = (candidate, expected) => {
   const left = Buffer.from(hashLoginOtp(candidate), "hex");
   const right = Buffer.from(expected || "", "hex");
