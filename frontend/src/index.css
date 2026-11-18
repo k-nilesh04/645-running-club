@@ -757,3 +757,32 @@ iframe { display:block; }
 @media(prefers-reduced-motion:reduce) {
   .auth-shinchan-body { animation:none!important; }
 }
+
+
+/* Restore the original two-character motion scene and its responsive sizing. */
+.auth-mascot {
+  width:min(100%,390px);
+  height:280px;
+  flex:0 1 390px;
+  display:grid;
+  place-items:center;
+  overflow:visible;
+  border-radius:42px;
+  background:radial-gradient(ellipse at 50% 55%,rgba(255,255,255,.58),rgba(255,255,255,.08) 72%);
+  box-shadow:0 20px 48px rgba(11,22,15,.09);
+}
+.auth-mascot .auth-duo-art {
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:270px;
+  overflow:visible;
+}
+@media(max-width:1023px) {
+  .auth-mascot {width:min(100%,330px);height:235px;flex-basis:330px}
+  .auth-mascot .auth-duo-art {max-height:225px}
+}
+@media(max-width:520px) {
+  .auth-mascot {width:min(100%,285px);height:195px;flex-basis:285px;border-radius:28px}
+  .auth-mascot .auth-duo-art {max-height:190px}
+}
