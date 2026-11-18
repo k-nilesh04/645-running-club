@@ -101,7 +101,7 @@ export default function Profile() {
         </div> : <p className="mt-5 text-sm text-offwhite/55">You do not have a subscription history yet. Explore membership options to become a Premium member.</p>}
       </section>
       <form onSubmit={handleSubmit} className="max-w-4xl">
-        <div className="grid gap-10 md:grid-cols-2">
+        <div className="grid gap-10 lg:grid-cols-2">
           <div>
             <h3 className="mb-5 font-display text-lg font-semibold text-white">Personal information</h3>
             <div className="space-y-5">
