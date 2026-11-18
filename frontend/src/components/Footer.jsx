@@ -10,7 +10,7 @@ const links = [
 export default function Footer() {
   return (
     <footer className="site-footer mt-16 border-t border-white/10">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-7 md:grid-cols-[1.4fr_.7fr_1fr] lg:px-10 lg:py-16">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-7 lg:grid-cols-[1.4fr_.7fr_1fr] lg:px-10 lg:py-16">
         <div>
           <NavLink to="/" className="inline-flex items-center gap-3"><span className="brand-mark grid h-12 w-12 place-items-center rounded-2xl font-display text-lg font-black">645</span><span className="font-display text-lg font-bold text-white">Run Club<span className="text-[#a9e66e]">.</span></span></NavLink>
           <p className="mt-5 max-w-sm text-sm leading-7 text-white/55">A community built around movement, meaningful connections and the simple joy of showing up. See you on Sunday.</p>

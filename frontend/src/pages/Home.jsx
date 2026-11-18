@@ -40,7 +40,7 @@ function CommunityHighlights() {
           <div><p className="eyebrow">The community in motion</p><h2 className="section-title mt-3">Small steps. Real momentum.</h2></div>
           <p className="text-xs text-white/40">{data.month}</p>
         </div>
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
           {stats.map((stat) => <div key={stat.label} className="border-l border-[#a9e66e]/35 pl-4"><p className="font-display text-3xl font-bold tracking-tight text-white md:text-4xl">{stat.value}</p><p className="mt-2 text-xs leading-5 text-white/50">{stat.label}</p></div>)}
         </div>
         <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -72,7 +72,7 @@ export default function Home() {
       <section className="distance-section border-y border-white/10">
         <div className="section">
           <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="eyebrow">Choose your own pace</p><h2 className="section-title mt-3 text-4xl sm:text-5xl">Every runner has a <span className="text-[#a9e66e]">starting line.</span></h2></div><p className="max-w-sm text-sm leading-7 text-white/50">Walk it. Jog it. Run it. The only pace that matters is yours.</p></div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 lg:grid-cols-3">
             {runOptions.map((run, index) => <article key={run.distance} className={`distance-card group relative overflow-hidden rounded-[1.75rem] p-6 sm:p-7 ${index === 1 ? "distance-card-featured" : ""}`}>
               <div className="flex items-start justify-between"><span className="font-display text-6xl font-bold tracking-[-.07em] text-white">{run.distance}<span className="ml-1 text-xl text-[#a9e66e]">{run.unit}</span></span><span className="rounded-full border border-white/10 px-3 py-1 text-[9px] font-bold uppercase tracking-wider text-white/45">{run.tag}</span></div>
               <div className="mt-12"><h3 className="font-display text-xl font-bold text-white">{run.title}</h3><p className="mt-3 min-h-[3.5rem] text-sm leading-6 text-white/50">{run.description}</p></div>
@@ -85,7 +85,7 @@ export default function Home() {
       <section className="section">
         <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
           <div><p className="eyebrow">More than a run</p><h2 className="section-title mt-3 text-4xl sm:text-5xl">Good for your body.<br /><span className="text-[#a9e66e]">Great for your soul.</span></h2><p className="mt-5 max-w-md text-sm leading-7 text-white/55">We believe feeling better starts with small, consistent steps. Join a welcoming group where every effort counts and every person belongs.</p><div className="mt-7 flex flex-wrap gap-3"><NavLink to="/about" className="btn-primary">Our story <span aria-hidden="true">↗</span></NavLink><NavLink to="/join" className="hero-secondary">Become a member</NavLink></div></div>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((value) => <article key={value.number} className="value-card rounded-3xl p-5"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#a9e66e]/10 text-xl text-[#b9ed89]">{value.icon}</span><p className="mt-7 text-xs font-bold tracking-widest text-[#a9e66e]">{value.number}</p><h3 className="mt-2 font-display text-lg font-bold text-white">{value.title}</h3><p className="mt-2 text-xs leading-6 text-white/50">{value.description}</p></article>)}
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function Home() {
       </section>
 
       <section className="section !pt-0">
-        <div className="benefits-panel grid gap-8 rounded-[2rem] p-7 sm:p-10 md:grid-cols-[.8fr_1.2fr] md:items-center">
+        <div className="benefits-panel grid gap-8 rounded-[2rem] p-7 sm:p-10 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
           <div><p className="eyebrow">A little goes a long way</p><h2 className="section-title mt-3 text-3xl sm:text-4xl">Your body will<br />thank you for it.</h2></div>
           <div className="grid gap-3 sm:grid-cols-2">{benefits.map((benefit) => <p key={benefit} className="flex items-start gap-3 border-b border-white/10 py-3 text-sm text-white/70"><span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#a9e66e]/15 text-[11px] text-[#b9ed89]">✓</span>{benefit}</p>)}</div>
         </div>
