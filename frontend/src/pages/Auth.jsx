@@ -280,10 +280,6 @@ export default function Auth() {
               </svg>
             </div>
           </div>
-          <div className="relative z-10 flex items-center justify-between border-t border-[#0b160f]/15 pt-5 text-xs font-semibold text-[#0b160f]/55">
-            <span>Dwarka Sector 19B Park</span>
-            <span>Run together. Grow together.</span>
-          </div>
         </aside>
 
         <div className="auth-form-panel min-w-0 p-5 sm:p-9 lg:p-10 xl:p-12">
