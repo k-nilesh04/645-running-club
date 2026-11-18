@@ -180,7 +180,7 @@ export default function Auth() {
   );
 
   return (
-    <section className="relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-dark px-4 py-8 sm:px-6 sm:py-12 lg:flex lg:items-center">
+    <section className="auth-page-motion relative isolate min-h-[calc(100vh-5rem)] overflow-hidden bg-dark px-4 py-8 sm:px-6 sm:py-12 lg:flex lg:items-center">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_12%_8%,rgba(169,230,110,.13),transparent_34%),radial-gradient(ellipse_at_92%_90%,rgba(65,112,65,.12),transparent_35%)]" />
       {verificationEmail && (
         <EmailVerificationModal
@@ -189,8 +189,8 @@ export default function Auth() {
         />
       )}
 
-      <div className="mx-auto grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d1b14] shadow-[0_28px_100px_rgba(0,0,0,.42)] lg:grid-cols-[.92fr_1.08fr]">
-        <aside className="relative hidden min-h-[660px] flex-col justify-between overflow-hidden bg-[#a9e66e] p-10 text-[#0b160f] lg:flex xl:p-12">
+      <div className="auth-card-motion mx-auto grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d1b14] shadow-[0_28px_100px_rgba(0,0,0,.42)] lg:grid-cols-[.92fr_1.08fr]">
+        <aside className="auth-brand-motion relative hidden min-h-[660px] flex-col justify-between overflow-hidden bg-[#a9e66e] p-10 text-[#0b160f] lg:flex xl:p-12">
           <div className="pointer-events-none absolute -right-28 -top-24 h-80 w-80 rounded-full border-[52px] border-[#0b160f]/[.07]" />
           <div className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full border-[44px] border-[#0b160f]/[.07]" />
           <div className="relative flex items-center gap-3">
@@ -214,7 +214,7 @@ export default function Auth() {
           </div>
         </aside>
 
-        <div className="min-w-0 p-5 sm:p-9 lg:p-10 xl:p-12">
+        <div className="auth-form-panel min-w-0 p-5 sm:p-9 lg:p-10 xl:p-12">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#a9e66e] font-display text-base font-black text-[#0b160f]">645</span>
             <div>
@@ -242,7 +242,7 @@ export default function Auth() {
             </button>
           </div>
 
-          <div className="mb-7">
+          <div className="auth-heading-motion mb-7">
             <p className="text-xs font-bold uppercase tracking-[.2em] text-[#a9e66e]">{isSignup ? "Start your journey" : "Good to see you again"}</p>
             <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-white sm:text-4xl">
               {isSignup ? "Join the community." : otpSent ? "Check your inbox." : "Welcome back."}
@@ -280,7 +280,7 @@ export default function Auth() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5" noValidate={false}>
+          <form onSubmit={handleSubmit} className="auth-fields-motion space-y-5" noValidate={false}>
             {isSignup && (
               <label className="block">
                 <span className={labelClass}>Full name</span>
