@@ -225,7 +225,7 @@ export const verifyLoginOTP = async (req, res) => {
   try {
     const email = String(req.body?.email || "").trim().toLowerCase();
     const otp = String(req.body?.otp || "").trim();
-    if (!EMAIL_PATTERN.test(email) || !/^\\d{6}$/.test(otp)) {
+    if (!EMAIL_PATTERN.test(email) || !/^\d{6}$/.test(otp)) {
       return res.status(400).json({ success: false, message: "Enter a valid email address and 6-digit OTP." });
     }
 
