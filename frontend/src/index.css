@@ -152,3 +152,102 @@ section[id] { scroll-margin-top:6rem; }
   .photo-marquee-track, .photo-marquee-right .photo-marquee-track { animation:none; transform:none; }
   .photo-marquee-lane { overflow-x:auto; scrollbar-width:thin; }
 }
+
+/* Responsive layout hardening: small phones, tablets, laptops and wide desktops. */
+*, *::before, *::after { box-sizing:border-box; }
+html, body, #root { width:100%; min-width:320px; }
+html, body { overflow-x:clip; }
+body { overflow-wrap:break-word; }
+img, video, iframe, svg { max-width:100%; }
+img { height:auto; }
+#root { overflow-x:clip; }
+main, section, article, aside, nav, footer, header { min-width:0; }
+.grid > *, .flex > * { min-width:0; }
+p, h1, h2, h3, h4, a, button, label { overflow-wrap:break-word; }
+input, select, textarea, button { max-width:100%; }
+input, select, textarea { min-width:0; font-size:16px; }
+button, a, input, select { touch-action:manipulation; }
+button, .btn-primary, .btn-outline { min-height:44px; }
+.section { width:100%; padding-left:clamp(16px,4vw,40px); padding-right:clamp(16px,4vw,40px); }
+.hero-shell .max-w-7xl { width:100%; }
+.hero-plan-card { min-width:0; }
+.photo-gallery-section { width:100%; min-width:0; }
+.photo-gallery-section > div:first-child { padding-left:clamp(16px,4vw,40px); padding-right:clamp(16px,4vw,40px); }
+.site-header nav { min-width:0; }
+.site-header nav > a { min-width:0; }
+.site-header nav > a > span:last-child { min-width:0; }
+.site-footer > div { min-width:0; }
+.run-chat { z-index:1000; }
+table { width:100%; }
+pre, code { max-width:100%; overflow-x:auto; }
+iframe { display:block; }
+
+/* Phones: compact type, controls and vertical composition. */
+@media (max-width: 639px) {
+  .section { padding-top:3.25rem; padding-bottom:3.25rem; }
+  .section-title { font-size:clamp(1.75rem,7vw,2.25rem); }
+  .hero-shell .max-w-7xl { display:flex; flex-direction:column; align-items:stretch; gap:2.25rem; padding:3.25rem 1rem 3.5rem; }
+  .hero-shell h1 { font-size:clamp(2.65rem,12vw,4rem); line-height:.99; letter-spacing:-.055em; }
+  .hero-shell .max-w-3xl { max-width:100%; }
+  .hero-shell .hero-plan-card { margin-left:0; max-width:none; border-radius:1.4rem; padding:1.25rem; }
+  .hero-shell .hero-plan-card > p:nth-of-type(1) { margin-top:1.4rem; font-size:clamp(3.25rem,14vw,4.25rem); }
+  .hero-shell .hero-plan-card .grid-cols-3 { gap:.4rem; }
+  .hero-shell .hero-plan-card .grid-cols-3 > div { padding:.65rem .3rem; }
+  .hero-shell .hero-plan-card .grid-cols-3 p:first-child { font-size:1.1rem; }
+  .hero-shell .hero-plan-card .grid-cols-3 p:last-child { font-size:9px; }
+  .hero-shell .hero-plan-card .mt-7.flex { align-items:flex-start; padding:.8rem; }
+  .hero-shell .mt-14 { margin-top:2rem; }
+  .hero-shell .flex.flex-wrap.items-center.gap-x-8 { gap:.75rem 1rem; }
+  .hero-shell .flex.flex-wrap.gap-3 > a { flex:1 1 100%; justify-content:center; }
+  .hero-secondary, .btn-primary { min-height:46px; }
+  .distance-card { min-height:0; padding:1.25rem; }
+  .distance-card > div:first-child > span:first-child { font-size:3.5rem; }
+  .photo-marquee-item { width:min(76vw,250px); height:clamp(145px,48vw,180px); }
+  .photo-marquee { gap:9px; }
+  .photo-marquee-track { gap:9px; }
+  .site-footer .grid { gap:2rem; }
+  .site-footer .footer-meet-card { padding:1.2rem; }
+  .run-chat { right:max(.65rem,env(safe-area-inset-right)); bottom:max(.65rem,env(safe-area-inset-bottom)); }
+  .run-chat__launcher { width:3.25rem; height:3.25rem; }
+  .run-chat__panel { inset:auto 0 max(4.25rem,calc(env(safe-area-inset-bottom) + 4rem)); width:min(100%,calc(100vw - 1.3rem)); height:min(72dvh,620px); min-height:280px; border-radius:1rem; }
+  .run-chat__messages { padding:.75rem; }
+  .run-chat__form { padding:.65rem; }
+  .mobile-menu { padding-left:1rem; padding-right:1rem; }
+  .site-header nav { padding-left:1rem; padding-right:1rem; }
+  .site-header .brand-mark { width:2.5rem; height:2.5rem; border-radius:.8rem; }
+  .site-header nav > a > span:last-child > span:first-child { font-size:.75rem; }
+  .site-header nav > a > span:last-child > span:last-child { font-size:8px; letter-spacing:.13em; }
+  .card { padding:1rem; }
+}
+
+/* Tablets and compact laptops: avoid desktop-width navigation and squeezed 3-column content. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .section { padding-top:4rem; padding-bottom:4rem; }
+  .hero-shell .max-w-7xl { min-height:0; gap:2.5rem; padding-top:4.5rem; padding-bottom:4.5rem; }
+  .hero-shell h1 { font-size:clamp(3.5rem,7.2vw,5rem); }
+  .hero-plan-card { max-width:100%; padding:1.5rem; }
+  .distance-card { min-height:280px; padding:1.25rem; }
+  .site-footer .grid { gap:2rem; }
+  .site-header nav { padding-left:1.25rem; padding-right:1.25rem; }
+  .admin-dashboard, .admin-content { min-width:0; }
+}
+
+/* Desktop: keep content centered and prevent ultra-wide stretching. */
+@media (min-width: 1024px) {
+  .section { padding-top:5rem; padding-bottom:5rem; }
+  .hero-shell .max-w-7xl { min-height:600px; }
+}
+
+/* Compact viewport and landscape mobile safeguards. */
+@media (max-width: 360px) {
+  .hero-shell .max-w-7xl { padding-left:.875rem; padding-right:.875rem; }
+  .hero-shell h1 { font-size:2.55rem; }
+  .site-header .brand-mark { width:2.3rem; height:2.3rem; }
+  .photo-gallery-section h2 { font-size:1.55rem; }
+  .photo-marquee-item { width:210px; }
+  .run-chat__panel { width:calc(100vw - 1rem); }
+}
+@media (orientation:landscape) and (max-height:520px) and (max-width:900px) {
+  .hero-shell .max-w-7xl { min-height:0; padding-top:2rem; padding-bottom:2rem; }
+  .run-chat__panel { height:calc(100dvh - 5.5rem); min-height:0; }
+}
