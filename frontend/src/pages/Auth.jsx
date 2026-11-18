@@ -243,7 +243,7 @@ export default function Auth() {
               <span className="auth-shinchan-prop auth-shinchan-prop--otp" aria-hidden="true">🔢</span>
               <span className="auth-shinchan-prop auth-shinchan-prop--success" aria-hidden="true">🎉</span>
               <span className="auth-shinchan-prop auth-shinchan-prop--error" aria-hidden="true">💦</span>
-              <svg className="auth-shinchan-svg" viewBox="0 0 360 430" role="presentation" aria-hidden="true">
+              <svg className="auth-shinchan-svg" viewBox="0 0 360 540" role="presentation" aria-hidden="true">
                 <g className="auth-shinchan-body">
                   <!-- Hair and head -->
                   <path d="M75 153 Q48 119 69 77 Q83 35 129 31 Q145 4 174 26 Q199 4 223 29 Q269 18 288 61 Q322 79 310 130 L299 204 Q279 240 245 246 L112 237 Q72 220 64 190Z" fill="#171313" stroke="#171313" strokeWidth="9" strokeLinejoin="round"/>
