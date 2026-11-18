@@ -6,10 +6,11 @@ import { saveAuthSession } from "../utils/auth.js";
 
 const initialForm = { name: "", email: "", password: "", confirmPassword: "" };
 const passwordRules = [
-  { label: "At least 12 characters", test: (value) => value.length >= 12 },
+  { label: "At least 6 characters", test: (value) => value.length >= 6 },
   { label: "One uppercase letter", test: (value) => /[A-Z]/.test(value) },
   { label: "One lowercase letter", test: (value) => /[a-z]/.test(value) },
   { label: "One number", test: (value) => /\d/.test(value) },
+  { label: "One special character", test: (value) => /[^A-Za-z0-9]/.test(value) },
 ];
 const inputClass = "w-full rounded-xl border border-white/10 bg-[#0b1811] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-white/30 focus:border-[#a9e66e] focus:ring-2 focus:ring-[#a9e66e]/15";
 const labelClass = "mb-2 block text-sm font-semibold text-white/80";
@@ -368,7 +369,7 @@ export default function Auth() {
                   <div className="rounded-xl border border-white/[.07] bg-black/15 p-3.5">
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <span className="text-xs font-semibold text-white/65">Password checklist</span>
-                      <span className={`text-xs font-bold ${passwordValid ? "text-[#a9e66e]" : "text-white/35"}`}>{passwordRules.filter((rule) => rule.test(formData.password)).length}/4 complete</span>
+                      <span className={`text-xs font-bold ${passwordValid ? "text-[#a9e66e]" : "text-white/35"}`}>{passwordRules.filter((rule) => rule.test(formData.password)).length}/{passwordRules.length} complete</span>
                     </div>
                     <div className="grid grid-cols-2 gap-x-3 gap-y-2">
                       {passwordRules.map((rule) => {
