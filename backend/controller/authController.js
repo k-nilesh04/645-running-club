@@ -20,8 +20,8 @@ const validateSignup = ({ name, email, password }) => {
   if (!name || !email || !password) return "Name, email and password are required";
   if (name.length < 2 || name.length > 80) return "Please enter a name between 2 and 80 characters";
   if (!EMAIL_PATTERN.test(email)) return "Please enter a valid email address";
-  if (password.length < 12 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
-    return "Use at least 12 characters with uppercase, lowercase, and a number";
+  if (password.length < 6 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+    return "Use at least 6 characters, including uppercase, lowercase, a number, and a special character";
   }
   return null;
 };
