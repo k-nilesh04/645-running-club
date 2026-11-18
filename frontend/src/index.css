@@ -2,27 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: dark;
+  --club-forest: #10251c;
+  --club-forest-soft: #19382a;
+  --club-forest-light: #244a36;
+  --club-cream: #f4f0e4;
+  --club-muted: #c4cbbf;
+  --club-lime: #c8ff3d;
+}
+
 html {
   scroll-behavior: smooth;
+  background: var(--club-forest);
 }
 
 body {
-  background-color: #1a1a1a;
+  min-height: 100vh;
+  background: var(--club-forest);
+  color: var(--club-cream);
+  font-family: Inter, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  color: var(--club-forest);
+  background: var(--club-lime);
+}
+
+:focus-visible {
+  outline: 2px solid var(--club-lime);
+  outline-offset: 3px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--club-forest-light) var(--club-forest);
+}
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--club-forest); }
+::-webkit-scrollbar-thumb {
+  background: var(--club-forest-light);
+  border: 2px solid var(--club-forest);
+  border-radius: 999px;
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-block bg-primary text-white font-display font-semibold px-6 py-3 rounded-full
-    hover:bg-[#0c7c46] transition-colors duration-200 shadow-lg shadow-primary/20;
+    @apply inline-flex items-center justify-center gap-2 bg-accent text-dark font-display font-bold px-6 py-3 rounded-full
+    hover:brightness-110 transition-all duration-200 shadow-lg shadow-accent/15;
   }
 
   .btn-outline {
-    @apply inline-block border-2 border-primary text-primary font-display font-semibold px-6 py-3 rounded-full
-    hover:bg-primary hover:text-white transition-colors duration-200;
+    @apply inline-flex items-center justify-center gap-2 border border-accent text-accent font-display font-semibold px-6 py-3 rounded-full
+    hover:bg-accent hover:text-dark transition-all duration-200;
   }
 
   .card {
-    @apply bg-[#232323] border border-white/5 rounded-2xl p-6;
+    @apply rounded-2xl p-6;
+    background: var(--club-forest-soft);
+    border: 1px solid rgba(244, 240, 228, 0.1);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
   }
 
   .section {
@@ -30,6 +72,37 @@ body {
   }
 
   .section-title {
-    @apply font-display text-3xl md:text-4xl font-bold text-white mb-2;
+    @apply font-display text-3xl md:text-4xl font-bold mb-2;
+    color: var(--club-cream);
+    letter-spacing: -0.035em;
+  }
+}
+
+/* Consistent surfaces for the existing public, member and admin screens. */
+.bg-dark { background-color: var(--club-forest) !important; }
+.bg-\[\#171b18\], .bg-\[\#141714\], .bg-\[\#1b201c\], .bg-\[\#202420\] {
+  background-color: var(--club-forest-soft) !important;
+}
+.bg-\[\#232323\], .bg-\[\#1f1f1f\] {
+  background-color: var(--club-forest-soft) !important;
+}
+.text-offwhite\/65, .text-offwhite\/75 { color: rgba(244, 240, 228, 0.78); }
+.text-offwhite\/60, .text-offwhite\/55 { color: rgba(244, 240, 228, 0.66); }
+.text-offwhite\/50, .text-offwhite\/45, .text-offwhite\/40 { color: rgba(244, 240, 228, 0.52); }
+
+a, button, input, select, textarea {
+  transition-duration: 180ms;
+}
+
+input, select, textarea {
+  accent-color: var(--club-lime);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
