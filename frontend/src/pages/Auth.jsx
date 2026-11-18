@@ -23,7 +23,7 @@ function EyeIcon({ visible }) {
   );
 }
 
-function PasswordField({ label, name, value, onChange, autoComplete, placeholder, error }) {
+function PasswordField({ label, name, value, onChange, autoComplete, placeholder, error, onMoodChange }) {
   const [visible, setVisible] = useState(false);
   return (
     <label className="block">
@@ -37,8 +37,8 @@ function PasswordField({ label, name, value, onChange, autoComplete, placeholder
           autoComplete={autoComplete}
           placeholder={placeholder}
           required
-          onFocus={() => setMascotMood(name === "password" || name === "confirmPassword" ? "shy" : "curious")}
-          onBlur={() => setMascotMood("ready")}
+          onFocus={() => onMoodChange?.(name === "confirmPassword" ? "confirm" : "password")}
+          onBlur={() => onMoodChange?.("idle")}
           className={inputClass + " pr-14"}
           aria-invalid={Boolean(error)}
         />
@@ -66,12 +66,26 @@ export default function Auth() {
   const [otpSent, setOtpSent] = useState(false);
   const [loginOtp, setLoginOtp] = useState("");
   const [otpCooldown, setOtpCooldown] = useState(0);
-  const [mascotMood, setMascotMood] = useState("ready");
+  const [mascotMood, setMascotMood] = useState("idle");
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state?.from || "/profile";
   const isSignup = mode === "signup";
   const passwordValid = passwordRules.every((rule) => rule.test(formData.password));
+  const mascotCopy = {
+    idle: isSignup ? "A new runner is joining the crew!" : "Welcome back, champion!",
+    hello: isSignup ? "Let’s get you on the starting line!" : "Hey, you’re back! Let’s go!",
+    email: "I’m looking for your email address…",
+    typing: "Nice! I’m keeping up with you.",
+    password: "Secret mode: I won’t peek! 🙈",
+    confirm: "Let’s make sure those passwords match.",
+    mismatch: "Hmm… these two don’t look the same yet.",
+    otp: "One-time code? I’m counting each digit!",
+    sending: "Sending your sign-in code…",
+    thinking: isSignup ? "Getting your membership ready…" : "Checking your details…",
+    success: "You’re in! Let’s make every mile count!",
+    error: "Oops! Let’s fix that and try again.",
+  };
 
   useEffect(() => {
     if (otpCooldown <= 0) return undefined;
@@ -81,8 +95,9 @@ export default function Auth() {
 
   const handleChange = ({ target: { name, value } }) => {
     setFormData((current) => ({ ...current, [name]: value }));
-    if (name === "password" || name === "confirmPassword") setMascotMood("shy");
-    else if (name === "email" || name === "name") setMascotMood("curious");
+    if (name === "password") setMascotMood("password");
+    else if (name === "confirmPassword") setMascotMood(value === formData.password ? "success" : "mismatch");
+    else if (name === "email" || name === "name") setMascotMood("typing");
   };
 
   const resetOtp = () => {
@@ -92,6 +107,7 @@ export default function Auth() {
   };
 
   const changeMode = (nextMode) => {
+    setMascotMood("hello");
     setMode(nextMode);
     setStatus({ type: "", message: "" });
     setVerificationEmail("");
@@ -100,6 +116,7 @@ export default function Auth() {
   };
 
   const changeLoginMethod = (nextMethod) => {
+    setMascotMood(nextMethod === "otp" ? "otp" : "hello");
     setLoginMethod(nextMethod);
     resetOtp();
     setStatus({ type: "", message: "" });
@@ -114,10 +131,12 @@ export default function Auth() {
       return;
     }
     if (isSignup && !passwordValid) {
+      setMascotMood("error");
       setStatus({ type: "error", message: "Please meet all password requirements before continuing." });
       return;
     }
     if (isSignup && formData.password !== formData.confirmPassword) {
+      setMascotMood("mismatch");
       setStatus({ type: "error", message: "Your passwords do not match. Please check and try again." });
       return;
     }
@@ -126,17 +145,20 @@ export default function Auth() {
       return;
     }
 
+    setMascotMood(loginMethod === "otp" && !isSignup ? (otpSent ? "thinking" : "sending") : "thinking");
     setLoading(true);
     try {
       if (!isSignup && loginMethod === "otp") {
         if (!otpSent) {
           const { data } = await sendLoginOtp(formData.email.trim());
           setOtpSent(true);
+          setMascotMood("otp");
           setOtpCooldown(60);
           setStatus({ type: "success", message: data.message || "Your login code is on its way." });
           return;
         }
         const { data } = await verifyLoginOtp({ email: formData.email.trim(), otp: loginOtp });
+        setMascotMood("success");
         saveAuthSession({ user: data.user });
         navigate(redirectPath, { replace: true });
         return;
@@ -148,13 +170,16 @@ export default function Auth() {
       const { data } = isSignup ? await signupUser(payload) : await loginUser(payload);
 
       if (isSignup && data.requiresEmailVerification) {
+        setMascotMood("success");
         setVerificationEmail(data.user?.email || formData.email);
         return;
       }
 
+      setMascotMood("success");
       saveAuthSession({ user: data.user });
       navigate(redirectPath, { replace: true });
     } catch (error) {
+      setMascotMood("error");
       setStatus({
         type: "error",
         message: error.response?.data?.message || error.message || "Something went wrong. Please try again.",
@@ -178,8 +203,8 @@ export default function Auth() {
           handleChange(event);
           if (otpSent) resetOtp();
         }}
-        onFocus={() => setMascotMood("curious")}
-        onBlur={() => setMascotMood("ready")}
+        onFocus={() => setMascotMood("email")}
+        onBlur={() => setMascotMood("idle")}
         required
         maxLength={254}
         className={inputClass}
@@ -199,7 +224,7 @@ export default function Auth() {
 
       <div className="auth-card-motion mx-auto grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d1b14] shadow-[0_28px_100px_rgba(0,0,0,.42)] lg:grid-cols-[.92fr_1.08fr]">
         <aside
-          className="auth-brand-motion auth-mascot-stage relative hidden min-h-[660px] flex-col justify-between overflow-hidden bg-[#a9e66e] p-10 text-[#0b160f] lg:flex xl:p-12"
+          className="auth-brand-motion auth-mascot-stage relative flex min-h-[300px] flex-col justify-between overflow-hidden bg-[#a9e66e] p-5 text-[#0b160f] sm:p-7 lg:min-h-[660px] lg:p-10 xl:p-12"
           onPointerMove={(event) => {
             const bounds = event.currentTarget.getBoundingClientRect();
             const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
@@ -219,7 +244,7 @@ export default function Auth() {
             <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#0b160f] font-display text-lg font-black text-[#a9e66e]">645</span>
             <span className="font-display text-sm font-extrabold uppercase tracking-[.16em]">Run Club</span>
           </div>
-          <div className="relative py-12">
+          <div className="relative py-5 sm:py-7 lg:py-12">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#0b160f]/15 bg-white/25 px-3 py-1.5 text-xs font-bold uppercase tracking-[.14em]">
               <span className="h-2 w-2 rounded-full bg-[#0b160f]" /> Every Sunday · 6:15 AM
             </span>
@@ -229,9 +254,9 @@ export default function Auth() {
             <p className="mt-6 max-w-sm text-base leading-7 text-[#0b160f]/75">
               Find your pace, meet your people, and make every Sunday count. Your running community is one step away.
             </p>
-            <div className="auth-mascot-wrap mt-9 flex items-center gap-4 rounded-[1.5rem] border border-[#0b160f]/10 bg-white/25 p-4 backdrop-blur-sm" aria-live="polite">
-              <div className={`auth-mascot auth-mascot--${mascotMood}`} aria-hidden="true">
-                <svg viewBox="0 0 132 120" role="img" className="h-[108px] w-[118px] overflow-visible">
+            <div className="auth-mascot-wrap mt-6 flex items-center gap-4 rounded-[1.5rem] border border-[#0b160f]/10 bg-white/25 p-4 sm:p-5 backdrop-blur-sm" aria-live="polite">
+              <div className={`auth-mascot auth-mascot--${mascotMood}`} aria-hidden="true" key={mascotMood}>
+                <svg viewBox="0 0 132 120" role="img" className="h-[158px] w-[172px] overflow-visible">
                   <ellipse cx="66" cy="108" rx="42" ry="7" fill="#0b160f" opacity=".12" />
                   <path className="auth-mascot-arm auth-mascot-arm-left" d="M34 68 Q14 75 19 91 Q24 100 34 88" fill="none" stroke="#245b36" strokeWidth="10" strokeLinecap="round" />
                   <path className="auth-mascot-arm auth-mascot-arm-right" d="M98 68 Q118 75 113 91 Q108 100 98 88" fill="none" stroke="#245b36" strokeWidth="10" strokeLinecap="round" />
@@ -254,9 +279,9 @@ export default function Auth() {
               <div className="min-w-0">
                 <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#0b160f]/50">Your run buddy</p>
                 <p className="auth-mascot-caption mt-1 font-display text-lg font-black leading-tight text-[#0b160f]">
-                  {mascotMood === "shy" ? "Psst… eyes on your password!" : mascotMood === "curious" ? "Hey! Who’s joining the run?" : mascotMood === "excited" ? "You’ve got this! Almost there." : "Ready when you are!"}
+                  {mascotCopy[mascotMood] || mascotCopy.idle}
                 </p>
-                <p className="mt-1 text-xs leading-5 text-[#0b160f]/60">Move your cursor and I’ll follow along.</p>
+                <p className="mt-1 text-xs leading-5 text-[#0b160f]/60">Your little run buddy reacts as you sign up or sign in.</p>
               </div>
             </div>
           </div>
@@ -343,8 +368,8 @@ export default function Auth() {
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
-                  onFocus={() => setMascotMood("curious")}
-                  onBlur={() => setMascotMood("ready")}
+                  onFocus={() => setMascotMood("typing")}
+                  onBlur={() => setMascotMood("idle")}
                   minLength={2}
                   maxLength={80}
                   required
@@ -364,6 +389,7 @@ export default function Auth() {
                   onChange={handleChange}
                   autoComplete={isSignup ? "new-password" : "current-password"}
                   placeholder={isSignup ? "Create a strong password" : "Enter your password"}
+                  onMoodChange={setMascotMood}
                 />
                 {isSignup && (
                   <div className="rounded-xl border border-white/[.07] bg-black/15 p-3.5">
@@ -396,6 +422,7 @@ export default function Auth() {
                 autoComplete="new-password"
                 placeholder="Enter your password again"
                 error={Boolean(formData.confirmPassword) && formData.password !== formData.confirmPassword}
+                onMoodChange={setMascotMood}
               />
             )}
 
