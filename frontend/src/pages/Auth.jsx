@@ -53,7 +53,7 @@ export default function Auth() {
         setStatus({ type: "error", message: "Enter your email address first." });
         return;
       }
-      if (otpSent && !/^\\d{6}$/.test(loginOtp)) {
+      if (otpSent && !/^\d{6}$/.test(loginOtp)) {
         setStatus({ type: "error", message: "Enter the 6-digit OTP sent to your email." });
         return;
       }
@@ -168,7 +168,7 @@ export default function Auth() {
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-offwhite/75">Email address</span>
-              <input type="email" name="email" autoComplete="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} required className={inputClass} />
+              <input type="email" name="email" autoComplete="email" placeholder="you@example.com" value={formData.email} onChange={(event) => { handleChange(event); setOtpSent(false); setLoginOtp(""); setOtpCooldown(0); }} required className={inputClass} />
             </label>
 
             {(isSignup || loginMethod === "password") && (
@@ -181,7 +181,7 @@ export default function Auth() {
             {!isSignup && loginMethod === "otp" && otpSent && (
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-offwhite/75">6-digit email OTP</span>
-                <input type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="Enter OTP" value={loginOtp} onChange={(event) => setLoginOtp(event.target.value.replace(/\\D/g, ""))} required className={inputClass + " text-center text-xl font-semibold tracking-[0.35em]"} />
+                <input type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="Enter OTP" value={loginOtp} onChange={(event) => setLoginOtp(event.target.value.replace(/\D/g, ""))} required className={inputClass + " text-center text-xl font-semibold tracking-[0.35em]"} />
                 <div className="mt-2 flex justify-between gap-3 text-xs text-offwhite/50">
                   <span>Code expires in 10 minutes.</span>
                   <button type="button" disabled={loading || otpCooldown > 0} onClick={async () => { setLoading(true); try { const { data } = await sendLoginOtp(formData.email.trim()); setStatus({ type: "success", message: data.message || "A new OTP has been sent." }); setOtpCooldown(60); setLoginOtp(""); } catch (error) { setStatus({ type: "error", message: error.response?.data?.message || "Could not resend OTP." }); } finally { setLoading(false); } }} className="font-semibold text-primary disabled:opacity-40">{otpCooldown > 0 ? `Resend in ${otpCooldown}s` : "Resend OTP"}</button>
