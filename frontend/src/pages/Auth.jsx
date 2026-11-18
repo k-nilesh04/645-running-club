@@ -36,6 +36,8 @@ function PasswordField({ label, name, value, onChange, autoComplete, placeholder
           autoComplete={autoComplete}
           placeholder={placeholder}
           required
+          onFocus={() => setMascotMood(name === "password" || name === "confirmPassword" ? "shy" : "curious")}
+          onBlur={() => setMascotMood("ready")}
           className={inputClass + " pr-14"}
           aria-invalid={Boolean(error)}
         />
@@ -78,6 +80,8 @@ export default function Auth() {
 
   const handleChange = ({ target: { name, value } }) => {
     setFormData((current) => ({ ...current, [name]: value }));
+    if (name === "password" || name === "confirmPassword") setMascotMood("shy");
+    else if (name === "email" || name === "name") setMascotMood("curious");
   };
 
   const resetOtp = () => {
@@ -173,6 +177,8 @@ export default function Auth() {
           handleChange(event);
           if (otpSent) resetOtp();
         }}
+        onFocus={() => setMascotMood("curious")}
+        onBlur={() => setMascotMood("ready")}
         required
         maxLength={254}
         className={inputClass}
@@ -336,6 +342,8 @@ export default function Auth() {
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
+                  onFocus={() => setMascotMood("curious")}
+                  onBlur={() => setMascotMood("ready")}
                   minLength={2}
                   maxLength={80}
                   required
