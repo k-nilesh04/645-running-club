@@ -235,47 +235,61 @@ export default function Auth() {
           </div>
           <div className="auth-duo-scene relative z-10 flex flex-1 items-center justify-center" aria-hidden="true">
             <div key={`${mascotMood}-${mascotPulse}`} className={`auth-mascot auth-mascot--${mascotMood}`}>
-              <span className="auth-shinchan-prop auth-shinchan-prop--typing" aria-hidden="true">⌨️</span>
-              <span className="auth-shinchan-prop auth-shinchan-prop--email" aria-hidden="true">💌</span>
-              <span className="auth-shinchan-prop auth-shinchan-prop--password" aria-hidden="true">🙈</span>
-              <span className="auth-shinchan-prop auth-shinchan-prop--confirm" aria-hidden="true">🔍</span>
-              <span className="auth-shinchan-prop auth-shinchan-prop--mismatch" aria-hidden="true">❌</span>
-              <span className="auth-shinchan-prop auth-shinchan-prop--otp" aria-hidden="true">🔢</span>
-              <span className="auth-shinchan-prop auth-shinchan-prop--success" aria-hidden="true">🎉</span>
-              <span className="auth-shinchan-prop auth-shinchan-prop--error" aria-hidden="true">💦</span>
-              <svg className="auth-shinchan-svg" viewBox="0 0 360 540" role="presentation" aria-hidden="true">
-                <g className="auth-shinchan-body">
-                  <!-- Hair and head -->
-                  <path d="M75 153 Q48 119 69 77 Q83 35 129 31 Q145 4 174 26 Q199 4 223 29 Q269 18 288 61 Q322 79 310 130 L299 204 Q279 240 245 246 L112 237 Q72 220 64 190Z" fill="#171313" stroke="#171313" strokeWidth="9" strokeLinejoin="round"/>
-                  <path d="M77 140 Q72 85 112 59 Q133 45 158 54 Q178 36 202 52 Q240 38 270 70 Q296 92 294 145 L281 196 Q263 229 231 234 L119 226 Q83 211 77 178Z" fill="#ffbd91" stroke="#171313" strokeWidth="5"/>
-                  <path d="M105 63 Q126 23 150 54 Q162 70 173 66 Q163 29 190 34 Q209 35 217 64 Q241 29 263 65" fill="none" stroke="#171313" strokeWidth="15" strokeLinecap="round"/>
-                  <path d="M111 117 Q133 93 159 115 M207 115 Q234 91 258 117" fill="none" stroke="#171313" strokeWidth="6" strokeLinecap="round"/>
-                  <ellipse cx="139" cy="145" rx="27" ry="33" fill="#fff"/>
-                  <ellipse cx="230" cy="145" rx="27" ry="33" fill="#fff"/>
-                  <ellipse cx="143" cy="149" rx="15" ry="22" fill="#171313"/>
-                  <ellipse cx="226" cy="149" rx="15" ry="22" fill="#171313"/>
-                  <circle cx="147" cy="140" r="6" fill="#fff"/>
-                  <circle cx="230" cy="140" r="6" fill="#fff"/>
-                  <ellipse cx="188" cy="190" rx="19" ry="24" fill="#8d4053" stroke="#171313" strokeWidth="4"/>
-                  <path d="M72 148 Q36 132 28 169 Q22 209 65 213 L91 201 M287 147 Q328 128 337 169 Q344 209 302 215 L280 201" fill="#ffbd91" stroke="#171313" strokeWidth="5"/>
-                  <!-- Shirt -->
-                  <path d="M100 235 Q126 222 160 232 Q195 241 223 230 Q259 223 278 243 L296 345 Q290 365 268 365 L92 365 Q70 359 73 340Z" fill="#ed171b" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
-                  <path d="M98 253 L75 337 M276 252 L291 337" fill="none" stroke="#b90d15" strokeWidth="5" strokeLinecap="round"/>
-                  <path d="M79 337 Q62 336 55 355 Q48 376 75 378 L104 364 M288 339 Q311 333 319 355 Q325 375 299 380 L274 365" fill="#ffbd91" stroke="#171313" strokeWidth="5"/>
-                  <!-- Yellow shorts -->
-                  <path d="M91 359 Q180 369 271 359 L284 421 L202 422 L184 393 L165 422 L78 420Z" fill="#ffe500" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
-                  <path d="M184 393 L184 421" fill="none" stroke="#171313" strokeWidth="4"/>
-                  <!-- Legs and socks -->
-                  <path d="M111 420 L108 461 L151 461 L166 422 M222 422 L236 461 L278 461 L270 420" fill="#ffbd91" stroke="#171313" strokeWidth="5" strokeLinejoin="round"/>
-                  <path d="M108 457 L105 489 L145 489 L153 457 M236 457 L243 489 L281 489 L277 457" fill="#fff" stroke="#171313" strokeWidth="5"/>
-                  <!-- Shoes -->
-                  <path d="M104 485 Q89 492 79 511 Q61 526 77 531 L151 531 Q168 528 158 513 L140 488 Q129 476 119 491Z" fill="#ffca13" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
-                  <path d="M244 485 Q231 495 222 514 Q211 529 229 532 L301 532 Q319 529 304 513 L280 489 Q266 478 258 493Z" fill="#ffca13" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
+              <svg viewBox="0 0 300 190" role="presentation" className="auth-duo-art">
+                <g className="auth-toon-lead">
+                  <ellipse cx="92" cy="167" rx="57" ry="9" fill="#0b160f" opacity=".12" />
+                  <path d="M54 126 Q28 142 17 160 M104 128 Q130 139 138 158" fill="none" stroke="#0b160f" strokeWidth="13" strokeLinecap="round" />
+                  <path d="M47 76 Q20 67 23 43" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-left"/>
+                  <path d="M122 76 Q152 64 151 42" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-right"/>
+                  <path d="M39 85 Q42 45 85 43 Q129 45 132 88 L122 131 Q84 151 48 130Z" fill="#ff8b42" stroke="#0b160f" strokeWidth="5"/>
+                  <path d="M48 54 Q47 17 84 15 Q122 17 125 55 L113 48 Q82 31 57 52Z" fill="#0b160f"/>
+                  <ellipse cx="69" cy="82" rx="13" ry="17" fill="#fff"/><ellipse cx="105" cy="82" rx="13" ry="17" fill="#fff"/>
+                  <g className="auth-toon-eyes"><ellipse cx="72" cy="85" rx="5" ry="8" fill="#0b160f"/><ellipse cx="108" cy="85" rx="5" ry="8" fill="#0b160f"/></g>
+                  <path className="auth-toon-mouth" d="M72 108 Q88 127 106 106" fill="none" stroke="#0b160f" strokeWidth="5" strokeLinecap="round"/>
+                  <circle cx="50" cy="99" r="8" fill="#ffbd9b"/><circle cx="122" cy="99" r="8" fill="#ffbd9b"/>
+                  <path d="M43 136 L31 155 M113 139 L125 158" stroke="#0b160f" strokeWidth="10" strokeLinecap="round"/>
+                  <path d="M20 160 L42 160 M121 160 L145 160" stroke="#a9e66e" strokeWidth="9" strokeLinecap="round"/>
                 </g>
+                <g className="auth-toon-sidekick">
+                  <ellipse cx="220" cy="166" rx="35" ry="6" fill="#0b160f" opacity=".12"/>
+                  <path d="M194 111 Q185 125 190 148 M232 111 Q247 129 241 149" stroke="#0b160f" strokeWidth="9" strokeLinecap="round"/>
+                  <path d="M188 73 Q190 43 218 42 Q247 44 249 75 L242 117 Q216 128 194 116Z" fill="#74bdff" stroke="#0b160f" strokeWidth="4"/>
+                  <path d="M194 57 Q202 28 230 37 Q243 41 246 59" fill="#f3d46b" stroke="#0b160f" strokeWidth="4"/>
+                  <ellipse cx="207" cy="78" rx="8" ry="11" fill="#fff"/><ellipse cx="231" cy="78" rx="8" ry="11" fill="#fff"/>
+                  <circle cx="209" cy="80" r="3.5" fill="#0b160f"/><circle cx="233" cy="80" r="3.5" fill="#0b160f"/>
+                  <path d="M210 96 Q219 103 229 96" fill="none" stroke="#0b160f" strokeWidth="3.5" strokeLinecap="round"/>
+                  <path d="M193 89 L177 103 M244 89 L260 73" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
+                  <path d="M185 150 L174 163 M241 150 L252 163" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
+                </g>
+                <g className="auth-activity auth-activity--typing">
+                  <rect x="82" y="7" width="116" height="43" rx="8" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <g fill="#a9e66e" stroke="#0b160f" strokeWidth="1.5">
+                    <rect x="91" y="15" width="13" height="8" rx="2"/><rect x="108" y="15" width="13" height="8" rx="2"/><rect x="125" y="15" width="13" height="8" rx="2"/><rect x="142" y="15" width="13" height="8" rx="2"/><rect x="159" y="15" width="13" height="8" rx="2"/><rect x="176" y="15" width="13" height="8" rx="2"/>
+                    <rect x="99" y="29" width="82" height="8" rx="3"/>
+                  </g>
+                  <path d="M67 3 l-7 -10 M205 8 l8 -9 M191 60 l7 8" stroke="#ff8b42" strokeWidth="4" strokeLinecap="round"/>
+                </g>
+                <g className="auth-activity auth-activity--email">
+                  <rect x="108" y="2" width="66" height="45" rx="9" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <path d="M112 8 L141 29 L170 8" fill="none" stroke="#245b36" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M112 39 L131 23 M170 39 L151 23" stroke="#245b36" strokeWidth="3" strokeLinecap="round"/>
+                </g>
+                <g className="auth-activity auth-activity--password">
+                  <rect x="117" y="3" width="50" height="43" rx="9" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <rect x="126" y="20" width="32" height="20" rx="5" fill="#f3d46b" stroke="#0b160f" strokeWidth="2.5"/>
+                  <path d="M132 20 V15 Q132 6 142 6 Q152 6 152 15 V20" fill="none" stroke="#0b160f" strokeWidth="4"/>
+                  <circle cx="142" cy="29" r="3" fill="#0b160f"/>
+                </g>
+                <g className="auth-activity auth-activity--otp">
+                  <rect x="111" y="2" width="62" height="44" rx="9" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <g fill="#74bdff"><circle cx="124" cy="18" r="4"/><circle cx="142" cy="18" r="4"/><circle cx="160" cy="18" r="4"/></g>
+                  <path d="M122 32 H162" stroke="#0b160f" strokeWidth="4" strokeLinecap="round"/>
+                </g>
+                <path className="auth-toon-spark" d="M158 20 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
+                <path className="auth-toon-spark auth-toon-spark-two" d="M274 111 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
               </svg>
-              <span className="auth-shinchan-sweat" aria-hidden="true">💧</span>
-              <span className="auth-shinchan-sparkle" aria-hidden="true">✨</span>
             </div>
+          </div>
           </div>
         </aside>
 
