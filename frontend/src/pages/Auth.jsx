@@ -9,7 +9,7 @@ const passwordRules = [
   { label: "At least 12 characters", test: (value) => value.length >= 12 },
   { label: "One uppercase letter", test: (value) => /[A-Z]/.test(value) },
   { label: "One lowercase letter", test: (value) => /[a-z]/.test(value) },
-  { label: "One number", test: (value) => /\\d/.test(value) },
+  { label: "One number", test: (value) => /\d/.test(value) },
 ];
 const inputClass = "w-full rounded-xl border border-white/10 bg-[#0b1811] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-white/30 focus:border-[#a9e66e] focus:ring-2 focus:ring-[#a9e66e]/15";
 const labelClass = "mb-2 block text-sm font-semibold text-white/80";
@@ -115,7 +115,7 @@ export default function Auth() {
       setStatus({ type: "error", message: "Your passwords do not match. Please check and try again." });
       return;
     }
-    if (!isSignup && loginMethod === "otp" && otpSent && !/^\\d{6}$/.test(loginOtp)) {
+    if (!isSignup && loginMethod === "otp" && otpSent && !/^\d{6}$/.test(loginOtp)) {
       setStatus({ type: "error", message: "Enter the 6-digit code sent to your email." });
       return;
     }
@@ -357,7 +357,7 @@ export default function Auth() {
                     autoFocus
                     placeholder="000000"
                     value={loginOtp}
-                    onChange={(event) => setLoginOtp(event.target.value.replace(/\\D/g, "").slice(0, 6))}
+                    onChange={(event) => setLoginOtp(event.target.value.replace(/\D/g, "").slice(0, 6))}
                     required
                     className={inputClass + " text-center text-2xl font-bold tracking-[.55em]"}
                   />
