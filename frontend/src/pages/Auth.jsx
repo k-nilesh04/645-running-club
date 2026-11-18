@@ -67,6 +67,7 @@ export default function Auth() {
   const [loginOtp, setLoginOtp] = useState("");
   const [otpCooldown, setOtpCooldown] = useState(0);
   const [mascotMood, setMascotMood] = useState("idle");
+  const [mascotPulse, setMascotPulse] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state?.from || "/profile";
@@ -81,6 +82,7 @@ export default function Auth() {
   }, [otpCooldown]);
 
   const handleChange = ({ target: { name, value } }) => {
+    setMascotPulse((pulse) => pulse + 1);
     setFormData((current) => ({ ...current, [name]: value }));
     if (name === "password") setMascotMood("password");
     else if (name === "confirmPassword") setMascotMood(value === formData.password ? "success" : "mismatch");
@@ -232,7 +234,7 @@ export default function Auth() {
             <span className="font-display text-sm font-extrabold uppercase tracking-[.16em]">Run Club</span>
           </div>
           <div className="auth-duo-scene relative z-10 flex flex-1 items-center justify-center" aria-hidden="true">
-            <div className={`auth-mascot auth-mascot--${mascotMood}`}>
+            <div key={`${mascotMood}-${mascotPulse}`} className={`auth-mascot auth-mascot--${mascotMood}`}>
               <svg viewBox="0 0 300 190" role="presentation" className="auth-duo-art">
                 <g className="auth-toon-lead">
                   <ellipse cx="92" cy="167" rx="57" ry="9" fill="#0b160f" opacity=".12" />
@@ -258,6 +260,14 @@ export default function Auth() {
                   <path d="M210 96 Q219 103 229 96" fill="none" stroke="#0b160f" strokeWidth="3.5" strokeLinecap="round"/>
                   <path d="M193 89 L177 103 M244 89 L260 73" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
                   <path d="M185 150 L174 163 M241 150 L252 163" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
+                </g>
+                <g className="auth-activity auth-activity--typing">
+                  <rect x="82" y="7" width="116" height="43" rx="8" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <g fill="#a9e66e" stroke="#0b160f" strokeWidth="1.5">
+                    <rect x="91" y="15" width="13" height="8" rx="2"/><rect x="108" y="15" width="13" height="8" rx="2"/><rect x="125" y="15" width="13" height="8" rx="2"/><rect x="142" y="15" width="13" height="8" rx="2"/><rect x="159" y="15" width="13" height="8" rx="2"/><rect x="176" y="15" width="13" height="8" rx="2"/>
+                    <rect x="99" y="29" width="82" height="8" rx="3"/>
+                  </g>
+                  <path d="M67 3 l-7 -10 M205 8 l8 -9 M191 60 l7 8" stroke="#ff8b42" strokeWidth="4" strokeLinecap="round"/>
                 </g>
                 <g className="auth-activity auth-activity--email">
                   <rect x="108" y="2" width="66" height="45" rx="9" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
