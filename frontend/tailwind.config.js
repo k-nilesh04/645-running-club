@@ -4,16 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#C8FF3D",
-        dark: "#10251C",
-        offwhite: "#F4F0E4",
-        accent: "#C8FF3D",
-        forest: {
-          DEFAULT: "#10251C",
-          soft: "#19382A",
-          light: "#244A36",
-        },
-        cream: "#F4F0E4",
+        primary: "#A9E66E",
+        dark: "#07110D",
+        offwhite: "#F5F8F2",
+        accent: "#A9E66E",
+        forest: { DEFAULT: "#07110D", soft: "#0D1B14", light: "#13251A" },
+        cream: "#F5F8F2",
+        leaf: "#D0F2B0",
       },
       fontFamily: {
         display: ["Poppins", "sans-serif"],
