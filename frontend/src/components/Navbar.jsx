@@ -62,12 +62,12 @@ export default function Navbar() {
           <span className="leading-tight"><span className="block font-display text-sm font-bold tracking-wide text-white">RUN CLUB</span><span className="mt-1 block text-[9px] font-medium uppercase tracking-[.2em] text-white/45">Dwarka · Delhi</span></span>
         </NavLink>
 
-        <div className="hidden min-w-0 flex-1 items-center justify-center gap-1 md:flex">
+        <div className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex">
           {primaryLinks.map((link) => <NavLink key={link.to} to={link.to} end={link.end} className={navClass}>{link.label}</NavLink>)}
           {loggedIn && currentUser.role === "admin" && <NavLink to="/admin" className={navClass}>Admin</NavLink>}
         </div>
 
-        <div className="hidden shrink-0 items-center gap-4 md:flex">
+        <div className="hidden shrink-0 items-center gap-4 lg:flex">
           {loggedIn ? (
             <>
               <NavLink to="/profile" className="profile-avatar" aria-label="Open profile">{userInitial}</NavLink>
@@ -81,7 +81,7 @@ export default function Navbar() {
           )}
         </div>
 
-        <button type="button" className="mobile-menu-button grid h-10 w-10 shrink-0 place-items-center rounded-xl md:hidden" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen}>
+        <button type="button" className="mobile-menu-button grid h-10 w-10 shrink-0 place-items-center rounded-xl lg:hidden" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen}>
           <span className="text-xl leading-none">{menuOpen ? "×" : "≡"}</span>
         </button>
       </nav>
