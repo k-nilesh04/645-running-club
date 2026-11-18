@@ -6,13 +6,13 @@ export default function Members() {
 
   return (
     <section className="section min-h-[60vh]">
-      <div className="mb-10 flex flex-col gap-6 border-b border-white/10 pb-8 md:flex-row md:items-end md:justify-between">
+      <div className="mb-10 flex flex-col gap-6 border-b border-white/10 pb-8 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-primary">The people behind the miles</p>
           <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl">Our members<span className="text-primary">.</span></h1>
           <p className="mt-3 text-sm text-offwhite/55">A community of runners, one Sunday at a time.</p>
         </div>
-        <label className="w-full md:max-w-xs">
+        <label className="w-full lg:max-w-xs">
           <span className="mb-2 block text-xs text-offwhite/45">Find someone</span>
           <input type="text" placeholder="Search by name..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-white/15 bg-[#232323] px-4 py-3 text-sm text-white placeholder:text-offwhite/35 outline-none transition focus:border-primary" />
         </label>
