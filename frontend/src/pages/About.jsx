@@ -22,7 +22,7 @@ export default function About() {
       </section>
 
       <section id="our-story" className="section">
-        <div className="grid gap-8 md:grid-cols-[0.7fr_1.3fr]">
+        <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
           <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Our story</p><h2 className="section-title mt-3">It starts with showing up.</h2></div>
           <div className="max-w-2xl space-y-4 text-sm leading-7 text-offwhite/65">
             <p>645 Run Club is a community-driven initiative that encourages people across all age groups to build a healthier lifestyle, one Sunday at a time. Every Sunday morning, runners gather at Dwarka Sector 19B Park to improve their fitness, meet like-minded people, and build a routine that lasts.</p>
@@ -33,7 +33,7 @@ export default function About() {
 
       <section className="border-y border-white/10 bg-black/10">
         <div className="section">
-          <div className="grid gap-10 md:grid-cols-2">
+          <div className="grid gap-10 lg:grid-cols-2">
             <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Our vision</p><h2 className="section-title mt-3">What we're working towards.</h2><ul className="mt-6 space-y-4">{vision.map((item) => <li key={item} className="flex gap-3 border-b border-white/10 pb-3 text-sm leading-6 text-offwhite/70"><span className="text-primary">—</span>{item}</li>)}</ul></div>
             <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Our mission</p><h2 className="section-title mt-3">What we do along the way.</h2><ul className="mt-6 space-y-4">{mission.map((item) => <li key={item} className="flex gap-3 border-b border-white/10 pb-3 text-sm leading-6 text-offwhite/70"><span className="text-primary">—</span>{item}</li>)}</ul></div>
           </div>
