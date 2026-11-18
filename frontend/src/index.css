@@ -557,3 +557,31 @@ iframe { display:block; }
 @media (prefers-reduced-motion:reduce) {
   .auth-mascot *, .auth-mascot *::before { animation:none!important;transition:none!important; }
 }
+
+
+/* Extra-comedic typing reactions: rapid-fire keys, panic sweat and goofy teamwork. */
+.auth-mascot--typing .auth-activity--typing,
+.auth-mascot--email .auth-activity--typing { opacity:1; animation:auth-keyboard-pop .28s cubic-bezier(.2,1.6,.4,1) both; }
+.auth-mascot--typing .auth-toon-lead,
+.auth-mascot--email .auth-toon-lead { animation:auth-frantic-type .22s ease-in-out infinite alternate; }
+.auth-mascot--typing .auth-toon-sidekick,
+.auth-mascot--email .auth-toon-sidekick { animation:auth-sidekick-panic .34s ease-in-out infinite alternate; }
+.auth-mascot--typing .auth-toon-eyes,
+.auth-mascot--email .auth-toon-eyes { animation:auth-bug-eyes .2s steps(2,end) infinite; }
+.auth-mascot--typing .auth-toon-mouth,
+.auth-mascot--email .auth-toon-mouth { d:path("M72 108 Q88 139 106 106"); }
+.auth-mascot--password .auth-toon-lead { animation:auth-password-peek .7s ease-in-out infinite alternate; }
+.auth-mascot--password .auth-toon-sidekick { animation:auth-sidekick-facepalm .55s ease-in-out infinite alternate; }
+.auth-mascot--password .auth-toon-mouth { d:path("M76 113 Q88 106 100 113"); }
+.auth-mascot--confirm .auth-toon-sidekick { animation:auth-sidekick-inspector .45s ease-in-out infinite alternate; }
+.auth-mascot--mismatch .auth-toon-sidekick { animation:auth-sidekick-disbelief .22s ease-in-out infinite alternate; }
+.auth-mascot--otp .auth-toon-sidekick { animation:auth-sidekick-count .24s ease-in-out infinite alternate; }
+@keyframes auth-keyboard-pop { 0%{opacity:0;transform:translateY(18px) scale(.5) rotate(-8deg)} 70%{opacity:1;transform:translateY(-5px) scale(1.1) rotate(4deg)} 100%{opacity:1;transform:translateY(0) scale(1) rotate(0)} }
+@keyframes auth-frantic-type { from{transform:translateY(2px) rotate(-5deg) scale(.98)} to{transform:translateY(-10px) rotate(6deg) scale(1.04)} }
+@keyframes auth-sidekick-panic { from{transform:rotate(-12deg) translate(-4px,2px)} to{transform:rotate(15deg) translate(5px,-7px)} }
+@keyframes auth-bug-eyes { 0%,100%{transform:translate(-7px,-2px) scale(1.13)} 50%{transform:translate(7px,2px) scale(.9)} }
+@keyframes auth-password-peek { from{transform:translateY(8px) rotate(-7deg)} to{transform:translateY(2px) rotate(7deg)} }
+@keyframes auth-sidekick-facepalm { from{transform:rotate(-4deg) translateY(0)} to{transform:rotate(-25deg) translateY(7px)} }
+@keyframes auth-sidekick-inspector { from{transform:rotate(7deg) translateY(0)} to{transform:rotate(-8deg) translateY(-7px)} }
+@keyframes auth-sidekick-disbelief { from{transform:translateX(-5px) rotate(-10deg)} to{transform:translateX(5px) rotate(10deg)} }
+@keyframes auth-sidekick-count { from{transform:translateY(0) rotate(-12deg)} to{transform:translateY(-13px) rotate(12deg)} }
