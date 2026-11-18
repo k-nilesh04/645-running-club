@@ -87,7 +87,7 @@ export default function Navbar() {
       </nav>
 
       {menuOpen && (
-        <div className="mobile-menu border-t border-white/10 px-5 pb-5 pt-3 md:hidden">
+        <div className="mobile-menu border-t border-white/10 px-5 pb-5 pt-3 lg:hidden">
           <div className="mx-auto flex max-w-6xl flex-col">
             {primaryLinks.map((link) => <NavLink key={link.to} to={link.to} end={link.end} onClick={closeMenu} className={({ isActive }) => `border-b border-white/10 py-3 text-sm font-medium ${isActive ? "text-[#b9ed89]" : "text-white/70"}`}>{link.label}</NavLink>)}
             {loggedIn && currentUser.role === "admin" && <NavLink to="/admin" onClick={closeMenu} className="border-b border-white/10 py-3 text-sm text-[#b9ed89]">Admin</NavLink>}
