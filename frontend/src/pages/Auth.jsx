@@ -243,15 +243,39 @@ export default function Auth() {
               <span className="auth-shinchan-prop auth-shinchan-prop--otp" aria-hidden="true">🔢</span>
               <span className="auth-shinchan-prop auth-shinchan-prop--success" aria-hidden="true">🎉</span>
               <span className="auth-shinchan-prop auth-shinchan-prop--error" aria-hidden="true">💦</span>
-              <img
-                src="/assets/auth-shinchan.svg"
-                alt=""
-                draggable="false"
-                className="auth-shinchan-image"
-              />
+              <svg className="auth-shinchan-svg" viewBox="0 0 360 430" role="presentation" aria-hidden="true">
+                <g className="auth-shinchan-body">
+                  <!-- Hair and head -->
+                  <path d="M75 153 Q48 119 69 77 Q83 35 129 31 Q145 4 174 26 Q199 4 223 29 Q269 18 288 61 Q322 79 310 130 L299 204 Q279 240 245 246 L112 237 Q72 220 64 190Z" fill="#171313" stroke="#171313" strokeWidth="9" strokeLinejoin="round"/>
+                  <path d="M77 140 Q72 85 112 59 Q133 45 158 54 Q178 36 202 52 Q240 38 270 70 Q296 92 294 145 L281 196 Q263 229 231 234 L119 226 Q83 211 77 178Z" fill="#ffbd91" stroke="#171313" strokeWidth="5"/>
+                  <path d="M105 63 Q126 23 150 54 Q162 70 173 66 Q163 29 190 34 Q209 35 217 64 Q241 29 263 65" fill="none" stroke="#171313" strokeWidth="15" strokeLinecap="round"/>
+                  <path d="M111 117 Q133 93 159 115 M207 115 Q234 91 258 117" fill="none" stroke="#171313" strokeWidth="6" strokeLinecap="round"/>
+                  <ellipse cx="139" cy="145" rx="27" ry="33" fill="#fff"/>
+                  <ellipse cx="230" cy="145" rx="27" ry="33" fill="#fff"/>
+                  <ellipse cx="143" cy="149" rx="15" ry="22" fill="#171313"/>
+                  <ellipse cx="226" cy="149" rx="15" ry="22" fill="#171313"/>
+                  <circle cx="147" cy="140" r="6" fill="#fff"/>
+                  <circle cx="230" cy="140" r="6" fill="#fff"/>
+                  <ellipse cx="188" cy="190" rx="19" ry="24" fill="#8d4053" stroke="#171313" strokeWidth="4"/>
+                  <path d="M72 148 Q36 132 28 169 Q22 209 65 213 L91 201 M287 147 Q328 128 337 169 Q344 209 302 215 L280 201" fill="#ffbd91" stroke="#171313" strokeWidth="5"/>
+                  <!-- Shirt -->
+                  <path d="M100 235 Q126 222 160 232 Q195 241 223 230 Q259 223 278 243 L296 345 Q290 365 268 365 L92 365 Q70 359 73 340Z" fill="#ed171b" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
+                  <path d="M98 253 L75 337 M276 252 L291 337" fill="none" stroke="#b90d15" strokeWidth="5" strokeLinecap="round"/>
+                  <path d="M79 337 Q62 336 55 355 Q48 376 75 378 L104 364 M288 339 Q311 333 319 355 Q325 375 299 380 L274 365" fill="#ffbd91" stroke="#171313" strokeWidth="5"/>
+                  <!-- Yellow shorts -->
+                  <path d="M91 359 Q180 369 271 359 L284 421 L202 422 L184 393 L165 422 L78 420Z" fill="#ffe500" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
+                  <path d="M184 393 L184 421" fill="none" stroke="#171313" strokeWidth="4"/>
+                  <!-- Legs and socks -->
+                  <path d="M111 420 L108 461 L151 461 L166 422 M222 422 L236 461 L278 461 L270 420" fill="#ffbd91" stroke="#171313" strokeWidth="5" strokeLinejoin="round"/>
+                  <path d="M108 457 L105 489 L145 489 L153 457 M236 457 L243 489 L281 489 L277 457" fill="#fff" stroke="#171313" strokeWidth="5"/>
+                  <!-- Shoes -->
+                  <path d="M104 485 Q89 492 79 511 Q61 526 77 531 L151 531 Q168 528 158 513 L140 488 Q129 476 119 491Z" fill="#ffca13" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
+                  <path d="M244 485 Q231 495 222 514 Q211 529 229 532 L301 532 Q319 529 304 513 L280 489 Q266 478 258 493Z" fill="#ffca13" stroke="#171313" strokeWidth="6" strokeLinejoin="round"/>
+                </g>
+              </svg>
               <span className="auth-shinchan-sweat" aria-hidden="true">💧</span>
               <span className="auth-shinchan-sparkle" aria-hidden="true">✨</span>
-            </div>>
+            </div>
           </div>
         </aside>
 
