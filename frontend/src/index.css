@@ -113,3 +113,13 @@ a, button, input, select, textarea { transition-duration:180ms; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
 }
+.stats-panel { border:1px solid rgba(169,230,110,.16); background:radial-gradient(ellipse at 100% 0%,rgba(169,230,110,.09),transparent 45%),linear-gradient(145deg,#122319,#0b1811); box-shadow:0 24px 70px rgba(0,0,0,.18); }
+.distance-section { background:radial-gradient(ellipse at 50% 0%,rgba(71,119,69,.1),transparent 55%),rgba(255,255,255,.012); }
+.distance-card { min-height:310px; border:1px solid rgba(226,242,224,.1); background:linear-gradient(150deg,#122319,#0b1811 78%); transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
+.distance-card:hover { transform:translateY(-6px); border-color:rgba(169,230,110,.42); box-shadow:0 24px 55px rgba(0,0,0,.25); }
+.distance-card-featured { border-color:rgba(169,230,110,.35); background:radial-gradient(ellipse at 100% 0%,rgba(169,230,110,.13),transparent 55%),linear-gradient(150deg,#172d1e,#0b1811 78%); }
+.value-card { border:1px solid rgba(226,242,224,.1); background:linear-gradient(145deg,rgba(19,37,26,.9),rgba(10,22,15,.9)); transition:transform .25s ease,border-color .25s ease; }
+.value-card:hover { transform:translateY(-5px); border-color:rgba(169,230,110,.35); }
+.benefits-panel { border:1px solid rgba(169,230,110,.17); background:radial-gradient(ellipse at 0% 100%,rgba(169,230,110,.1),transparent 45%),linear-gradient(145deg,#122319,#0a1710); }
+section[id] { scroll-margin-top:6rem; }
+.card, article { transition: border-color .2s ease; }
