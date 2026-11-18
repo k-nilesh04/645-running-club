@@ -85,7 +85,7 @@ export default function Home() {
       <section className="section">
         <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
           <div><p className="eyebrow">More than a run</p><h2 className="section-title mt-3 text-4xl sm:text-5xl">Good for your body.<br /><span className="text-[#a9e66e]">Great for your soul.</span></h2><p className="mt-5 max-w-md text-sm leading-7 text-white/55">We believe feeling better starts with small, consistent steps. Join a welcoming group where every effort counts and every person belongs.</p><div className="mt-7 flex flex-wrap gap-3"><NavLink to="/about" className="btn-primary">Our story <span aria-hidden="true">↗</span></NavLink><NavLink to="/join" className="hero-secondary">Become a member</NavLink></div></div>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {values.map((value) => <article key={value.number} className="value-card rounded-3xl p-5"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#a9e66e]/10 text-xl text-[#b9ed89]">{value.icon}</span><p className="mt-7 text-xs font-bold tracking-widest text-[#a9e66e]">{value.number}</p><h3 className="mt-2 font-display text-lg font-bold text-white">{value.title}</h3><p className="mt-2 text-xs leading-6 text-white/50">{value.description}</p></article>)}
           </div>
         </div>
