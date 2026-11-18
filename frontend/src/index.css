@@ -723,3 +723,37 @@ iframe { display:block; }
 @media(prefers-reduced-motion:reduce) {
  .auth-shinchan-image,.auth-shinchan-prop,.auth-shinchan-sweat{animation:none!important}
 }
+
+
+/* Shin-chan is rendered as inline vector artwork, never loaded as a bitmap. */
+.auth-shinchan-svg {
+  display:block;
+  width:min(100%,360px);
+  height:auto;
+  max-height:430px;
+  overflow:visible;
+  filter:drop-shadow(0 14px 10px rgba(11,22,15,.16));
+}
+.auth-shinchan-body {
+  transform-box:fill-box;
+  transform-origin:50% 90%;
+  animation:shinchan-idle 2.8s ease-in-out infinite;
+}
+.auth-mascot--typing .auth-shinchan-body,
+.auth-mascot--email .auth-shinchan-body { animation:shinchan-frantic .32s steps(2,end) infinite; }
+.auth-mascot--password .auth-shinchan-body { animation:shinchan-shy .65s ease-in-out infinite alternate; }
+.auth-mascot--confirm .auth-shinchan-body { animation:shinchan-inspect .7s ease-in-out infinite alternate; }
+.auth-mascot--mismatch .auth-shinchan-body,
+.auth-mascot--error .auth-shinchan-body { animation:shinchan-nope .22s ease-in-out infinite alternate; }
+.auth-mascot--otp .auth-shinchan-body,
+.auth-mascot--sending .auth-shinchan-body { animation:shinchan-otp .42s ease-in-out infinite; }
+.auth-mascot--success .auth-shinchan-body { animation:shinchan-party .48s ease-in-out 5; }
+@media(max-width:1023px) {
+  .auth-shinchan-svg { width:min(100%,290px);max-height:320px; }
+}
+@media(max-width:520px) {
+  .auth-shinchan-svg { width:min(100%,235px);max-height:255px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .auth-shinchan-body { animation:none!important; }
+}
