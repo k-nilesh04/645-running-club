@@ -496,3 +496,64 @@ iframe { display:block; }
   .auth-toon-lead,.auth-toon-sidekick,.auth-toon-arm-left,.auth-toon-arm-right,
   .auth-toon-eyes,.auth-toon-spark{animation:none!important}
 }
+
+
+/* Clean auth illustration layout: no mascot copy, no overflowing character card. */
+.auth-mascot-stage { min-width:0; }
+.auth-duo-scene { width:100%; min-width:0; min-height:330px; padding:1rem .25rem; }
+.auth-mascot {
+  width:min(100%,390px);
+  height:280px;
+  flex:0 1 390px;
+  display:grid;
+  place-items:center;
+  overflow:visible;
+  border-radius:42px;
+  background:radial-gradient(ellipse at 50% 55%,rgba(255,255,255,.58),rgba(255,255,255,.08) 72%);
+  box-shadow:0 20px 48px rgba(11,22,15,.09);
+}
+.auth-mascot .auth-duo-art { display:block;width:100%;height:auto;max-height:270px;overflow:visible; }
+.auth-activity { opacity:0; transform-origin:center; pointer-events:none; }
+.auth-activity--email { opacity:0; }
+.auth-mascot--email .auth-activity--email,
+.auth-mascot--typing .auth-activity--email { opacity:1; animation:auth-activity-pop .5s ease-out both; }
+.auth-mascot--password .auth-activity--password,
+.auth-mascot--confirm .auth-activity--password,
+.auth-mascot--mismatch .auth-activity--password { opacity:1; animation:auth-activity-pop .45s ease-out both; }
+.auth-mascot--otp .auth-activity--otp,
+.auth-mascot--sending .auth-activity--otp { opacity:1; animation:auth-activity-pop .45s ease-out both; }
+.auth-mascot--email .auth-toon-lead,.auth-mascot--typing .auth-toon-lead { animation:auth-email-type .5s ease-in-out infinite alternate; }
+.auth-mascot--email .auth-toon-sidekick,.auth-mascot--typing .auth-toon-sidekick { animation:auth-email-point .7s ease-in-out infinite alternate; }
+.auth-mascot--password .auth-toon-lead { animation:auth-password-hide .55s ease-in-out infinite alternate; }
+.auth-mascot--password .auth-toon-sidekick { animation:auth-password-cover .55s ease-in-out infinite alternate; }
+.auth-mascot--password .auth-toon-mouth { d:path("M74 112 Q88 104 102 112"); }
+.auth-mascot--confirm .auth-toon-lead { animation:auth-confirm-check .55s ease-in-out infinite alternate; }
+.auth-mascot--mismatch .auth-toon-lead { animation:auth-mismatch-shake .2s ease-in-out infinite alternate; }
+.auth-mascot--otp .auth-toon-lead { animation:auth-otp-count .42s ease-in-out infinite; }
+.auth-mascot--otp .auth-toon-sidekick { animation:auth-otp-tap .32s ease-in-out infinite alternate; }
+.auth-mascot--sending .auth-toon-sidekick,.auth-mascot--thinking .auth-toon-sidekick { animation:auth-otp-tap .28s ease-in-out infinite alternate; }
+.auth-mascot--success .auth-toon-lead { animation:auth-duo-celebrate .5s ease-in-out 4; }
+.auth-mascot--success .auth-toon-sidekick { animation:auth-sidekick-party .45s ease-in-out 4; }
+.auth-mascot--error .auth-toon-lead { animation:auth-duo-nope .24s ease-in-out 4; }
+@keyframes auth-activity-pop { from{opacity:0;transform:translateY(12px) scale(.7)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes auth-email-type { from{transform:translateY(0) rotate(-2deg)} to{transform:translateY(-5px) rotate(3deg)} }
+@keyframes auth-email-point { from{transform:rotate(-5deg)} to{transform:rotate(12deg) translateY(-4px)} }
+@keyframes auth-password-hide { from{transform:translateY(0) rotate(-3deg)} to{transform:translateY(7px) rotate(4deg)} }
+@keyframes auth-password-cover { from{transform:rotate(-5deg)} to{transform:rotate(-28deg) translateY(4px)} }
+@keyframes auth-confirm-check { from{transform:rotate(-4deg)} to{transform:rotate(5deg) translateY(-5px)} }
+@keyframes auth-mismatch-shake { from{transform:translateX(-6px) rotate(-4deg)} to{transform:translateX(6px) rotate(4deg)} }
+@keyframes auth-otp-count { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px) rotate(5deg)} }
+@keyframes auth-otp-tap { from{transform:translateY(0) rotate(-8deg)} to{transform:translateY(-7px) rotate(9deg)} }
+@media (max-width:1023px) {
+  .auth-duo-scene { min-height:250px; }
+  .auth-mascot { width:min(100%,330px);height:235px;flex-basis:330px; }
+  .auth-mascot .auth-duo-art { max-height:225px; }
+}
+@media (max-width:520px) {
+  .auth-duo-scene { min-height:205px;padding:.4rem 0; }
+  .auth-mascot { width:min(100%,285px);height:195px;flex-basis:285px;border-radius:28px; }
+  .auth-mascot .auth-duo-art { max-height:190px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .auth-mascot *, .auth-mascot *::before { animation:none!important;transition:none!important; }
+}
