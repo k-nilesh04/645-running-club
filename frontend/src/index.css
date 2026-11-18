@@ -123,3 +123,32 @@ a, button, input, select, textarea { transition-duration:180ms; }
 .benefits-panel { border:1px solid rgba(169,230,110,.17); background:radial-gradient(ellipse at 0% 100%,rgba(169,230,110,.1),transparent 45%),linear-gradient(145deg,#122319,#0a1710); }
 section[id] { scroll-margin-top:6rem; }
 .card, article { transition: border-color .2s ease; }
+
+/* Two-lane, continuous photo marquee shared by Home and Our Story. */
+.photo-gallery-section { overflow:hidden; }
+.photo-marquee { position:relative; display:grid; gap:14px; overflow:hidden; padding:2px 0 10px; }
+.photo-marquee::before, .photo-marquee::after { content:""; position:absolute; z-index:2; top:0; bottom:0; width:clamp(24px,5vw,76px); pointer-events:none; }
+.photo-marquee::before { left:0; background:linear-gradient(90deg,var(--club-bg),transparent); }
+.photo-marquee::after { right:0; background:linear-gradient(270deg,var(--club-bg),transparent); }
+.photo-marquee-lane { overflow:hidden; width:100%; }
+.photo-marquee-track { display:flex; width:max-content; gap:14px; animation:photo-marquee-left 52s linear infinite; will-change:transform; }
+.photo-marquee-right .photo-marquee-track { animation-name:photo-marquee-right; animation-duration:58s; }
+.photo-marquee-item { position:relative; flex:0 0 auto; width:clamp(220px,27vw,350px); height:clamp(155px,19vw,235px); overflow:hidden; border:1px solid rgba(226,242,224,.12); border-radius:20px; background:#102117; }
+.photo-marquee-item img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .7s cubic-bezier(.2,.7,.2,1),filter .5s ease; }
+.photo-marquee-item:hover img { transform:scale(1.07); filter:saturate(1.08); }
+.photo-marquee-shade { position:absolute; inset:35% 0 0; background:linear-gradient(transparent,rgba(3,10,6,.72)); pointer-events:none; }
+.photo-marquee-item figcaption { position:absolute; right:16px; bottom:13px; left:16px; color:rgba(255,255,255,.86); font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.photo-marquee-item figcaption span { color:var(--club-green); padding:0 4px; }
+.photo-marquee:hover .photo-marquee-track, .photo-marquee:focus-within .photo-marquee-track { animation-play-state:paused; }
+@keyframes photo-marquee-left { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+@keyframes photo-marquee-right { from { transform:translateX(-50%); } to { transform:translateX(0); } }
+@media (max-width:640px) {
+  .photo-marquee { gap:10px; }
+  .photo-marquee-track { gap:10px; animation-duration:42s; }
+  .photo-marquee-right .photo-marquee-track { animation-duration:48s; }
+  .photo-marquee-item { width:220px; height:158px; border-radius:15px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .photo-marquee-track, .photo-marquee-right .photo-marquee-track { animation:none; transform:none; }
+  .photo-marquee-lane { overflow-x:auto; scrollbar-width:thin; }
+}

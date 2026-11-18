@@ -1,20 +1,52 @@
 const images = Object.values(import.meta.glob("../clubImage/*.{png,jpg,jpeg,webp}", { eager: true, import: "default" }));
 
-export default function PhotoGallery() {
-  if (!images.length) return null;
+function PhotoLane({ items, direction = "left", label }) {
+  if (!items.length) return null;
+  const repeated = [...items, ...items];
 
   return (
-    <section className="overflow-hidden">
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">From our Sundays</p><h2 className="mt-2 font-display text-2xl font-bold text-white">Good people. Good miles.</h2></div>
-        <span className="hidden text-xs text-offwhite/40 sm:block">645 Run Club · Dwarka</span>
-      </div>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
-        {images.slice(0, 8).map((src, index) => (
-          <figure key={src} className={`group overflow-hidden bg-[#202420] ${index === 0 ? "col-span-2 row-span-2" : ""} ${index === 0 ? "aspect-square" : "aspect-[4/3]"}`}>
-            <img src={src} alt={`645 Run Club community moment ${index + 1}`} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+    <div className={`photo-marquee-lane photo-marquee-${direction}`} aria-label={label}>
+      <div className="photo-marquee-track">
+        {repeated.map((src, index) => (
+          <figure
+            key={`${direction}-${index}-${src}`}
+            className="photo-marquee-item"
+            aria-hidden={index >= items.length ? "true" : undefined}
+          >
+            <img
+              src={src}
+              alt={index >= items.length ? "" : `645 Run Club community moment ${index + 1}`}
+              loading="lazy"
+              decoding="async"
+            />
+            <span className="photo-marquee-shade" />
+            {index < items.length && <figcaption>645 Run Club <span>·</span> Sunday miles</figcaption>}
           </figure>
         ))}
+      </div>
+    </div>
+  );
+}
+
+export default function PhotoGallery() {
+  if (!images.length) return null;
+  const galleryImages = images.slice(0, 12);
+  const secondLane = [...galleryImages].reverse();
+
+  return (
+    <section className="photo-gallery-section" aria-label="645 Run Club photo gallery">
+      <div className="mb-7 flex items-end justify-between gap-4 px-5 sm:px-7 lg:px-10">
+        <div>
+          <p className="eyebrow">Real people. Real moments.</p>
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">The miles we make <span className="text-[#a9e66e]">together.</span></h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-white/50">A little glimpse of the energy, friendships and memories from our Sunday runs.</p>
+        </div>
+        <span className="hidden shrink-0 rounded-full border border-white/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[.16em] text-white/40 sm:inline-flex">645 · Dwarka</span>
+      </div>
+
+      <div className="photo-marquee" role="region" aria-label="Moving photos from 645 Run Club. Animation pauses when focused or hovered.">
+        <PhotoLane items={galleryImages} direction="left" label="Run club photos moving left" />
+        {galleryImages.length > 2 && <PhotoLane items={secondLane} direction="right" label="Run club photos moving right" />}
       </div>
     </section>
   );
