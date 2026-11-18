@@ -587,202 +587,31 @@ iframe { display:block; }
 @keyframes auth-sidekick-count { from{transform:translateY(0) rotate(-12deg)} to{transform:translateY(-13px) rotate(12deg)} }
 
 
-/* User-provided Shin-chan artwork with activity-specific comic reactions. */
+
+/* Original two-character authentication motion scene. */
 .auth-mascot {
-  position:relative;
-  width:min(100%,430px);
-  height:440px;
-  flex:0 1 430px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:visible;
-  border:0;
-  border-radius:0;
-  background:transparent;
-  box-shadow:none;
-}
-.auth-mascot .auth-duo-art { display:none; }
-.auth-shinchan-image {
-  display:block;
-  width:auto;
-  height:min(100%,420px);
-  max-width:100%;
-  object-fit:contain;
-  transform-origin:50% 88%;
-  filter:drop-shadow(0 18px 12px rgba(11,22,15,.14));
-  animation:shinchan-idle 2.8s ease-in-out infinite;
-  user-select:none;
-  -webkit-user-drag:none;
-}
-.auth-shinchan-prop {
-  position:absolute;
-  z-index:3;
-  top:7%;
-  right:8%;
-  display:grid;
-  place-items:center;
-  width:66px;
-  height:66px;
-  border:3px solid #0b160f;
-  border-radius:20px;
-  background:#fff;
-  box-shadow:5px 6px 0 #0b160f;
-  font-size:35px;
-  opacity:0;
-  transform:scale(.2) rotate(-18deg);
-  pointer-events:none;
-}
-.auth-shinchan-sweat,.auth-shinchan-sparkle {
-  position:absolute;
-  z-index:4;
-  font-size:32px;
-  opacity:0;
-  pointer-events:none;
-}
-.auth-mascot--typing .auth-shinchan-image,
-.auth-mascot--email .auth-shinchan-image {
-  animation:shinchan-frantic 0.32s steps(2,end) infinite;
-}
-.auth-mascot--typing .auth-shinchan-prop--typing,
-.auth-mascot--email .auth-shinchan-prop--typing,
-.auth-mascot--email .auth-shinchan-prop--email {
-  opacity:1;
-  animation:shinchan-prop-pop .35s cubic-bezier(.2,1.7,.4,1) both,shinchan-prop-wiggle .3s ease-in-out .35s infinite alternate;
-}
-.auth-mascot--typing .auth-shinchan-sweat,
-.auth-mascot--email .auth-shinchan-sweat {
-  opacity:1;
-  top:24%;
-  left:10%;
-  animation:shinchan-sweat .55s ease-in-out infinite;
-}
-.auth-mascot--password .auth-shinchan-image {
-  animation:shinchan-shy .65s ease-in-out infinite alternate;
-}
-.auth-mascot--password .auth-shinchan-prop--password {
-  opacity:1;
-  animation:shinchan-prop-pop .35s cubic-bezier(.2,1.7,.4,1) both,shinchan-prop-float .9s ease-in-out .35s infinite alternate;
-}
-.auth-mascot--confirm .auth-shinchan-image {
-  animation:shinchan-inspect .7s ease-in-out infinite alternate;
-}
-.auth-mascot--confirm .auth-shinchan-prop--confirm {
-  opacity:1;
-  animation:shinchan-prop-pop .35s cubic-bezier(.2,1.7,.4,1) both,shinchan-prop-float .8s ease-in-out .35s infinite alternate;
-}
-.auth-mascot--mismatch .auth-shinchan-image {
-  animation:shinchan-nope .22s ease-in-out infinite alternate;
-}
-.auth-mascot--mismatch .auth-shinchan-prop--mismatch {
-  opacity:1;
-  animation:shinchan-prop-pop .35s cubic-bezier(.2,1.7,.4,1) both,shinchan-prop-wiggle .22s ease-in-out .35s infinite alternate;
-}
-.auth-mascot--otp .auth-shinchan-image {
-  animation:shinchan-otp .42s ease-in-out infinite;
-}
-.auth-mascot--otp .auth-shinchan-prop--otp,
-.auth-mascot--sending .auth-shinchan-prop--otp {
-  opacity:1;
-  animation:shinchan-prop-pop .35s cubic-bezier(.2,1.7,.4,1) both,shinchan-prop-float .5s ease-in-out .35s infinite alternate;
-}
-.auth-mascot--success .auth-shinchan-image {
-  animation:shinchan-party .48s ease-in-out 5;
-}
-.auth-mascot--success .auth-shinchan-prop--success {
-  opacity:1;
-  animation:shinchan-prop-pop .35s cubic-bezier(.2,1.7,.4,1) both,shinchan-prop-float .5s ease-in-out .35s infinite alternate;
-}
-.auth-mascot--error .auth-shinchan-image {
-  animation:shinchan-nope .18s ease-in-out 5 alternate;
-}
-.auth-mascot--error .auth-shinchan-prop--error {
-  opacity:1;
-  animation:shinchan-prop-pop .35s cubic-bezier(.2,1.7,.4,1) both,shinchan-prop-wiggle .22s ease-in-out .35s infinite alternate;
-}
-@keyframes shinchan-idle { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-7px) rotate(1deg)} }
-@keyframes shinchan-frantic { 0%{transform:translateY(2px) rotate(-4deg) scale(.99)} 100%{transform:translateY(-8px) rotate(4deg) scale(1.015)} }
-@keyframes shinchan-shy { from{transform:translateY(5px) rotate(-4deg) scale(.98)} to{transform:translateY(0) rotate(3deg) scale(1)} }
-@keyframes shinchan-inspect { from{transform:rotate(-4deg) translateY(0)} to{transform:rotate(4deg) translateY(-6px)} }
-@keyframes shinchan-nope { from{transform:translateX(-8px) rotate(-3deg)} to{transform:translateX(8px) rotate(3deg)} }
-@keyframes shinchan-otp { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-18px) rotate(3deg)} }
-@keyframes shinchan-party { 0%,100%{transform:translateY(0) rotate(0)} 30%{transform:translateY(-25px) rotate(-7deg)} 65%{transform:translateY(-9px) rotate(7deg)} }
-@keyframes shinchan-prop-pop { from{opacity:0;transform:scale(.2) rotate(-18deg)} to{opacity:1;transform:scale(1) rotate(0)} }
-@keyframes shinchan-prop-wiggle { from{rotate:-12deg} to{rotate:12deg} }
-@keyframes shinchan-prop-float { from{translate:0 3px} to{translate:0 -12px} }
-@keyframes shinchan-sweat { 0%{transform:translate(0,0) rotate(0);opacity:0} 30%{opacity:1} 100%{transform:translate(-18px,35px) rotate(45deg);opacity:0} }
-@media(max-width:1023px) {
- .auth-mascot{height:320px;flex-basis:320px}
- .auth-shinchan-image{height:min(100%,310px)}
-}
-@media(max-width:520px) {
- .auth-mascot{height:250px;flex-basis:250px}
- .auth-shinchan-image{height:min(100%,240px)}
- .auth-shinchan-prop{width:48px;height:48px;border-radius:14px;font-size:26px;box-shadow:3px 4px 0 #0b160f}
-}
-@media(prefers-reduced-motion:reduce) {
- .auth-shinchan-image,.auth-shinchan-prop,.auth-shinchan-sweat{animation:none!important}
-}
-
-
-/* Shin-chan is rendered as inline vector artwork, never loaded as a bitmap. */
-.auth-shinchan-svg {
-  display:block;
-  width:min(100%,360px);
-  height:auto;
-  max-height:430px;
-  overflow:visible;
-  filter:drop-shadow(0 14px 10px rgba(11,22,15,.16));
-}
-.auth-shinchan-body {
-  transform-box:fill-box;
-  transform-origin:50% 90%;
-  animation:shinchan-idle 2.8s ease-in-out infinite;
-}
-.auth-mascot--typing .auth-shinchan-body,
-.auth-mascot--email .auth-shinchan-body { animation:shinchan-frantic .32s steps(2,end) infinite; }
-.auth-mascot--password .auth-shinchan-body { animation:shinchan-shy .65s ease-in-out infinite alternate; }
-.auth-mascot--confirm .auth-shinchan-body { animation:shinchan-inspect .7s ease-in-out infinite alternate; }
-.auth-mascot--mismatch .auth-shinchan-body,
-.auth-mascot--error .auth-shinchan-body { animation:shinchan-nope .22s ease-in-out infinite alternate; }
-.auth-mascot--otp .auth-shinchan-body,
-.auth-mascot--sending .auth-shinchan-body { animation:shinchan-otp .42s ease-in-out infinite; }
-.auth-mascot--success .auth-shinchan-body { animation:shinchan-party .48s ease-in-out 5; }
-@media(max-width:1023px) {
-  .auth-shinchan-svg { width:min(100%,290px);max-height:320px; }
-}
-@media(max-width:520px) {
-  .auth-shinchan-svg { width:min(100%,235px);max-height:255px; }
-}
-@media(prefers-reduced-motion:reduce) {
-  .auth-shinchan-body { animation:none!important; }
-}
-
-
-/* Restore the original two-character motion scene and its responsive sizing. */
-.auth-mascot {
-  width:min(100%,390px);
-  height:280px;
-  flex:0 1 390px;
-  display:grid;
-  place-items:center;
-  overflow:visible;
-  border-radius:42px;
-  background:radial-gradient(ellipse at 50% 55%,rgba(255,255,255,.58),rgba(255,255,255,.08) 72%);
-  box-shadow:0 20px 48px rgba(11,22,15,.09);
+  width: min(100%, 390px);
+  height: 280px;
+  flex: 0 1 390px;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  border-radius: 42px;
+  background: radial-gradient(ellipse at 50% 55%, rgba(255,255,255,.58), rgba(255,255,255,.08) 72%);
+  box-shadow: 0 20px 48px rgba(11,22,15,.09);
 }
 .auth-mascot .auth-duo-art {
-  display:block;
-  width:100%;
-  height:auto;
-  max-height:270px;
-  overflow:visible;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 270px;
+  overflow: visible;
 }
-@media(max-width:1023px) {
-  .auth-mascot {width:min(100%,330px);height:235px;flex-basis:330px}
-  .auth-mascot .auth-duo-art {max-height:225px}
+@media (max-width: 1023px) {
+  .auth-mascot { width: min(100%, 330px); height: 235px; flex-basis: 330px; }
+  .auth-mascot .auth-duo-art { max-height: 225px; }
 }
-@media(max-width:520px) {
-  .auth-mascot {width:min(100%,285px);height:195px;flex-basis:285px;border-radius:28px}
-  .auth-mascot .auth-duo-art {max-height:190px}
+@media (max-width: 520px) {
+  .auth-mascot { width: min(100%, 285px); height: 195px; flex-basis: 285px; border-radius: 28px; }
+  .auth-mascot .auth-duo-art { max-height: 190px; }
 }
