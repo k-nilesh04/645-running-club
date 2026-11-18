@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loginUser, signupUser } from "../api/api.js";
+import { loginUser, signupUser, sendLoginOtp, verifyLoginOtp } from "../api/api.js";
 import EmailVerificationModal from "../components/EmailVerificationModal.jsx";
 import { saveAuthSession } from "../utils/auth.js";
 
@@ -16,10 +16,20 @@ export default function Auth() {
   const [status, setStatus] = useState({ type: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState("");
+  const [loginMethod, setLoginMethod] = useState("password");
+  const [otpSent, setOtpSent] = useState(false);
+  const [loginOtp, setLoginOtp] = useState("");
+  const [otpCooldown, setOtpCooldown] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state?.from || "/profile";
   const isSignup = mode === "signup";
+
+  useEffect(() => {
+    if (otpCooldown <= 0) return undefined;
+    const timer = setTimeout(() => setOtpCooldown((value) => value - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [otpCooldown]);
 
   const handleChange = ({ target: { name, value } }) => {
     setFormData((current) => ({ ...current, [name]: value }));
@@ -29,10 +39,25 @@ export default function Auth() {
     setMode(nextMode);
     setStatus({ type: "", message: "" });
     setVerificationEmail("");
+    setOtpSent(false);
+    setLoginOtp("");
+    setOtpCooldown(0);
+    setLoginMethod("password");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!isSignup && loginMethod === "otp") {
+      if (!formData.email.trim()) {
+        setStatus({ type: "error", message: "Enter your email address first." });
+        return;
+      }
+      if (otpSent && !/^\d{6}$/.test(loginOtp)) {
+        setStatus({ type: "error", message: "Enter the 6-digit OTP sent to your email." });
+        return;
+      }
+    }
 
     if (isSignup && !strongPassword(formData.password)) {
       setStatus({ type: "error", message: "Use at least 12 characters with uppercase, lowercase, and a number." });
@@ -47,6 +72,20 @@ export default function Auth() {
     setStatus({ type: "", message: "" });
 
     try {
+      if (!isSignup && loginMethod === "otp") {
+        if (!otpSent) {
+          const { data } = await sendLoginOtp(formData.email.trim());
+          setOtpSent(true);
+          setOtpCooldown(60);
+          setStatus({ type: "success", message: data.message || "OTP sent to your registered email address." });
+          return;
+        }
+        const { data } = await verifyLoginOtp({ email: formData.email.trim(), otp: loginOtp });
+        saveAuthSession({ user: data.user });
+        navigate(redirectPath, { replace: true });
+        return;
+      }
+
       const payload = isSignup
         ? { name: formData.name.trim(), email: formData.email.trim(), password: formData.password }
         : { email: formData.email.trim(), password: formData.password };
@@ -112,6 +151,12 @@ export default function Auth() {
           <p className="mt-3 text-sm leading-6 text-offwhite/60">
             {isSignup ? "Your email will be verified before your account is activated." : "Sign in to view your profile and registered runs."}
           </p>
+          {!isSignup && (
+            <div className="mt-6 grid grid-cols-2 gap-2 rounded-xl bg-black/20 p-1">
+              <button type="button" onClick={() => { setLoginMethod("password"); setOtpSent(false); setLoginOtp(""); setStatus({ type: "", message: "" }); }} className={`rounded-lg px-3 py-2.5 text-sm font-semibold transition ${loginMethod === "password" ? "bg-primary text-white" : "text-offwhite/60 hover:text-white"}`}>Password</button>
+              <button type="button" onClick={() => { setLoginMethod("otp"); setOtpSent(false); setLoginOtp(""); setStatus({ type: "", message: "" }); }} className={`rounded-lg px-3 py-2.5 text-sm font-semibold transition ${loginMethod === "otp" ? "bg-primary text-white" : "text-offwhite/60 hover:text-white"}`}>Login with OTP</button>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             {isSignup && (
@@ -123,13 +168,26 @@ export default function Auth() {
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-offwhite/75">Email address</span>
-              <input type="email" name="email" autoComplete="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} required className={inputClass} />
+              <input type="email" name="email" autoComplete="email" placeholder="you@example.com" value={formData.email} onChange={(event) => { handleChange(event); setOtpSent(false); setLoginOtp(""); setOtpCooldown(0); }} required className={inputClass} />
             </label>
 
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-offwhite/75">Password</span>
-              <input type="password" name="password" autoComplete={isSignup ? "new-password" : "current-password"} placeholder={isSignup ? "Create a secure password" : "Enter your password"} value={formData.password} onChange={handleChange} minLength={isSignup ? 12 : undefined} required className={inputClass} />
-            </label>
+            {(isSignup || loginMethod === "password") && (
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-offwhite/75">Password</span>
+                <input type="password" name="password" autoComplete={isSignup ? "new-password" : "current-password"} placeholder={isSignup ? "Create a secure password" : "Enter your password"} value={formData.password} onChange={handleChange} minLength={isSignup ? 12 : undefined} required className={inputClass} />
+              </label>
+            )}
+
+            {!isSignup && loginMethod === "otp" && otpSent && (
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-offwhite/75">6-digit email OTP</span>
+                <input type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={6} placeholder="Enter OTP" value={loginOtp} onChange={(event) => setLoginOtp(event.target.value.replace(/\D/g, ""))} required className={inputClass + " text-center text-xl font-semibold tracking-[0.35em]"} />
+                <div className="mt-2 flex justify-between gap-3 text-xs text-offwhite/50">
+                  <span>Code expires in 10 minutes.</span>
+                  <button type="button" disabled={loading || otpCooldown > 0} onClick={async () => { setLoading(true); try { const { data } = await sendLoginOtp(formData.email.trim()); setStatus({ type: "success", message: data.message || "A new OTP has been sent." }); setOtpCooldown(60); setLoginOtp(""); } catch (error) { setStatus({ type: "error", message: error.response?.data?.message || "Could not resend OTP." }); } finally { setLoading(false); } }} className="font-semibold text-primary disabled:opacity-40">{otpCooldown > 0 ? `Resend in ${otpCooldown}s` : "Resend OTP"}</button>
+                </div>
+              </label>
+            )}
 
             {isSignup && (
               <>
@@ -142,7 +200,7 @@ export default function Auth() {
             )}
 
             <button type="submit" disabled={loading} className="btn-primary mt-2 w-full py-3.5 disabled:cursor-not-allowed disabled:opacity-60">
-              {loading ? "Please wait..." : isSignup ? "Create account" : "Log in"}
+              {loading ? "Please wait..." : isSignup ? "Create account" : loginMethod === "otp" ? (otpSent ? "Verify & log in" : "Send login OTP") : "Log in"}
             </button>
           </form>
 

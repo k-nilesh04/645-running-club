@@ -25,6 +25,8 @@ api.interceptors.response.use(
 
 export const signupUser = (payload) => api.post("/user/signup", payload);
 export const loginUser = (payload) => api.post("/user/login", payload);
+export const sendLoginOtp = (email) => api.post("/user/login/send-otp", { email });
+export const verifyLoginOtp = (payload) => api.post("/user/login/verify-otp", payload);
 export const logoutUser = () => api.post("/user/logout");
 export const getMyProfile = () => api.get("/user/profile");
 export const updateMyProfile = (payload) => api.put("/user/profile/update", payload);
