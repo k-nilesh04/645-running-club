@@ -428,3 +428,71 @@ iframe { display:block; }
   .auth-mascot--otp svg,.auth-mascot--sending svg,.auth-mascot--thinking svg,
   .auth-mascot--success svg,.auth-mascot--error svg { animation:none !important; }
 }
+
+
+/* Playful two-character 2D runner duo — auth page only. */
+.auth-mascot-wrap {
+  min-height:208px;
+  gap:.8rem;
+  border:2px solid rgba(11,22,15,.12);
+  background:linear-gradient(135deg,rgba(255,255,255,.5),rgba(255,255,255,.23));
+  box-shadow:0 18px 38px rgba(11,22,15,.08),inset 0 1px 0 rgba(255,255,255,.42);
+}
+.auth-mascot {
+  width:270px;
+  height:190px;
+  flex:0 0 270px;
+  border-radius:28px;
+  background:radial-gradient(circle at 52% 45%,rgba(255,255,255,.86),rgba(255,255,255,.2) 72%);
+  overflow:visible;
+}
+.auth-mascot svg { width:270px;height:172px;overflow:visible; }
+.auth-toon-lead { transform-origin:88px 154px; animation:auth-duo-jump .78s cubic-bezier(.45,0,.55,1) infinite; }
+.auth-toon-sidekick { transform-origin:218px 153px; animation:auth-sidekick-bop 1.05s ease-in-out infinite; }
+.auth-toon-arm-left { transform-origin:28px 68px; animation:auth-arm-flail .6s ease-in-out infinite alternate; }
+.auth-toon-arm-right { transform-origin:124px 74px; animation:auth-arm-flail .55s ease-in-out .12s infinite alternate-reverse; }
+.auth-toon-eyes { transform-origin:90px 84px; animation:auth-eye-wiggle 2s ease-in-out infinite; }
+.auth-toon-spark { transform-origin:158px 38px; animation:auth-spark-pop 1.15s ease-in-out infinite; }
+.auth-toon-spark-two { animation-delay:.45s; }
+.auth-mascot--hello .auth-toon-lead { animation:auth-duo-wave .55s ease-in-out 3; }
+.auth-mascot--email .auth-toon-eyes,.auth-mascot--typing .auth-toon-eyes { animation:auth-eye-wiggle .35s ease-in-out infinite; }
+.auth-mascot--password .auth-toon-lead { animation:auth-duo-hide .65s ease-in-out infinite alternate; }
+.auth-mascot--password .auth-toon-sidekick { animation:auth-sidekick-cover .6s ease-in-out infinite alternate; }
+.auth-mascot--confirm .auth-toon-lead { animation:auth-duo-check .55s ease-in-out infinite alternate; }
+.auth-mascot--mismatch .auth-toon-lead { animation:auth-duo-confused .28s ease-in-out infinite alternate; }
+.auth-mascot--otp .auth-toon-lead { animation:auth-duo-count .48s ease-in-out infinite; }
+.auth-mascot--sending .auth-toon-sidekick,.auth-mascot--thinking .auth-toon-sidekick { animation:auth-sidekick-run .35s linear infinite; }
+.auth-mascot--success .auth-toon-lead { animation:auth-duo-celebrate .5s ease-in-out 4; }
+.auth-mascot--success .auth-toon-sidekick { animation:auth-sidekick-party .45s ease-in-out 4; }
+.auth-mascot--error .auth-toon-lead { animation:auth-duo-nope .24s ease-in-out 4; }
+@keyframes auth-duo-jump { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-13px) rotate(2deg)} }
+@keyframes auth-sidekick-bop { 0%,100%{transform:rotate(-4deg) translateY(0)} 50%{transform:rotate(5deg) translateY(-7px)} }
+@keyframes auth-arm-flail { from{rotate:-16deg} to{rotate:18deg} }
+@keyframes auth-eye-wiggle { 0%,100%{transform:translateX(-4px)} 50%{transform:translateX(4px)} }
+@keyframes auth-spark-pop { 0%,100%{transform:scale(.55) rotate(0);opacity:.4} 50%{transform:scale(1.2) rotate(24deg);opacity:1} }
+@keyframes auth-duo-wave { 0%,100%{transform:rotate(0) translateY(0)} 30%{transform:rotate(-9deg) translateY(-11px)} 70%{transform:rotate(8deg) translateY(-4px)} }
+@keyframes auth-duo-hide { from{transform:translateY(0) rotate(-5deg)} to{transform:translateY(10px) rotate(5deg)} }
+@keyframes auth-sidekick-cover { from{transform:rotate(0)} to{transform:rotate(-16deg) translateY(5px)} }
+@keyframes auth-duo-check { from{transform:rotate(-5deg)} to{transform:rotate(5deg) translateY(-5px)} }
+@keyframes auth-duo-confused { from{transform:translateX(-7px) rotate(-6deg)} to{transform:translateX(7px) rotate(6deg)} }
+@keyframes auth-duo-count { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-17px) rotate(5deg)} }
+@keyframes auth-sidekick-run { 0%{transform:translateY(0) rotate(-8deg)} 50%{transform:translateY(-9px) rotate(8deg)} 100%{transform:translateY(0) rotate(-8deg)} }
+@keyframes auth-duo-celebrate { 0%,100%{transform:translateY(0) rotate(0) scale(1)} 40%{transform:translateY(-23px) rotate(-10deg) scale(1.08)} 70%{transform:translateY(-5px) rotate(10deg) scale(1.02)} }
+@keyframes auth-sidekick-party { 0%,100%{transform:rotate(0) translateY(0)} 50%{transform:rotate(20deg) translateY(-18px)} }
+@keyframes auth-duo-nope { 0%,100%{transform:translateX(0)} 30%{transform:translateX(-9px) rotate(-6deg)} 70%{transform:translateX(9px) rotate(6deg)} }
+@media (max-width:1023px) {
+  .auth-mascot-wrap{min-height:165px}
+  .auth-mascot{width:220px;height:155px;flex-basis:220px}
+  .auth-mascot svg{width:220px;height:145px}
+}
+@media (max-width:520px) {
+  .auth-mascot-wrap{min-height:132px;gap:.35rem;padding:.55rem}
+  .auth-mascot{width:142px;height:118px;flex-basis:142px;border-radius:18px}
+  .auth-mascot svg{width:145px;height:115px}
+  .auth-mascot-caption{font-size:.9rem}
+  .auth-mascot-wrap .text-\[10px\]{font-size:8px}
+}
+@media (prefers-reduced-motion:reduce) {
+  .auth-toon-lead,.auth-toon-sidekick,.auth-toon-arm-left,.auth-toon-arm-right,
+  .auth-toon-eyes,.auth-toon-spark{animation:none!important}
+}
