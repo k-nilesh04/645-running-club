@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loginUser, signupUser } from "../api/api.js";
+import { loginUser, signupUser, sendLoginOtp, verifyLoginOtp } from "../api/api.js";
 import EmailVerificationModal from "../components/EmailVerificationModal.jsx";
 import { saveAuthSession } from "../utils/auth.js";
 
@@ -16,10 +16,20 @@ export default function Auth() {
   const [status, setStatus] = useState({ type: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState("");
+  const [loginMethod, setLoginMethod] = useState("password");
+  const [otpSent, setOtpSent] = useState(false);
+  const [loginOtp, setLoginOtp] = useState("");
+  const [otpCooldown, setOtpCooldown] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state?.from || "/profile";
   const isSignup = mode === "signup";
+
+  useEffect(() => {
+    if (otpCooldown <= 0) return undefined;
+    const timer = setTimeout(() => setOtpCooldown((value) => value - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [otpCooldown]);
 
   const handleChange = ({ target: { name, value } }) => {
     setFormData((current) => ({ ...current, [name]: value }));
@@ -29,10 +39,25 @@ export default function Auth() {
     setMode(nextMode);
     setStatus({ type: "", message: "" });
     setVerificationEmail("");
+    setOtpSent(false);
+    setLoginOtp("");
+    setOtpCooldown(0);
+    setLoginMethod("password");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!isSignup && loginMethod === "otp") {
+      if (!formData.email.trim()) {
+        setStatus({ type: "error", message: "Enter your email address first." });
+        return;
+      }
+      if (otpSent && !/^\\d{6}$/.test(loginOtp)) {
+        setStatus({ type: "error", message: "Enter the 6-digit OTP sent to your email." });
+        return;
+      }
+    }
 
     if (isSignup && !strongPassword(formData.password)) {
       setStatus({ type: "error", message: "Use at least 12 characters with uppercase, lowercase, and a number." });
@@ -142,7 +167,7 @@ export default function Auth() {
             )}
 
             <button type="submit" disabled={loading} className="btn-primary mt-2 w-full py-3.5 disabled:cursor-not-allowed disabled:opacity-60">
-              {loading ? "Please wait..." : isSignup ? "Create account" : "Log in"}
+              {loading ? "Please wait..." : isSignup ? "Create account" : loginMethod === "otp" ? (otpSent ? "Verify & log in" : "Send login OTP") : "Log in"}
             </button>
           </form>
 
