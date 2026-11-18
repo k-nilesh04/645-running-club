@@ -256,32 +256,49 @@ export default function Auth() {
             </p>
             <div className="auth-mascot-wrap mt-6 flex items-center gap-4 rounded-[1.5rem] border border-[#0b160f]/10 bg-white/25 p-4 sm:p-5 backdrop-blur-sm" aria-live="polite">
               <div className={`auth-mascot auth-mascot--${mascotMood}`} aria-hidden="true" key={mascotMood}>
-                <svg viewBox="0 0 132 120" role="img" className="h-[158px] w-[172px] overflow-visible">
-                  <ellipse cx="66" cy="108" rx="42" ry="7" fill="#0b160f" opacity=".12" />
-                  <path className="auth-mascot-arm auth-mascot-arm-left" d="M34 68 Q14 75 19 91 Q24 100 34 88" fill="none" stroke="#245b36" strokeWidth="10" strokeLinecap="round" />
-                  <path className="auth-mascot-arm auth-mascot-arm-right" d="M98 68 Q118 75 113 91 Q108 100 98 88" fill="none" stroke="#245b36" strokeWidth="10" strokeLinecap="round" />
-                  <path className="auth-mascot-body" d="M28 68 Q28 27 66 24 Q104 27 104 68 Q104 99 66 101 Q28 99 28 68Z" fill="#245b36" />
-                  <path d="M52 26 Q43 9 55 7 Q67 8 66 24" fill="#245b36" />
-                  <path d="M66 24 Q72 6 84 12 Q91 18 79 30" fill="#245b36" />
-                  <ellipse cx="51" cy="65" rx="11" ry="14" fill="#fff" />
-                  <ellipse cx="81" cy="65" rx="11" ry="14" fill="#fff" />
-                  <g className="auth-mascot-eyes">
-                    <ellipse cx="53" cy="67" rx="4.5" ry="7" fill="#0b160f" />
-                    <ellipse cx="83" cy="67" rx="4.5" ry="7" fill="#0b160f" />
-                    <circle cx="54.5" cy="64" r="1.6" fill="#fff" />
-                    <circle cx="84.5" cy="64" r="1.6" fill="#fff" />
+                <svg viewBox="0 0 300 190" role="img" className="h-[172px] w-[270px] overflow-visible">
+                  {/* Bouncy lead runner */}
+                  <g className="auth-toon-lead">
+                    <ellipse cx="92" cy="167" rx="57" ry="9" fill="#0b160f" opacity=".12" />
+                    <path d="M54 126 Q28 142 17 160" fill="none" stroke="#0b160f" strokeWidth="13" strokeLinecap="round" />
+                    <path d="M104 128 Q130 139 138 158" fill="none" stroke="#0b160f" strokeWidth="13" strokeLinecap="round" />
+                    <path d="M47 76 Q20 67 23 43" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-left"/>
+                    <path d="M122 76 Q152 64 151 42" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-right"/>
+                    <path d="M39 85 Q42 45 85 43 Q129 45 132 88 L122 131 Q84 151 48 130Z" fill="#ff8b42" stroke="#0b160f" strokeWidth="5"/>
+                    <path d="M48 54 Q47 17 84 15 Q122 17 125 55 L113 48 Q82 31 57 52Z" fill="#0b160f"/>
+                    <ellipse cx="69" cy="82" rx="13" ry="17" fill="#fff"/>
+                    <ellipse cx="105" cy="82" rx="13" ry="17" fill="#fff"/>
+                    <g className="auth-toon-eyes">
+                      <ellipse cx="72" cy="85" rx="5" ry="8" fill="#0b160f"/>
+                      <ellipse cx="108" cy="85" rx="5" ry="8" fill="#0b160f"/>
+                    </g>
+                    <path d="M72 108 Q88 127 106 106" fill="none" stroke="#0b160f" strokeWidth="5" strokeLinecap="round"/>
+                    <circle cx="50" cy="99" r="8" fill="#ffbd9b" opacity=".9"/><circle cx="122" cy="99" r="8" fill="#ffbd9b" opacity=".9"/>
+                    <path d="M43 136 L31 155 M113 139 L125 158" stroke="#0b160f" strokeWidth="10" strokeLinecap="round"/>
+                    <path d="M20 160 L42 160 M121 160 L145 160" stroke="#a9e66e" strokeWidth="9" strokeLinecap="round"/>
                   </g>
-                  <path className="auth-mascot-mouth" d="M59 83 Q66 90 73 83" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M38 48 Q46 42 56 46 M76 46 Q87 42 94 48" fill="none" stroke="#0b160f" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M47 98 L42 108 M85 98 L90 108" stroke="#0b160f" strokeWidth="7" strokeLinecap="round" />
+                  {/* Tiny sidekick runner */}
+                  <g className="auth-toon-sidekick">
+                    <ellipse cx="220" cy="166" rx="35" ry="6" fill="#0b160f" opacity=".12"/>
+                    <path d="M194 111 Q185 125 190 148 M232 111 Q247 129 241 149" stroke="#0b160f" strokeWidth="9" strokeLinecap="round"/>
+                    <path d="M188 73 Q190 43 218 42 Q247 44 249 75 L242 117 Q216 128 194 116Z" fill="#74bdff" stroke="#0b160f" strokeWidth="4"/>
+                    <path d="M194 57 Q202 28 230 37 Q243 41 246 59" fill="#f3d46b" stroke="#0b160f" strokeWidth="4"/>
+                    <ellipse cx="207" cy="78" rx="8" ry="11" fill="#fff"/><ellipse cx="231" cy="78" rx="8" ry="11" fill="#fff"/>
+                    <circle cx="209" cy="80" r="3.5" fill="#0b160f"/><circle cx="233" cy="80" r="3.5" fill="#0b160f"/>
+                    <path d="M210 96 Q219 103 229 96" fill="none" stroke="#0b160f" strokeWidth="3.5" strokeLinecap="round"/>
+                    <path d="M193 89 L177 103 M244 89 L260 73" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
+                    <path d="M185 150 L174 163 M241 150 L252 163" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
+                  </g>
+                  <path className="auth-toon-spark" d="M158 20 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
+                  <path className="auth-toon-spark auth-toon-spark-two" d="M274 111 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
                 </svg>
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#0b160f]/50">Your run buddy</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#0b160f]/50">The 645 chaos crew</p>
                 <p className="auth-mascot-caption mt-1 font-display text-lg font-black leading-tight text-[#0b160f]">
                   {mascotCopy[mascotMood] || mascotCopy.idle}
                 </p>
-                <p className="mt-1 text-xs leading-5 text-[#0b160f]/60">Your little run buddy reacts as you sign up or sign in.</p>
+                <p className="mt-1 text-xs leading-5 text-[#0b160f]/60">Two tiny runners. Zero chill. Maximum support.</p>
               </div>
             </div>
           </div>
