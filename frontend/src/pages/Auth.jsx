@@ -72,20 +72,7 @@ export default function Auth() {
   const redirectPath = location.state?.from || "/profile";
   const isSignup = mode === "signup";
   const passwordValid = passwordRules.every((rule) => rule.test(formData.password));
-  const mascotCopy = {
-    idle: isSignup ? "A new runner is joining the crew!" : "Welcome back, champion!",
-    hello: isSignup ? "Let’s get you on the starting line!" : "Hey, you’re back! Let’s go!",
-    email: "I’m looking for your email address…",
-    typing: "Nice! I’m keeping up with you.",
-    password: "Secret mode: I won’t peek! 🙈",
-    confirm: "Let’s make sure those passwords match.",
-    mismatch: "Hmm… these two don’t look the same yet.",
-    otp: "One-time code? I’m counting each digit!",
-    sending: "Sending your sign-in code…",
-    thinking: isSignup ? "Getting your membership ready…" : "Checking your details…",
-    success: "You’re in! Let’s make every mile count!",
-    error: "Oops! Let’s fix that and try again.",
-  };
+
 
   useEffect(() => {
     if (otpCooldown <= 0) return undefined;
@@ -97,7 +84,8 @@ export default function Auth() {
     setFormData((current) => ({ ...current, [name]: value }));
     if (name === "password") setMascotMood("password");
     else if (name === "confirmPassword") setMascotMood(value === formData.password ? "success" : "mismatch");
-    else if (name === "email" || name === "name") setMascotMood("typing");
+    else if (name === "email") setMascotMood("email");
+    else if (name === "name") setMascotMood("typing");
   };
 
   const resetOtp = () => {
@@ -235,74 +223,64 @@ export default function Auth() {
           onPointerLeave={(event) => {
             event.currentTarget.style.setProperty("--mascot-look-x", "0px");
             event.currentTarget.style.setProperty("--mascot-look-y", "0px");
-            setMascotMood("ready");
           }}
         >
-          <div className="pointer-events-none absolute -right-28 -top-24 h-80 w-80 rounded-full border-[52px] border-[#0b160f]/[.07]" />
-          <div className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full border-[44px] border-[#0b160f]/[.07]" />
-          <div className="relative flex items-center gap-3">
+          <div className="pointer-events-none absolute -right-28 -top-24 h-80 w-80 rounded-full border-[52px] border-[#0b160f]/[.06]" />
+          <div className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full border-[44px] border-[#0b160f]/[.06]" />
+          <div className="relative z-10 flex items-center gap-3">
             <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#0b160f] font-display text-lg font-black text-[#a9e66e]">645</span>
             <span className="font-display text-sm font-extrabold uppercase tracking-[.16em]">Run Club</span>
           </div>
-          <div className="relative py-5 sm:py-7 lg:py-12">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#0b160f]/15 bg-white/25 px-3 py-1.5 text-xs font-bold uppercase tracking-[.14em]">
-              <span className="h-2 w-2 rounded-full bg-[#0b160f]" /> Every Sunday · 6:15 AM
-            </span>
-            <h1 className="mt-7 max-w-md font-display text-5xl font-black leading-[1.04] tracking-[-.055em] xl:text-6xl">
-              Better days start with a run.
-            </h1>
-            <p className="mt-6 max-w-sm text-base leading-7 text-[#0b160f]/75">
-              Find your pace, meet your people, and make every Sunday count. Your running community is one step away.
-            </p>
-            <div className="auth-mascot-wrap mt-6 flex items-center gap-4 rounded-[1.5rem] border border-[#0b160f]/10 bg-white/25 p-4 sm:p-5 backdrop-blur-sm" aria-live="polite">
-              <div className={`auth-mascot auth-mascot--${mascotMood}`} aria-hidden="true" key={mascotMood}>
-                <svg viewBox="0 0 300 190" role="img" className="h-[172px] w-[270px] overflow-visible">
-                  {/* Bouncy lead runner */}
-                  <g className="auth-toon-lead">
-                    <ellipse cx="92" cy="167" rx="57" ry="9" fill="#0b160f" opacity=".12" />
-                    <path d="M54 126 Q28 142 17 160" fill="none" stroke="#0b160f" strokeWidth="13" strokeLinecap="round" />
-                    <path d="M104 128 Q130 139 138 158" fill="none" stroke="#0b160f" strokeWidth="13" strokeLinecap="round" />
-                    <path d="M47 76 Q20 67 23 43" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-left"/>
-                    <path d="M122 76 Q152 64 151 42" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-right"/>
-                    <path d="M39 85 Q42 45 85 43 Q129 45 132 88 L122 131 Q84 151 48 130Z" fill="#ff8b42" stroke="#0b160f" strokeWidth="5"/>
-                    <path d="M48 54 Q47 17 84 15 Q122 17 125 55 L113 48 Q82 31 57 52Z" fill="#0b160f"/>
-                    <ellipse cx="69" cy="82" rx="13" ry="17" fill="#fff"/>
-                    <ellipse cx="105" cy="82" rx="13" ry="17" fill="#fff"/>
-                    <g className="auth-toon-eyes">
-                      <ellipse cx="72" cy="85" rx="5" ry="8" fill="#0b160f"/>
-                      <ellipse cx="108" cy="85" rx="5" ry="8" fill="#0b160f"/>
-                    </g>
-                    <path d="M72 108 Q88 127 106 106" fill="none" stroke="#0b160f" strokeWidth="5" strokeLinecap="round"/>
-                    <circle cx="50" cy="99" r="8" fill="#ffbd9b" opacity=".9"/><circle cx="122" cy="99" r="8" fill="#ffbd9b" opacity=".9"/>
-                    <path d="M43 136 L31 155 M113 139 L125 158" stroke="#0b160f" strokeWidth="10" strokeLinecap="round"/>
-                    <path d="M20 160 L42 160 M121 160 L145 160" stroke="#a9e66e" strokeWidth="9" strokeLinecap="round"/>
-                  </g>
-                  {/* Tiny sidekick runner */}
-                  <g className="auth-toon-sidekick">
-                    <ellipse cx="220" cy="166" rx="35" ry="6" fill="#0b160f" opacity=".12"/>
-                    <path d="M194 111 Q185 125 190 148 M232 111 Q247 129 241 149" stroke="#0b160f" strokeWidth="9" strokeLinecap="round"/>
-                    <path d="M188 73 Q190 43 218 42 Q247 44 249 75 L242 117 Q216 128 194 116Z" fill="#74bdff" stroke="#0b160f" strokeWidth="4"/>
-                    <path d="M194 57 Q202 28 230 37 Q243 41 246 59" fill="#f3d46b" stroke="#0b160f" strokeWidth="4"/>
-                    <ellipse cx="207" cy="78" rx="8" ry="11" fill="#fff"/><ellipse cx="231" cy="78" rx="8" ry="11" fill="#fff"/>
-                    <circle cx="209" cy="80" r="3.5" fill="#0b160f"/><circle cx="233" cy="80" r="3.5" fill="#0b160f"/>
-                    <path d="M210 96 Q219 103 229 96" fill="none" stroke="#0b160f" strokeWidth="3.5" strokeLinecap="round"/>
-                    <path d="M193 89 L177 103 M244 89 L260 73" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
-                    <path d="M185 150 L174 163 M241 150 L252 163" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
-                  </g>
-                  <path className="auth-toon-spark" d="M158 20 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
-                  <path className="auth-toon-spark auth-toon-spark-two" d="M274 111 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
-                </svg>
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#0b160f]/50">The 645 chaos crew</p>
-                <p className="auth-mascot-caption mt-1 font-display text-lg font-black leading-tight text-[#0b160f]">
-                  {mascotCopy[mascotMood] || mascotCopy.idle}
-                </p>
-                <p className="mt-1 text-xs leading-5 text-[#0b160f]/60">Two tiny runners. Zero chill. Maximum support.</p>
-              </div>
+          <div className="auth-duo-scene relative z-10 flex flex-1 items-center justify-center" aria-hidden="true">
+            <div className={`auth-mascot auth-mascot--${mascotMood}`}>
+              <svg viewBox="0 0 300 190" role="presentation" className="auth-duo-art">
+                <g className="auth-toon-lead">
+                  <ellipse cx="92" cy="167" rx="57" ry="9" fill="#0b160f" opacity=".12" />
+                  <path d="M54 126 Q28 142 17 160 M104 128 Q130 139 138 158" fill="none" stroke="#0b160f" strokeWidth="13" strokeLinecap="round" />
+                  <path d="M47 76 Q20 67 23 43" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-left"/>
+                  <path d="M122 76 Q152 64 151 42" fill="none" stroke="#ff8b42" strokeWidth="13" strokeLinecap="round" className="auth-toon-arm-right"/>
+                  <path d="M39 85 Q42 45 85 43 Q129 45 132 88 L122 131 Q84 151 48 130Z" fill="#ff8b42" stroke="#0b160f" strokeWidth="5"/>
+                  <path d="M48 54 Q47 17 84 15 Q122 17 125 55 L113 48 Q82 31 57 52Z" fill="#0b160f"/>
+                  <ellipse cx="69" cy="82" rx="13" ry="17" fill="#fff"/><ellipse cx="105" cy="82" rx="13" ry="17" fill="#fff"/>
+                  <g className="auth-toon-eyes"><ellipse cx="72" cy="85" rx="5" ry="8" fill="#0b160f"/><ellipse cx="108" cy="85" rx="5" ry="8" fill="#0b160f"/></g>
+                  <path className="auth-toon-mouth" d="M72 108 Q88 127 106 106" fill="none" stroke="#0b160f" strokeWidth="5" strokeLinecap="round"/>
+                  <circle cx="50" cy="99" r="8" fill="#ffbd9b"/><circle cx="122" cy="99" r="8" fill="#ffbd9b"/>
+                  <path d="M43 136 L31 155 M113 139 L125 158" stroke="#0b160f" strokeWidth="10" strokeLinecap="round"/>
+                  <path d="M20 160 L42 160 M121 160 L145 160" stroke="#a9e66e" strokeWidth="9" strokeLinecap="round"/>
+                </g>
+                <g className="auth-toon-sidekick">
+                  <ellipse cx="220" cy="166" rx="35" ry="6" fill="#0b160f" opacity=".12"/>
+                  <path d="M194 111 Q185 125 190 148 M232 111 Q247 129 241 149" stroke="#0b160f" strokeWidth="9" strokeLinecap="round"/>
+                  <path d="M188 73 Q190 43 218 42 Q247 44 249 75 L242 117 Q216 128 194 116Z" fill="#74bdff" stroke="#0b160f" strokeWidth="4"/>
+                  <path d="M194 57 Q202 28 230 37 Q243 41 246 59" fill="#f3d46b" stroke="#0b160f" strokeWidth="4"/>
+                  <ellipse cx="207" cy="78" rx="8" ry="11" fill="#fff"/><ellipse cx="231" cy="78" rx="8" ry="11" fill="#fff"/>
+                  <circle cx="209" cy="80" r="3.5" fill="#0b160f"/><circle cx="233" cy="80" r="3.5" fill="#0b160f"/>
+                  <path d="M210 96 Q219 103 229 96" fill="none" stroke="#0b160f" strokeWidth="3.5" strokeLinecap="round"/>
+                  <path d="M193 89 L177 103 M244 89 L260 73" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
+                  <path d="M185 150 L174 163 M241 150 L252 163" stroke="#0b160f" strokeWidth="8" strokeLinecap="round"/>
+                </g>
+                <g className="auth-activity auth-activity--email">
+                  <rect x="108" y="2" width="66" height="45" rx="9" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <path d="M112 8 L141 29 L170 8" fill="none" stroke="#245b36" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M112 39 L131 23 M170 39 L151 23" stroke="#245b36" strokeWidth="3" strokeLinecap="round"/>
+                </g>
+                <g className="auth-activity auth-activity--password">
+                  <rect x="117" y="3" width="50" height="43" rx="9" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <rect x="126" y="20" width="32" height="20" rx="5" fill="#f3d46b" stroke="#0b160f" strokeWidth="2.5"/>
+                  <path d="M132 20 V15 Q132 6 142 6 Q152 6 152 15 V20" fill="none" stroke="#0b160f" strokeWidth="4"/>
+                  <circle cx="142" cy="29" r="3" fill="#0b160f"/>
+                </g>
+                <g className="auth-activity auth-activity--otp">
+                  <rect x="111" y="2" width="62" height="44" rx="9" fill="#fff" stroke="#0b160f" strokeWidth="3"/>
+                  <g fill="#74bdff"><circle cx="124" cy="18" r="4"/><circle cx="142" cy="18" r="4"/><circle cx="160" cy="18" r="4"/></g>
+                  <path d="M122 32 H162" stroke="#0b160f" strokeWidth="4" strokeLinecap="round"/>
+                </g>
+                <path className="auth-toon-spark" d="M158 20 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
+                <path className="auth-toon-spark auth-toon-spark-two" d="M274 111 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3Z" fill="#fff" stroke="#0b160f" strokeWidth="2"/>
+              </svg>
             </div>
           </div>
-          <div className="relative flex items-center justify-between border-t border-[#0b160f]/15 pt-5 text-xs font-semibold text-[#0b160f]/65">
+          <div className="relative z-10 flex items-center justify-between border-t border-[#0b160f]/15 pt-5 text-xs font-semibold text-[#0b160f]/55">
             <span>Dwarka Sector 19B Park</span>
             <span>Run together. Grow together.</span>
           </div>
