@@ -63,6 +63,7 @@ export default function Auth() {
   const [otpSent, setOtpSent] = useState(false);
   const [loginOtp, setLoginOtp] = useState("");
   const [otpCooldown, setOtpCooldown] = useState(0);
+  const [mascotMood, setMascotMood] = useState("ready");
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state?.from || "/profile";
@@ -190,7 +191,21 @@ export default function Auth() {
       )}
 
       <div className="auth-card-motion mx-auto grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d1b14] shadow-[0_28px_100px_rgba(0,0,0,.42)] lg:grid-cols-[.92fr_1.08fr]">
-        <aside className="auth-brand-motion relative hidden min-h-[660px] flex-col justify-between overflow-hidden bg-[#a9e66e] p-10 text-[#0b160f] lg:flex xl:p-12">
+        <aside
+          className="auth-brand-motion auth-mascot-stage relative hidden min-h-[660px] flex-col justify-between overflow-hidden bg-[#a9e66e] p-10 text-[#0b160f] lg:flex xl:p-12"
+          onPointerMove={(event) => {
+            const bounds = event.currentTarget.getBoundingClientRect();
+            const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+            const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+            event.currentTarget.style.setProperty("--mascot-look-x", `${Math.max(-1, Math.min(1, x)) * 5}px`);
+            event.currentTarget.style.setProperty("--mascot-look-y", `${Math.max(-1, Math.min(1, y)) * 3}px`);
+          }}
+          onPointerLeave={(event) => {
+            event.currentTarget.style.setProperty("--mascot-look-x", "0px");
+            event.currentTarget.style.setProperty("--mascot-look-y", "0px");
+            setMascotMood("ready");
+          }}
+        >
           <div className="pointer-events-none absolute -right-28 -top-24 h-80 w-80 rounded-full border-[52px] border-[#0b160f]/[.07]" />
           <div className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full border-[44px] border-[#0b160f]/[.07]" />
           <div className="relative flex items-center gap-3">
@@ -207,6 +222,36 @@ export default function Auth() {
             <p className="mt-6 max-w-sm text-base leading-7 text-[#0b160f]/75">
               Find your pace, meet your people, and make every Sunday count. Your running community is one step away.
             </p>
+            <div className="auth-mascot-wrap mt-9 flex items-center gap-4 rounded-[1.5rem] border border-[#0b160f]/10 bg-white/25 p-4 backdrop-blur-sm" aria-live="polite">
+              <div className={`auth-mascot auth-mascot--${mascotMood}`} aria-hidden="true">
+                <svg viewBox="0 0 132 120" role="img" className="h-[108px] w-[118px] overflow-visible">
+                  <ellipse cx="66" cy="108" rx="42" ry="7" fill="#0b160f" opacity=".12" />
+                  <path className="auth-mascot-arm auth-mascot-arm-left" d="M34 68 Q14 75 19 91 Q24 100 34 88" fill="none" stroke="#245b36" strokeWidth="10" strokeLinecap="round" />
+                  <path className="auth-mascot-arm auth-mascot-arm-right" d="M98 68 Q118 75 113 91 Q108 100 98 88" fill="none" stroke="#245b36" strokeWidth="10" strokeLinecap="round" />
+                  <path className="auth-mascot-body" d="M28 68 Q28 27 66 24 Q104 27 104 68 Q104 99 66 101 Q28 99 28 68Z" fill="#245b36" />
+                  <path d="M52 26 Q43 9 55 7 Q67 8 66 24" fill="#245b36" />
+                  <path d="M66 24 Q72 6 84 12 Q91 18 79 30" fill="#245b36" />
+                  <ellipse cx="51" cy="65" rx="11" ry="14" fill="#fff" />
+                  <ellipse cx="81" cy="65" rx="11" ry="14" fill="#fff" />
+                  <g className="auth-mascot-eyes">
+                    <ellipse cx="53" cy="67" rx="4.5" ry="7" fill="#0b160f" />
+                    <ellipse cx="83" cy="67" rx="4.5" ry="7" fill="#0b160f" />
+                    <circle cx="54.5" cy="64" r="1.6" fill="#fff" />
+                    <circle cx="84.5" cy="64" r="1.6" fill="#fff" />
+                  </g>
+                  <path className="auth-mascot-mouth" d="M59 83 Q66 90 73 83" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M38 48 Q46 42 56 46 M76 46 Q87 42 94 48" fill="none" stroke="#0b160f" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M47 98 L42 108 M85 98 L90 108" stroke="#0b160f" strokeWidth="7" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#0b160f]/50">Your run buddy</p>
+                <p className="auth-mascot-caption mt-1 font-display text-lg font-black leading-tight text-[#0b160f]">
+                  {mascotMood === "shy" ? "Psst… eyes on your password!" : mascotMood === "curious" ? "Hey! Who’s joining the run?" : mascotMood === "excited" ? "You’ve got this! Almost there." : "Ready when you are!"}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-[#0b160f]/60">Move your cursor and I’ll follow along.</p>
+              </div>
+            </div>
           </div>
           <div className="relative flex items-center justify-between border-t border-[#0b160f]/15 pt-5 text-xs font-semibold text-[#0b160f]/65">
             <span>Dwarka Sector 19B Park</span>
