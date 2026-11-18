@@ -433,7 +433,12 @@ export default function Auth() {
                     autoFocus
                     placeholder="000000"
                     value={loginOtp}
-                    onChange={(event) => setLoginOtp(event.target.value.replace(/\D/g, "").slice(0, 6))}
+                    onChange={(event) => {
+                      setLoginOtp(event.target.value.replace(/\D/g, "").slice(0, 6));
+                      setMascotMood("otp");
+                    }}
+                    onFocus={() => setMascotMood("otp")}
+                    onBlur={() => setMascotMood("idle")}
                     required
                     className={inputClass + " text-center text-2xl font-bold tracking-[.55em]"}
                   />
