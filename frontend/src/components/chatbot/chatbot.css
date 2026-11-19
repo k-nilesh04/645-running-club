@@ -290,3 +290,26 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Light sage palette aligned with the 645 Run Club site */
+.run-chat {
+  --chat-green:#438b5b;
+  --chat-panel:#ffffff;
+  --chat-text:#203328;
+  color:var(--chat-text);
+}
+.run-chat__panel { border-color:#dce9de; background:#fff; box-shadow:0 18px 56px rgba(26,65,37,.18); }
+.run-chat__header { background:#f0f7f1; color:#203328; border-bottom:1px solid #e1ece2; }
+.run-chat__identity p, .run-chat__suggestions p { color:#718075; }
+.run-chat__close { color:#315e3d; }
+.run-chat__message--assistant { color:#26382b; border-color:#e2ece3; background:#f3f8f3; }
+.run-chat__message--user { color:#fff; background:#438b5b; }
+.run-chat__suggestions button { color:#326a43; border-color:#c5ddc9; background:#eff7f0; }
+.run-chat__suggestions button:hover { background:#e2f0e4; }
+.run-chat__form { border-top-color:#e2ece3; background:#f8fbf8; }
+.run-chat__form input { color:#24352a; border-color:#d6e4d8; background:#fff; }
+.run-chat__form input::placeholder { color:#8a988d; }
+.run-chat__form button { color:#fff; background:#438b5b; }
+.run-chat__launcher { background:#438b5b; }
+.run-chat__launcher:hover { background:#34794c; }
+.run-chat__launcher::before { border-color:#fff; }
