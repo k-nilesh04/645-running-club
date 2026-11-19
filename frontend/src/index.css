@@ -785,3 +785,38 @@ main .auth-page-motion button[class*="bg-"] { color:#fff !important; }
   background:rgba(255,255,255,.07) !important;
   border-color:rgba(215,239,219,.2) !important;
 }
+
+
+/* Restore previous navbar and footer theme. */
+.site-header {
+  background:rgba(255,255,255,.92) !important;
+  border-color:rgba(39,91,55,.12) !important;
+  box-shadow:0 5px 24px rgba(29,65,39,.045) !important;
+}
+.site-header-scrolled {
+  background:rgba(255,255,255,.97) !important;
+  box-shadow:0 10px 30px rgba(29,65,39,.08) !important;
+}
+.mobile-menu {
+  background:#fff !important;
+  border-color:#e4eee5 !important;
+}
+.mobile-menu-button {
+  color:#285c39 !important;
+  background:#f2f7f2 !important;
+  border-color:#dce9de !important;
+}
+.site-footer {
+  color:#eaf4eb !important;
+  background:linear-gradient(145deg,#173c28,#102c1d) !important;
+  border-top:0 !important;
+}
+.site-footer h1, .site-footer h2, .site-footer h3,
+.site-footer h4, .site-footer p, .site-footer li,
+.site-footer span, .site-footer label { color:inherit; }
+.site-footer a { color:inherit !important; }
+.site-footer a:hover { color:#fff !important; }
+.site-footer .footer-meet-card {
+  border-color:rgba(190,226,195,.25) !important;
+  background:linear-gradient(145deg,rgba(122,184,135,.18),rgba(255,255,255,.06)) !important;
+}
