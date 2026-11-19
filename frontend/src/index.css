@@ -699,3 +699,28 @@ input:focus, select:focus, textarea:focus { border-color:#70a77a !important; box
 @media (max-width:767px) {
   .hero-overlay { background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.82)),linear-gradient(0deg,#fff 0%,transparent 52%) !important; }
 }
+
+
+/* Ensure legacy page-level dark utility classes remain legible on white surfaces. */
+main .text-white:not([class*="bg-primary"]):not(.btn-primary):not(button),
+main .text-white\/90:not([class*="bg-primary"]),
+main .text-white\/80:not([class*="bg-primary"]),
+main .text-white\/75:not([class*="bg-primary"]),
+main .text-white\/65:not([class*="bg-primary"]),
+main .text-white\/60:not([class*="bg-primary"]),
+main .text-white\/55:not([class*="bg-primary"]),
+main .text-white\/50:not([class*="bg-primary"]),
+main .text-white\/45:not([class*="bg-primary"]),
+main .text-white\/40:not([class*="bg-primary"]) { color:#34483a !important; }
+main [class*="bg-[#122319]"],
+main [class*="bg-[#172d1e]"],
+main [class*="bg-[#0b1811]"],
+main [class*="bg-[#181818]"],
+main [class*="bg-[#202420]"],
+main [class*="bg-[#1b201c]"],
+main [class*="bg-[#232323]"] {
+  background-color:#f3f8f3 !important;
+  border-color:#deeadf !important;
+}
+main [class*="border-white/"] { border-color:#dce8de !important; }
+main [class*="text-[#d0f2b0]"], main [class*="text-[#b9ed89]"] { color:#438b5b !important; }
