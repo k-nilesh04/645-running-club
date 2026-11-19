@@ -724,3 +724,30 @@ main [class*="bg-[#232323]"] {
 }
 main [class*="border-white/"] { border-color:#dce8de !important; }
 main [class*="text-[#d0f2b0]"], main [class*="text-[#b9ed89]"] { color:#438b5b !important; }
+
+/* Global contrast pass for every light-theme page. */
+main { color:#26382b; }
+main h1, main h2, main h3, main h4, main h5, main h6 { color:#192b20; }
+main [class*="text-white"], main [class*="text-offwhite"],
+main [class*="text-[#d0f2b0]"], main [class*="text-[#b9ed89]"],
+main [class*="text-[#a9e66e]"] { color:#53665a !important; }
+main h1[class*="text-white"], main h2[class*="text-white"],
+main h3[class*="text-white"], main h4[class*="text-white"] { color:#192b20 !important; }
+main [class*="bg-[#122319]"], main [class*="bg-[#172d1e]"],
+main [class*="bg-[#0b1811]"], main [class*="bg-[#181818]"],
+main [class*="bg-[#202420]"], main [class*="bg-[#1b201c]"],
+main [class*="bg-[#232323]"] {
+  background:#f3f8f3 !important; border-color:#deeadf !important;
+}
+main [class*="border-white/"] { border-color:#dce8de !important; }
+main a:not(.btn-primary):not(.btn-outline):not([class*="bg-primary"]) { color:#34794c; }
+main a:not(.btn-primary):not(.btn-outline):hover { color:#245d38; }
+main button:not(.btn-primary):not([class*="bg-primary"]) { color:#31553b; }
+main .btn-primary, main button.btn-primary, main [class*="bg-primary"], main [class*="bg-green-"] { color:#fff !important; }
+main .btn-outline { color:#285c39 !important; }
+main input, main select, main textarea { color:#26382b !important; background:#fff !important; }
+main input::placeholder, main textarea::placeholder { color:#87958a !important; opacity:1; }
+main .hero-shell [class*="text-white"] { color:#26382b !important; }
+main .hero-shell .hero-secondary, main .hero-shell .btn-primary { color:#fff !important; }
+main .auth-page-motion [class*="text-white"] { color:#26382b !important; }
+main .auth-page-motion button[class*="bg-"] { color:#fff !important; }
