@@ -751,3 +751,37 @@ main .hero-shell [class*="text-white"] { color:#26382b !important; }
 main .hero-shell .hero-secondary, main .hero-shell .btn-primary { color:#fff !important; }
 main .auth-page-motion [class*="text-white"] { color:#26382b !important; }
 main .auth-page-motion button[class*="bg-"] { color:#fff !important; }
+
+
+/* Slightly darker chrome for clearer separation from the white page. */
+.site-header {
+  background:rgba(239,246,240,.97) !important;
+  border-bottom:1px solid #d6e4d8 !important;
+  box-shadow:0 5px 22px rgba(31,76,43,.07) !important;
+}
+.site-header-scrolled {
+  background:rgba(232,242,233,.98) !important;
+  box-shadow:0 10px 28px rgba(31,76,43,.1) !important;
+}
+.mobile-menu {
+  background:#edf5ee !important;
+  border-color:#d5e5d7 !important;
+}
+.mobile-menu-button {
+  background:#e4efe5 !important;
+  border-color:#cbd ecc !important;
+}
+.site-footer {
+  color:#edf5ee !important;
+  background:linear-gradient(145deg,#244b32 0%,#183b27 55%,#123321 100%) !important;
+  border-top:1px solid #315d3d !important;
+}
+.site-footer h1, .site-footer h2, .site-footer h3,
+.site-footer h4, .site-footer p, .site-footer li,
+.site-footer span, .site-footer label { color:#edf5ee; }
+.site-footer a { color:#d3e8d6 !important; }
+.site-footer a:hover { color:#fff !important; }
+.site-footer .footer-meet-card {
+  background:rgba(255,255,255,.07) !important;
+  border-color:rgba(215,239,219,.2) !important;
+}
